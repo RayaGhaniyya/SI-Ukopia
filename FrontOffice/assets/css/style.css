@@ -1,0 +1,367 @@
+/* Navbar */
+.navbar-custom {
+    background-color: #000;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important;
+}
+
+.navbar-brand {
+    color: #fff !important;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.ukopia-logo {
+    height: 30px;
+}
+
+
+/* Footer */
+.footer {
+    background-color: #2b3133;
+    color: #fff;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 60px;
+}
+
+.left-section {
+    flex: 1;
+    max-width: 400px;
+}
+
+.logo {
+    max-width: 200px;
+    margin-bottom: 30px; 
+}
+
+.partners-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.partners-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.partners-row img {
+    max-height: 100px;
+    max-width: 80px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.partners-row img:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.right-section {
+    flex: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 50px;
+}
+
+.footer-column h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+    color: #fff;
+}
+
+.footer-column a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footer-column a:hover {
+    color: #fff;
+}
+
+.footer-column p {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .left-section {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .partners-row {
+        justify-content: center;
+    }
+
+    .right-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 30px 15px;
+    }
+
+    .partners-row {
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .partners-row img {
+        max-height: 30px;
+        max-width: 70px;
+    }
+
+    .right-section {
+        gap: 25px;
+    }
+}
+
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 90vh;
+  overflow: hidden;
+}
+
+.hero img {
+  object-fit: cover;
+  height: 90vh;
+  filter: brightness(80%);
+}
+
+.hero-caption {
+  position: absolute;   
+  top: 50%;             
+  left: 50%;            
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  z-index: 10;          
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5%;
+}
+
+
+/* Gallery */
+.gallery {
+  background-color: #111;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+
+/* Products */
+.products {
+  background-color: #1e1f23; 
+  color: white;
+}
+
+.product-card {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;  
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.product-card img {
+  width: auto;
+  height: 200px;
+  object-fit: contain;
+}
+
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-overlay h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.btn-view {
+  background: #111;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn-view:hover {
+  background: #444;
+}
+
+/* About */
+.about {
+  background-color: #f8f9fa; 
+}
+
+.about-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.about-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Reservation */
+.reservation {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.reservation-card {
+  position: relative;
+  width: 100%;
+  height: 500px; 
+  overflow: hidden;
+}
+
+.reservation-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.reservation-card:hover img {
+  transform: scale(1.05); 
+  filter: brightness(70%);
+}
+
+
+.reservation-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.reservation-overlay h3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.btn-reserve {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #111;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.btn-reserve:hover {
+  background: #444;
+}
+
+.reservation-card:hover img {
+  transform: scale(1.05);
+}
+
+.reservation-card:hover .reservation-overlay {
+  opacity: 1;
+}
