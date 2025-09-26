@@ -1,9 +1,14 @@
+body {
+  padding-top: 70px;
+}
+
 /* Navbar */
 .navbar-custom {
     background-color: #000;
     background-position: bottom;
     background-repeat: no-repeat;
     background-size: cover;
+    z-index: 1050;
 }
 
 .navbar-nav .nav-link {

@@ -172,7 +172,7 @@ include("../Component/NavBar.php");
         <img src="../assets/img/Reservation/Reservation-Homepage.jpg" alt="Reservation Background">
         <div class="reservation-overlay">
             <h3>Reservation</h2>
-            <a href="#" class="btn-reserve">Click Here</a>
+                <a href="#" class="btn-reserve">Click Here</a>
         </div>
     </div>
 </section>

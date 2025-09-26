@@ -15,7 +15,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-custom">
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <img src="../assets/img/Logo Ukopia/Logo-Ukopia.png" alt="" class="ukopia-logo">
 
