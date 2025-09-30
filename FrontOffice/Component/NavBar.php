@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="../HomePage/homepage.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Product</a>
@@ -35,7 +35,7 @@
                         <a class="nav-link" href="#">Galery</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reservations</a>
+                        <a class="nav-link" href="../Reservation/reservations.php">Reservations</a>
                     </li>
                 </ul>
             </div>

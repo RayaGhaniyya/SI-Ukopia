@@ -1,0 +1,219 @@
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #111;
+  color: #fff;
+}
+
+/* Layout utama */
+section.reservation-section {
+  display: flex;
+  height: 100vh;
+}
+
+/* ====================== */
+/* Bagian Kiri (Deskripsi) */
+/* ====================== */
+.left-content {
+  flex: 1;
+  position: relative;
+  background: url("../img/Reservation/Reservation-img1.JPG") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.left-content .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.left-content .text-box {
+  position: relative;
+  max-width: 500px;
+  z-index: 2;
+}
+
+.left-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.left-content h2 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0 1rem;
+  font-weight: 500;
+  color: #ddd;
+}
+
+.left-content p {
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ====================== */
+/* Bagian Kanan (Form) */
+/* ====================== */
+.right-content {
+  flex: 1;
+  position: relative;
+  background: url("../img/Reservation/Reservation-Homepage.jpg") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-content .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+/* Form Box */
+.form-box {
+  position: relative;
+  z-index: 2;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.form-box h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* Input */
+.input-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 1.5rem;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+}
+
+/* Days */
+.days {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+  gap: 10px;
+}
+
+.days button {
+  flex: 1;
+  padding: 14px 0;
+  border: none;
+  background: #eee;
+  color: #333;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.days button:hover {
+  background: #26282C;
+  color: #000;
+}
+
+/* Time Picker sejajar kanan-kiri */
+.time-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* jarak antar dropdown dan titik dua */
+  margin: 1.5rem 0;
+}
+
+.custom-dropdown {
+  position: relative;
+  flex: 1; /* biar lebarnya sama kayak input lain */
+}
+
+.dropdown-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  background: #ffffff; /* gelap biar teks putih kelihatan */
+  cursor: pointer;
+  text-align: center;
+  color: #000000; /* teks putih */
+}
+
+
+.dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  background: #fff; /* gelap */
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  list-style: none;
+  display: none;
+  z-index: 10;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.dropdown-list li {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  color: #000000; /* teks putih */
+}
+
+.dropdown-list li:hover {
+  background: #ffffff; /* sedikit lebih terang biar kelihatan hover */
+}
+
+
+.custom-dropdown.active .dropdown-list {
+  display: block;
+}
+
+.time-select span {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+/* Confirm Button */
+.confirm-btn {
+  margin-top: 0.1rem;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #26282C;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 50%;
+}
+
+.confirm-btn:hover {
+  background: #848484;
+}
