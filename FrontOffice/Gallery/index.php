@@ -1,4 +1,5 @@
-<?php include("../Component/NavBar.php");
+<?php 
+include("../Component/NavBar.php");
 include("../Component/Loader.php");
 ?>
 

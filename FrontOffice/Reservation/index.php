@@ -82,4 +82,6 @@ include("../Component/NavBar.php");
 </section>
 
 <script src="../assets/js/reservation.js"></script>
-<?php include("../Component/Footer.php"); ?>
+<?php 
+include("../Component/Footer.php"); 
+?>
