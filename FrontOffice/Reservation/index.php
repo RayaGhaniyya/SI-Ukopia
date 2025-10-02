@@ -1,4 +1,10 @@
-<?php include("../Component/NavBar.php"); ?>
+<?php
+include("../Component/Loader.php");
+include("../Component/NavBar.php");
+?>
+
+<link rel="stylesheet" href="../assets/css/loader.css">
+<script src="../assets/js/loader.js"></script>
 <link rel="stylesheet" href="../assets/css/reservation.css">
 
 <section class="reservation-section">
@@ -22,13 +28,11 @@
         <div class="form-box">
             <h2>Reservations</h2>
             <form>
-                <!-- Nama & Telepon -->
                 <div class="input-group">
                     <input type="text" placeholder="Name" required>
                     <input type="text" placeholder="No Telepon" required>
                 </div>
 
-                <!-- Hari -->
                 <div class="days">
                     <button type="button">1</button>
                     <button type="button">2</button>
@@ -39,9 +43,7 @@
                     <button type="button">7</button>
                 </div>
 
-                <!-- Time Picker -->
                 <div class="time-select">
-                    <!-- Dropdown Jam -->
                     <div class="custom-dropdown">
                         <button type="button" class="dropdown-btn">07</button>
                         <ul class="dropdown-list">
@@ -60,7 +62,6 @@
 
                     <span>:</span>
 
-                    <!-- Dropdown Menit -->
                     <div class="custom-dropdown">
                         <button type="button" class="dropdown-btn">00</button>
                         <ul class="dropdown-list">
@@ -74,29 +75,11 @@
                     </div>
                 </div>
 
-                <!-- Tombol Confirm -->
                 <button type="submit" class="confirm-btn">Confirm</button>
             </form>
         </div>
     </div>
 </section>
 
-<script>
-    document.querySelectorAll(".custom-dropdown").forEach(drop => {
-        const btn = drop.querySelector(".dropdown-btn");
-        const list = drop.querySelectorAll(".dropdown-list li");
-
-        btn.addEventListener("click", () => {
-            drop.classList.toggle("active");
-        });
-
-        list.forEach(item => {
-            item.addEventListener("click", () => {
-                btn.textContent = item.textContent;
-                drop.classList.remove("active");
-            });
-        });
-    });
-</script>
-
+<script src="../assets/js/reservation.js"></script>
 <?php include("../Component/Footer.php"); ?>

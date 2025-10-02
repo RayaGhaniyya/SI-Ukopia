@@ -1,7 +1,12 @@
 <?php
 // include("../koneksi/koneksi.php");
+include("../Component/Loader.php");
 include("../Component/NavBar.php");
 ?>
+
+<link rel="stylesheet" href="../assets/css/loader.css">
+<script src="../assets/js/loader.js"></script>
+<link rel="stylesheet" href="../assets/css/homepage.css">
 
 <!-- Hero -->
 <div class="hero position-relative">
@@ -27,7 +32,7 @@ include("../Component/NavBar.php");
     </div>
 
     <div class="hero-caption">
-        <h3>"Wujudkan Kopimu, Kami Siap Mendampingi"</h3>
+        <h3>"From Beans To Cups"</h3>
     </div>
 </div>
 
@@ -36,46 +41,63 @@ include("../Component/NavBar.php");
     <div class="container py-6">
         <div class="row g-3 pt-5 mb-3">
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 1.JPG" alt="Foto 1" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 1.JPG" alt="Foto 1" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 2.JPG" alt="Foto 2" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 2.JPG" alt="Foto 2" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 3.JPG" alt="Foto 3" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 3.JPG" alt="Foto 3" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 4.JPG" alt="Foto 4" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 4.JPG" alt="Foto 4" class="img-fluid">
+                    </div>
+                </a>
             </div>
         </div>
+
         <div class="row g-3 pb-5">
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 5.JPG" alt="Foto 5" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 5.JPG" alt="Foto 5" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 6.JPG" alt="Foto 6" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 6.JPG" alt="Foto 6" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 7.JPG" alt="Foto 7" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 7.JPG" alt="Foto 7" class="img-fluid">
+                    </div>
+                </a>
             </div>
             <div class="col-md-3 col-sm-6">
-                <div class="gallery-item">
-                    <img src="../assets/img/Gallery-Homepage/foto 8.jpg" alt="Foto 8" class="img-fluid">
-                </div>
+                <a href="../Gallery/index.php">
+                    <div class="gallery-item">
+                        <img src="../assets/img/Gallery-Homepage/foto 8.jpg" alt="Foto 8" class="img-fluid">
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -96,7 +118,6 @@ include("../Component/NavBar.php");
                 </div>
             </div>
 
-            <!-- Product Card -->
             <div class="col-md-3 col-sm-6">
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/robusta.png" alt="Robusta Beans">
@@ -130,7 +151,6 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </div>
-
 
 <!-- About Section -->
 <section class="about py-5">
@@ -171,12 +191,13 @@ include("../Component/NavBar.php");
     <div class="reservation-card">
         <img src="../assets/img/Reservation/Reservation-Homepage.jpg" alt="Reservation Background">
         <div class="reservation-overlay">
-            <h3>Reservation</h2>
-                <a href="#" class="btn-reserve">Click Here</a>
+            <h3>Reservation</h3>
+            <a href="../Reservation/index.php" class="btn-reserve">Click Here</a>
         </div>
     </div>
 </section>
 
+<script src="../assets/js/homepage.js"></script>
 
 <?php
 include("../Component/Footer.php");

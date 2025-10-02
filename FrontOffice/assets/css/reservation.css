@@ -57,6 +57,7 @@ section.reservation-section {
 .left-content p {
   line-height: 1.6;
   font-size: 1rem;
+  white-space: pre-line; /* biar typing effect tetap rapi ke bawah */
 }
 
 /* ====================== */
@@ -96,17 +97,29 @@ section.reservation-section {
 /* Input */
 .input-group {
   display: flex;
+  flex-direction: column; /* jadi vertikal agar full width */
   gap: 15px;
   margin-bottom: 1.5rem;
 }
 
 .input-group input {
-  flex: 1;
+  width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 10px !important;
   outline: none;
   font-size: 1rem;
+  background: #fff;
+  color: #000;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  display: block;
+  transition: transform 0.2s ease; /* smooth effect */
+}
+
+.input-group input.focused {
+  transform: scale(1.03); /* sedikit nge-zoom pas fokus */
 }
 
 /* Days */
@@ -135,7 +148,17 @@ section.reservation-section {
   color: #000;
 }
 
-/* Time Picker sejajar kanan-kiri */
+.days button.active {
+  background: #26282C;
+  color: #fff;
+  border: 2px solid #fff;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+/* ====================== */
+/* Time Picker (jam & menit) */
+/* ====================== */
 .time-select {
   display: flex;
   align-items: center;
@@ -151,43 +174,72 @@ section.reservation-section {
 
 .dropdown-btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 1rem;
   border: 1px solid #ffffff;
   border-radius: 10px;
-  background: #ffffff; /* gelap biar teks putih kelihatan */
+  background: #fff;
   cursor: pointer;
   text-align: center;
-  color: #000000; /* teks putih */
+  color: #000;
+  transition: all 0.25s ease;
 }
 
+.dropdown-btn:hover,
+.dropdown-btn:focus {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
 
+/* Animasi list muncul */
 .dropdown-list {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 100%;
-  background: #fff; /* gelap */
-  border: 1px solid #ffffff;
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 10px;
   list-style: none;
   display: none;
   z-index: 10;
-  max-height: 150px;
+  max-height: 180px;
   overflow-y: auto;
+  animation: fadeSlide 0.25s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdown-list li {
   padding: 10px;
   cursor: pointer;
   text-align: center;
-  color: #000000; /* teks putih */
+  font-size: 0.95rem;
+  color: #000;
+  transition: all 0.2s ease;
 }
 
 .dropdown-list li:hover {
-  background: #ffffff; /* sedikit lebih terang biar kelihatan hover */
+  background: #26282C;
+  color: #fff;
+  transform: scale(1.05);
 }
 
+/* Item yang dipilih */
+.dropdown-list li.active {
+  background: #111;
+  color: #fff;
+  font-weight: bold;
+}
 
 .custom-dropdown.active .dropdown-list {
   display: block;
@@ -199,7 +251,9 @@ section.reservation-section {
   color: #ffffff;
 }
 
+/* ====================== */
 /* Confirm Button */
+/* ====================== */
 .confirm-btn {
   margin-top: 0.1rem;
   padding: 10px;
@@ -217,3 +271,31 @@ section.reservation-section {
 .confirm-btn:hover {
   background: #848484;
 }
+
+/* ====================== */
+/* Popup sukses */
+/* ====================== */
+/* Popup sukses */
+.reservation-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px; /* langsung visible di kanan */
+  background: #26282C;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  z-index: 9999; /* pastikan di atas semua */
+}
+
+.reservation-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+

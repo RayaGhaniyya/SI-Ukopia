@@ -1,0 +1,42 @@
+/* Loader Background */
+#loader {
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.coffee-beans {
+  display: flex;
+  gap: 15px;
+  font-size: 32px;
+  color: #fff; 
+}
+
+.coffee-beans i {
+  animation: moveBean 1.5s infinite ease-in-out;
+}
+
+.coffee-beans i:nth-child(1) { animation-delay: 0s; }
+.coffee-beans i:nth-child(2) { animation-delay: 0.3s; }
+.coffee-beans i:nth-child(3) { animation-delay: 0.6s; }
+
+/* Animasi naik-turun */
+@keyframes moveBean {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-14px); }
+}
+
+/* Loader hilang smooth */
+body.loaded #loader {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}

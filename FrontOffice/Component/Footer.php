@@ -24,7 +24,7 @@
                     <a href="#">Espresso Beans Catalog</a>
                     <a href="#">Filter Beans Catalog</a>
                     <a href="#">Merchandise</a>
-                    <a href="#">Coffee brewing tools</a>
+                    <a href="#">Coffee Brewing Tools</a>
                 </div>
 
                 <div class="footer-column">
