@@ -1,6 +1,4 @@
-// homepage.js — safe & defensive: cek dulu element sebelum dipakai
 document.addEventListener("DOMContentLoaded", () => {
-  /* ===== HERO: fade-in + typing effect (safe checks) ===== */
   try {
     const captionEl = document.querySelector(".hero-caption h3");
     if (captionEl) {
@@ -28,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Hero typing error:", err);
   }
 
-  /* ===== GALLERY: scroll reveal (efek gelombang) ===== */
   try {
     const galleryContainer = document.querySelector(".gallery");
     if (galleryContainer) {
@@ -54,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Gallery reveal error:", err);
   }
 
-  /* ===== PRODUCTS: scroll reveal (muncul serentak) ===== */
   try {
     const productsContainer = document.querySelector(".products");
     if (productsContainer) {
@@ -76,20 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("Products reveal error:", err);
   }
 
-  /* ===== BLOK DI BAWAH INI TELAH DIHAPUS ===== */
-  /*
-  try {
-    const productCards = document.querySelectorAll(".product-card");
-    productCards.forEach(card => {
-      card.addEventListener("mouseenter", () => card.classList.add("is-hover"));
-      card.addEventListener("mouseleave", () => card.classList.remove("is-hover"));
-    });
-  } catch (err) {
-    console.error("Product hover error:", err);
-  }
-  */
-
-  /* ===== RESERVATION: button hover class (safe) ===== */
   try {
     const reserveBtn = document.querySelector(".btn-reserve");
     if (reserveBtn) {

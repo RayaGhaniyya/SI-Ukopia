@@ -1,4 +1,3 @@
-/* ---------- Basic ---------- */
 * { 
   margin: 0; 
   padding: 0; 
@@ -114,11 +113,6 @@ body {
   transform: translateY(0);
 }
 
-/* CSS DI BAWAH INI TELAH DIHAPUS untuk menghilangkan efek angkat */
-/* .products.is-visible .product-card.is-hover { 
-  transform: translateY(-10px); 
-}
-*/
 
 .product-card img { 
   width: auto; 
@@ -146,7 +140,7 @@ body {
   opacity:0;
   transition: opacity 0.25s ease;
 }
-/* Efek overlay tetap ada */
+
 .product-card:hover .product-overlay { 
   opacity: 1; 
 }

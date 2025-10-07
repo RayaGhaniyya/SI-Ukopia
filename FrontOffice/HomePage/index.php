@@ -112,7 +112,7 @@ include("../Component/NavBar.php");
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/arabica.png" alt="Arabica Beans">
                     <div class="product-overlay">
-                        <h3>Filter Beans</h3>
+                        <h3>Filter Roast</h3>
                         <a href="../Product/filter.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
@@ -122,7 +122,7 @@ include("../Component/NavBar.php");
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/robusta.png" alt="Robusta Beans">
                     <div class="product-overlay">
-                        <h3>Espresso Beans</h3>
+                        <h3>Espresso Roast</h3>
                         <a href="../Product/espresso.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
