@@ -21,10 +21,10 @@
             <div class="right-section">
                 <div class="footer-column">
                     <h3>SHOP US</h3>
-                    <a href="#">Espresso Beans Catalog</a>
-                    <a href="#">Filter Beans Catalog</a>
-                    <a href="#">Merchandise</a>
-                    <a href="#">Coffee Brewing Tools</a>
+                    <a href="../Product/espresso.php">Espresso Beans Catalog</a>
+                    <a href="../Product/filter.php">Filter Beans Catalog</a>
+                    <a href="../Product/merchandise.php">Merchandise</a>
+                    <a href="../Product/tools.php">Coffee Brewing Tools</a>
                 </div>
 
                 <div class="footer-column">

@@ -112,8 +112,8 @@ include("../Component/NavBar.php");
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/arabica.png" alt="Arabica Beans">
                     <div class="product-overlay">
-                        <h3>Arabica Beans</h3>
-                        <a href="#" class="btn btn-view">View More</a>
+                        <h3>Filter Beans</h3>
+                        <a href="../Product/filter.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
             </div>
@@ -122,8 +122,8 @@ include("../Component/NavBar.php");
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/robusta.png" alt="Robusta Beans">
                     <div class="product-overlay">
-                        <h3>Robusta Beans</h3>
-                        <a href="#" class="btn btn-view">View More</a>
+                        <h3>Espresso Beans</h3>
+                        <a href="../Product/espresso.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@ include("../Component/NavBar.php");
                     <img src="../assets/img/Product-Homepage/merchandise.png" alt="Merchandise">
                     <div class="product-overlay">
                         <h3>Merchandise</h3>
-                        <a href="#" class="btn btn-view">View More</a>
+                        <a href="../Product/merchandise.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@ include("../Component/NavBar.php");
                     <img src="../assets/img/Product-Homepage/tools.png" alt="Brewing Tools">
                     <div class="product-overlay">
                         <h3>Brewing Tools</h3>
-                        <a href="#" class="btn btn-view">View More</a>
+                        <a href="../Product/tools.php" class="btn btn-view">View More</a>
                     </div>
                 </div>
             </div>

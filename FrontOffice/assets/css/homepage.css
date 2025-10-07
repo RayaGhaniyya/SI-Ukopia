@@ -3,7 +3,8 @@
   margin: 0; 
   padding: 0; 
   box-sizing: border-box; 
-  font-family: "Poppins", sans-serif; }
+  font-family: "Poppins", sans-serif; 
+}
 body { 
   background: #111; 
   color: #fff; 
@@ -24,12 +25,11 @@ body {
   transition: transform 0.8s ease, filter 0.8s ease;
 }
 
-/* zoom saat hover (subtle) */
 .hero:hover img { 
-  transform: scale(1.05); filter: brightness(70%); 
+  transform: scale(1.05); 
+  filter: brightness(70%); 
 }
 
-/* caption: default disembunyikan, JS akan menampilkan dengan fade + typing */
 .hero-caption {
   position: absolute;
   top: 50%;
@@ -43,7 +43,6 @@ body {
   opacity: 0;
 }
 
-/* ukuran teks hero */
 .hero-caption h3 {
   font-size: 2.2rem;
   line-height: 1.1;
@@ -58,18 +57,20 @@ body {
   z-index: 25;
 }
 
-/* ---------- GALLERY (scroll reveal) ---------- */
-.gallery { background-color: #000000; }
+/* ---------- GALLERY (Animasi hover asli) ---------- */
+.gallery { 
+  background-color: #000000; 
+}
 
 .gallery-item {
   position: relative;
   overflow: hidden;
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease, transform 0.6s ease, transition-delay 0.4s ease;
 }
 
-.gallery-item.show {
+.gallery.is-visible .gallery-item {
   opacity: 1;
   transform: translateY(0);
 }
@@ -78,20 +79,23 @@ body {
   width: 100%; 
   height: 250px; 
   object-fit: cover; 
-  transition: transform 0.4s ease; 
+  transition: transform 0.4s ease;
 }
 
 .gallery-item:hover img { 
   transform: scale(1.08); 
 }
 
-/* ---------- PRODUCTS ---------- */
+
+/* ---------- PRODUCTS (EFEK HOVER ANGKAT DIHAPUS) ---------- */
 .products { 
   background-color: #1e1f23; 
   color: #fff; 
 }
 
 .product-card {
+  opacity: 0;
+  transform: translateY(30px);
   width: 100%;
   height: 300px;
   display: flex; 
@@ -101,20 +105,34 @@ body {
   border-radius: 12px; 
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  will-change: transform, opacity;
 }
 
-/* class toggled by JS on hover (safer than inline styles) */
-.product-card.is-hover { 
-  transform: translateY(-10px); 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+.products.is-visible .product-card {
+  opacity: 1;
+  transform: translateY(0);
 }
+
+/* CSS DI BAWAH INI TELAH DIHAPUS untuk menghilangkan efek angkat */
+/* .products.is-visible .product-card.is-hover { 
+  transform: translateY(-10px); 
+}
+*/
 
 .product-card img { 
   width: auto; 
   height: 200px; 
   object-fit: contain; 
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
+
+.products.is-visible .product-card img {
+  opacity: 1;
+  transition-delay: 200ms;
+}
+
 
 .product-overlay {
   position: absolute; 
@@ -128,6 +146,7 @@ body {
   opacity:0;
   transition: opacity 0.25s ease;
 }
+/* Efek overlay tetap ada */
 .product-card:hover .product-overlay { 
   opacity: 1; 
 }
@@ -215,7 +234,10 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-reserve.is-hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+.btn-reserve.is-hover { 
+  transform: scale(1.05); 
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); 
+}
 
 /* ---------- Misc clean small helpers ---------- */
 .container { 

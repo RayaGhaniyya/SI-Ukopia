@@ -5,19 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const captionEl = document.querySelector(".hero-caption h3");
     if (captionEl) {
       const fullText = captionEl.textContent.trim();
-      // kosongkan dulu untuk typing
       captionEl.textContent = "";
-
       const captionWrapper = captionEl.closest(".hero-caption");
       if (captionWrapper) {
         captionWrapper.style.opacity = "0";
         captionWrapper.style.transition = "opacity 1s ease";
       }
-
-      // tampilkan wrapper dulu lalu mulai typing
       setTimeout(() => {
         if (captionWrapper) captionWrapper.style.opacity = "1";
-
         let i = 0;
         const speed = 150; 
         (function typeChar() {
@@ -30,35 +25,59 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 450);
     }
   } catch (err) {
-    // jangan crash; log untuk debugging di dev console
     console.error("Hero typing error:", err);
   }
 
-  /* ===== GALLERY: scroll reveal (IntersectionObserver) ===== */
+  /* ===== GALLERY: scroll reveal (efek gelombang) ===== */
   try {
-    const galleryItems = document.querySelectorAll(".gallery-item");
-    if (galleryItems && galleryItems.length) {
-      // Fallback: if IO not supported, reveal all
+    const galleryContainer = document.querySelector(".gallery");
+    if (galleryContainer) {
       if (!("IntersectionObserver" in window)) {
-        galleryItems.forEach(it => it.classList.add("show"));
+        galleryContainer.classList.add("is-visible");
       } else {
-        const io = new IntersectionObserver((entries, obs) => {
+        const galleryObserver = new IntersectionObserver((entries, observer) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              entry.target.classList.add("show");
-              obs.unobserve(entry.target);
+              const items = entry.target.querySelectorAll('.gallery-item');
+              items.forEach((item, index) => {
+                item.style.transitionDelay = `${index * 50}ms`;
+              });
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.15 });
-
-        galleryItems.forEach(it => io.observe(it));
+        }, { threshold: 0.1 });
+        galleryObserver.observe(galleryContainer);
       }
     }
   } catch (err) {
     console.error("Gallery reveal error:", err);
   }
 
-  /* ===== PRODUCTS: add/remove class on hover (no inline styles) ===== */
+  /* ===== PRODUCTS: scroll reveal (muncul serentak) ===== */
+  try {
+    const productsContainer = document.querySelector(".products");
+    if (productsContainer) {
+      if (!("IntersectionObserver" in window)) {
+        productsContainer.classList.add("is-visible");
+      } else {
+        const productsObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        productsObserver.observe(productsContainer);
+      }
+    }
+  } catch (err) {
+    console.error("Products reveal error:", err);
+  }
+
+  /* ===== BLOK DI BAWAH INI TELAH DIHAPUS ===== */
+  /*
   try {
     const productCards = document.querySelectorAll(".product-card");
     productCards.forEach(card => {
@@ -68,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch (err) {
     console.error("Product hover error:", err);
   }
+  */
 
   /* ===== RESERVATION: button hover class (safe) ===== */
   try {
