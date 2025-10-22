@@ -1,0 +1,212 @@
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: "Poppins", sans-serif; 
+}
+
+.cart-section {
+  width: 100%;
+  min-height: 100vh;
+  background: #f8f8f8;
+  color: #000;
+}
+
+/* Header */
+.cart-header {
+  background: #000000;
+  color: #fff;
+  padding: 15px 60px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+/* Tombol kembali */
+.back-btn {
+  position: absolute;
+  right: 25px;
+  top: 22px;
+  color: #fff;
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: transform 0.2s, color 0.3s;
+}
+
+.back-btn:hover {
+  color: #f5c518;
+  transform: scale(1.1);
+}
+
+/* Tabel */
+.cart-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 18px;
+  background: transparent;
+}
+
+.cart-table thead th {
+  text-align: left;
+  padding: 15px 60px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  background: #fff;
+  border-bottom: 2px solid #eee;
+}
+
+.cart-item {
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.cart-item td {
+  padding: 35px 60px;
+  vertical-align: middle;
+}
+
+/* Gambar & Detail */
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.product-img {
+  width: 130px;
+  height: 150px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 12px;     
+  overflow: hidden;
+}
+
+.product-img img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Checkbox */
+.custom-checkbox {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #000;
+  transform: scale(1.1);
+}
+
+/* Detail */
+.product-details h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.product-details p {
+  margin: 3px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Quantity */
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  background: #f2f2f2;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.qty-btn:hover {
+  background: #ddd;
+  transform: scale(1.05);
+}
+
+.qty-count {
+  min-width: 25px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Tombol Delete */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.delete-btn:hover {
+  color: #d11a2a;
+}
+
+/* Total per Produk */
+.product-total {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+}
+
+/* Ringkasan */
+.cart-summary {
+  background: #fff;
+  padding: 25px 60px;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.summary-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select-all-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.checkout-btn {
+  background: #111;
+  color: #fff;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.checkout-btn:hover {
+  background: #333;
+  transform: scale(1.03);
+}

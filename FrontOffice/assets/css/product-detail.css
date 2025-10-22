@@ -1,0 +1,220 @@
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+  height: 100%;
+  background: #fff;
+  color: #000;
+  overflow: hidden; /* hanya panel kanan yang bisa scroll */
+}
+
+/* Struktur tabel utama */
+.product-layout {
+  width: 100%;
+  height: 100vh;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Panel kiri */
+.left-panel {
+  width: 45%;
+  background: #f2f2f2;
+  vertical-align: top;
+  height: 100vh;
+  position: relative;
+}
+
+.image-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  width: 50%; /* Ubah nilai ini untuk memperkecil atau memperbesar gambar */
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Panel kanan */
+.right-panel {
+  width: 55%;
+  height: 100vh;
+  vertical-align: top;
+  background: #fff;
+  padding: 0;
+}
+
+/* Scroll area hanya kanan */
+.scroll-area {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 60px;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+/* Konten di dalam kanan */
+.content {
+  margin: auto;
+}
+
+/* Gaya teks */
+.product-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Opsi produk */
+.product-options {
+  margin-top: 20px;
+}
+
+.product-options h4 {
+  margin: 15px 0 8px;
+}
+
+.product-options button {
+  padding: 8px 15px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin: 3px;
+  background: transparent;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.product-options button:hover,
+.product-options button.active {
+  background: #333;
+  color: #fff;
+}
+
+/* Quantity */
+.product-quantity {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-quantity button {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #333;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.product-quantity button:hover {
+  background: #333;
+  color: #fff;
+}
+
+.product-quantity .count {
+  min-width: 25px;
+  text-align: center;
+}
+
+.stock {
+  margin-top: 10px;
+  color: #666;
+}
+
+/* Tombol utama */
+.product-buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 10px;
+}
+
+.product-buttons button {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease; 
+}
+
+.product-buttons .add {
+  background: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
+}
+
+.product-buttons .add:hover {
+  background: #333;
+  color: #ffffff;
+}
+
+.product-buttons .buy {
+  background: #333;
+  color: #fff;
+}
+
+.product-buttons .buy:hover {
+  opacity: 0.85;
+}
+
+
+/* Pickup info */
+.pickup-info {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* Tombol kembali */
+.back-button {
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 11px 12px;
+  border-radius: 100%;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button i {
+  font-size: 1rem;
+}
+
+.back-button:hover {
+  opacity: 0.85;
+}

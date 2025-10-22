@@ -191,7 +191,7 @@ include("../Component/NavBar.php");
     <div class="reservation-card">
         <img src="../assets/img/Reservation/Reservation-Homepage.jpg" alt="Reservation Background">
         <div class="reservation-overlay">
-            <h3>Reservation</h3>
+            <h2>Reservation</h2>
             <a href="../Reservation/index.php" class="btn-reserve">Click Here</a>
         </div>
     </div>

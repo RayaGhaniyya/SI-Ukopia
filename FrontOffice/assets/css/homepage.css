@@ -88,7 +88,7 @@ body {
 
 /* ---------- PRODUCTS (EFEK HOVER ANGKAT DIHAPUS) ---------- */
 .products { 
-  background-color: #1e1f23; 
+  background-color: #181C1F; 
   color: #fff; 
 }
 
@@ -219,7 +219,7 @@ body {
 
 .btn-reserve {
   display:inline-block; 
-  padding:12px 24px; 
+  padding:12px 20px; 
   border-radius:6px; 
   background:#111; 
   color:#fff;

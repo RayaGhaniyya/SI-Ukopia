@@ -10,7 +10,7 @@ include("../Component/NavBar.php");
 
 <nav class="secondary-navbar">
     <div class="nav-left">
-        <a href="/cart" class="cart-icon">
+        <a href="../Product-Cart/index.php" class="cart-icon">
             <i class="fas fa-shopping-cart"></i>
         </a>
         <div class="dropdown">
