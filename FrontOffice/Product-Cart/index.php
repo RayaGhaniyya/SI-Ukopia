@@ -116,7 +116,9 @@ include("../Component/Loader.php");
             <p><strong>Estimated total:</strong> <span id="cart-total">Rp 750.000,00</span></p>
         </div>
         <div class="summary-right">
-            <button class="checkout-btn">Check out</button>
+            <a href="../Product-Checkout/index.php">
+                <button class="checkout-btn">Check out</button>
+            </a>
         </div>
     </div>
 </main>

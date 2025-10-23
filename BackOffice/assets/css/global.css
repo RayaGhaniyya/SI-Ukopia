@@ -1,0 +1,20 @@
+/* === GLOBAL STYLING === */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #121212;
+  color: #fff;
+  overflow-x: hidden;
+  padding: 30px 40px 30px 220px; /* top right bottom left */
+  transition: padding-left 0.3s ease;
+}
+
+body.sidebar-collapsed {
+  padding-left: 100px; /* sesuai lebar sidebar collapsed + spacing */
+}
+
+/* Utility classes */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}

@@ -1,0 +1,43 @@
+<?php
+include("head.php");
+?>
+
+<link rel="stylesheet" href="../assets/css/sidebar.css">
+
+<div class="sidebar" id="sidebar">
+    <div class="logo-section">
+        <img src="../assets/img/Logo/Logo-Ukopia.png" alt="Ukopia Logo" class="logo">
+        <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <ul class="nav-list">
+        <li><a href="#"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="productBtn">
+                <i class="fas fa-box"></i><span>Product</span>
+            </a>
+            <ul class="dropdown-menu" id="productDropdown">
+                <li><a href="#"><i class="fas fa-filter"></i><span>Filter</span></a></li>
+                <li><a href="#"><i class="fas fa-coffee"></i><span>Espresso</span></a></li>
+                <li><a href="#"><i class="fas fa-tshirt"></i><span>Merchandise</span></a></li>
+                <li><a href="#"><i class="fas fa-blender"></i><span>Brewing Tools</span></a></li>
+                <li><a href="#"><i class="fas fa-circle-check"></i><span>Ukopia Approve</span></a></li>
+            </ul>
+        </li>
+
+        <li><a href="#"><i class="fas fa-calendar-check"></i><span>Reservation</span></a></li>
+        <li><a href="#"><i class="fas fa-image"></i><span>Gallery</span></a></li>
+        <li><a href="#"><i class="fas fa-receipt"></i><span>Riwayat Transaksi</span></a></li>
+    </ul>
+
+    <div class="profile-section">
+        <a href="#"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+    </div>
+</div>
+
+<script src="../assets/js/sidebar.js"></script>
+
+<?php
+include("bottom.php");
+?>

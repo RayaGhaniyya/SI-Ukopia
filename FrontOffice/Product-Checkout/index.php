@@ -12,7 +12,7 @@ include("../Component/Loader.php");
     <div class="checkout-container">
         <!-- Panel kiri -->
         <div class="checkout-left">
-            <button class="back-button" onclick="window.location.href='../Cart/cart.php'">
+            <button class="back-button" onclick="window.location.href='../Product-Cart/index.php'">
                 <i class="fa-solid fa-arrow-left"></i> Checkout
             </button>
 

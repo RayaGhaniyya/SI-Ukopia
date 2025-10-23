@@ -1,0 +1,247 @@
+/* === SIDEBAR UKOPIA === */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #121212;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background-color: #1e1e1e;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* === LOGO SECTION === */
+.logo-section {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  padding-top: 15px;
+  width: 140px;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+/* === TOGGLE BUTTON === */
+.toggle-btn {
+  position: absolute;
+  top: 30px;
+  right: 18px;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  width: auto;
+  padding: 0;
+}
+
+/* Sidebar tutup */
+.sidebar.collapsed {
+  width: 80px;
+  align-items: center;
+  transition: width 0.3s ease;
+}
+
+/* Logo hilang pas sidebar ditutup */
+.sidebar.collapsed .logo-section .logo {
+  display: none;
+}
+
+/* Logo section collapsed */
+.sidebar.collapsed .logo-section {
+  height: auto;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+/* === TOGGLE PAS DITUTUP — sejajar sempurna === */
+.sidebar.collapsed .toggle-btn {
+  position: static;
+  margin: 0;
+  padding: 20px 0 9px 28px;
+  width: 100%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* === NAV LIST === */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  flex-grow: 1;
+}
+
+.nav-list li {
+  width: 100%;
+}
+
+.nav-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-list a i {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-list a:hover,
+.nav-list a.active {
+  background-color: #333;
+  color: #fff;
+}
+
+/* === DROPDOWN === */
+.dropdown-menu {
+  list-style: none;
+  padding-left: 45px;
+  margin: 5px 0;
+  display: none;
+  flex-direction: column;
+}
+
+.dropdown-menu.show {
+  display: flex;
+  animation: dropdownFade 0.25s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu a {
+  font-size: 12px;
+  color: #bbb;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-menu a:hover {
+  color: #fff;
+}
+
+/* === PROFILE SECTION === */
+.profile-section {
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid #2a2a2a;
+  background-color: #1a1a1a;
+  padding: 12px 0;
+}
+
+.profile-section a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc;
+  text-decoration: none;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.profile-section a i {
+  font-size: 18px;
+}
+
+.profile-section a:hover {
+  color: #fff;
+}
+
+/* === COLLAPSED SIDEBAR === */
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* Logo hilang total saat ditutup */
+.sidebar.collapsed .logo {
+  display: none;
+}
+
+/* Tulisan span hilang tapi icon tetap */
+.sidebar.collapsed a span {
+  display: none;
+}
+
+/* Dropdown tetap bisa dibuka walau sidebar ditutup */
+.sidebar.collapsed .dropdown-menu {
+  padding-left: 20px;
+}
+
+/* Profile tetap di tengah */
+.sidebar.collapsed .profile-section a {
+  justify-content: center;
+}
+
+/* === TRANSITION EFFECTS === */
+.sidebar,
+.nav-list a,
+.dropdown-menu a,
+.profile-section a,
+.logo,
+.logo-section,
+.toggle-btn {
+  transition: all 0.3s ease;
+}
+
+/* === HILANGKAN TANDA SEGITIGA DROPDOWN === */
+.dropdown-toggle::after,
+.dropdown-toggle::before {
+  display: none !important;
+  content: none !important;
+}
+
+.dropdown a::after,
+.dropdown a::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Reset semua pseudo-element di nav-list */
+.nav-list a::after,
+.nav-list a::before {
+  display: none !important;
+  content: none !important;
+}
