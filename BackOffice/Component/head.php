@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="../assets/css/global.css">
 
+    <link rel="stylesheet" href="../assets/css/gallery.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/loader.css">
 
     <script src="../assets/js/loader.js"></script>

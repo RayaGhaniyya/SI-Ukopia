@@ -40,8 +40,6 @@ $existing_images = $result_img->fetch_all(MYSQLI_ASSOC);
 $stmt_img->close();
 ?>
 
-<link rel="stylesheet" href="../assets/css/gallery.css">
-
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
@@ -111,5 +109,4 @@ $stmt_img->close();
     </div>
 </div>
 
-<script src="../assets/js/gallery.js"></script>
 <?php include("../Component/bottom.php"); ?>

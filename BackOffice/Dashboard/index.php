@@ -3,8 +3,6 @@ include("../Component/session.php");
 include("../Component/head.php");
 ?>
 
-<link rel="stylesheet" href="../assets/css/dashboard.css">
-
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
@@ -98,7 +96,6 @@ include("../Component/head.php");
 </div>
 
 
-<script src="../assets/js/dashboard.js"></script>
 
 <?php if (!empty($notif)): ?>
     <script>

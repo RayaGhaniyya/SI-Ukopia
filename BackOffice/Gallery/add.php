@@ -4,8 +4,6 @@ include("../Component/session.php");
 include("../Component/head.php");
 ?>
 
-<link rel="stylesheet" href="../assets/css/gallery.css">
-
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
