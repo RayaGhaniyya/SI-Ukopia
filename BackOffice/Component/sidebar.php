@@ -1,7 +1,3 @@
-<?php
-include("head.php");
-?>
-
 <link rel="stylesheet" href="../assets/css/sidebar.css">
 
 <div class="sidebar" id="sidebar">
@@ -11,7 +7,7 @@ include("head.php");
     </div>
 
     <ul class="nav-list">
-        <li><a href="#"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+        <li><a href="../Dashboard/index.php"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
 
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn">
@@ -27,7 +23,7 @@ include("head.php");
         </li>
 
         <li><a href="#"><i class="fas fa-calendar-check"></i><span>Reservation</span></a></li>
-        <li><a href="#"><i class="fas fa-image"></i><span>Gallery</span></a></li>
+        <li><a href="../Gallery/index.php"><i class="fas fa-image"></i><span>Gallery</span></a></li>
         <li><a href="#"><i class="fas fa-receipt"></i><span>Riwayat Transaksi</span></a></li>
     </ul>
 
@@ -37,7 +33,4 @@ include("head.php");
 </div>
 
 <script src="../assets/js/sidebar.js"></script>
-
-<?php
-include("bottom.php");
-?>
+<script src="../assets/js/global.js"></script>

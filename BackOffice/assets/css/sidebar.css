@@ -1,12 +1,4 @@
 /* === SIDEBAR UKOPIA === */
-body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  background-color: #121212;
-  color: #fff;
-  overflow-x: hidden;
-}
-
 .sidebar {
   width: 220px;
   height: 100vh;
@@ -31,6 +23,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .logo {
@@ -59,11 +52,9 @@ body {
   padding: 0;
 }
 
-/* Sidebar tutup */
+/* === COLLAPSED STATE === */
 .sidebar.collapsed {
-  width: 80px;
-  align-items: center;
-  transition: width 0.3s ease;
+  width: 80px; /* SATU NILAI AJA! */
 }
 
 /* Logo hilang pas sidebar ditutup */
@@ -78,7 +69,7 @@ body {
   justify-content: flex-start;
 }
 
-/* === TOGGLE PAS DITUTUP — sejajar sempurna === */
+/* Toggle button pas ditutup — sejajar sempurna */
 .sidebar.collapsed .toggle-btn {
   position: static;
   margin: 0;
@@ -88,6 +79,21 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+/* Tulisan span hilang tapi icon tetap */
+.sidebar.collapsed a span {
+  display: none;
+}
+
+/* Dropdown tetap bisa dibuka walau sidebar ditutup */
+.sidebar.collapsed .dropdown-menu {
+  padding-left: 20px;
+}
+
+/* Profile tetap di tengah */
+.sidebar.collapsed .profile-section a {
+  justify-content: center;
 }
 
 /* === NAV LIST === */
@@ -106,17 +112,18 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 20px;
+  padding: 9px 25px;
   color: #ccc;
   text-decoration: none;
   font-size: 13px;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease; /* GANTI background jadi all */
 }
 
 .nav-list a i {
   font-size: 14px;
   width: 20px;
   text-align: center;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .nav-list a:hover,
@@ -132,6 +139,7 @@ body {
   margin: 5px 0;
   display: none;
   flex-direction: column;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .dropdown-menu.show {
@@ -153,14 +161,16 @@ body {
 .dropdown-menu a {
   font-size: 12px;
   color: #bbb;
-  padding: 6px 0;
+  padding: 5px 20px 0 0px;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .dropdown-menu a:hover {
   color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* === PROFILE SECTION === */
@@ -170,6 +180,7 @@ body {
   border-top: 1px solid #2a2a2a;
   background-color: #1a1a1a;
   padding: 12px 0;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .profile-section a {
@@ -180,66 +191,38 @@ body {
   text-decoration: none;
   gap: 8px;
   font-size: 13px;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .profile-section a i {
   font-size: 18px;
+  transition: all 0.3s ease; /* TAMBAH TRANSITION */
 }
 
 .profile-section a:hover {
   color: #fff;
 }
 
-/* === COLLAPSED SIDEBAR === */
-.sidebar.collapsed {
-  width: 70px;
-}
-
-/* Logo hilang total saat ditutup */
-.sidebar.collapsed .logo {
-  display: none;
-}
-
-/* Tulisan span hilang tapi icon tetap */
-.sidebar.collapsed a span {
-  display: none;
-}
-
-/* Dropdown tetap bisa dibuka walau sidebar ditutup */
-.sidebar.collapsed .dropdown-menu {
-  padding-left: 20px;
-}
-
-/* Profile tetap di tengah */
-.sidebar.collapsed .profile-section a {
-  justify-content: center;
-}
-
-/* === TRANSITION EFFECTS === */
+/* === TRANSITION EFFECTS (GLOBAL) === */
 .sidebar,
+.sidebar *,
+.nav-list,
 .nav-list a,
+.dropdown-menu,
 .dropdown-menu a,
+.profile-section,
 .profile-section a,
 .logo,
 .logo-section,
 .toggle-btn {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* SMOOTH EASING */
 }
 
 /* === HILANGKAN TANDA SEGITIGA DROPDOWN === */
 .dropdown-toggle::after,
-.dropdown-toggle::before {
-  display: none !important;
-  content: none !important;
-}
-
+.dropdown-toggle::before,
 .dropdown a::after,
-.dropdown a::before {
-  display: none !important;
-  content: none !important;
-}
-
-/* Reset semua pseudo-element di nav-list */
+.dropdown a::before,
 .nav-list a::after,
 .nav-list a::before {
   display: none !important;
