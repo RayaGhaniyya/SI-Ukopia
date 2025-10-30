@@ -3,7 +3,6 @@ body {
   margin: 0;
   font-family: "Poppins", sans-serif;
   background-color: #F4F4F4;
-  color: #fff;
   overflow-x: hidden;
   padding: 30px 15px 30px 230px; /* top right bottom left */
   transition: padding-left 0.3s ease;
