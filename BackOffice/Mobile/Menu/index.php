@@ -1,7 +1,7 @@
 <?php
 // (File: koneksi.php) diasumsikan sudah membuat variabel $conn
-include("../../../Koneksi/koneksi.php"); 
-include("../../Component/session.php"); // Pastikan session_start() ada di sini
+include("../../../Koneksi/koneksi.php");
+include("../../Component/session.php");
 include("../../Component/head.php");
 ?>
 
@@ -37,8 +37,8 @@ include("../../Component/head.php");
                 <input type="text" id="searchMenu" placeholder="🔍 Cari menu...">
             </div>
 
-           <div class="table-responsive">
-                <table class="gallery-table">
+            <div class="table-responsive">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -49,7 +49,7 @@ include("../../Component/head.php");
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="galleryTableBody">
+                    <tbody id="menuTableBody">
                         <?php
                         $query = "
                             SELECT 
@@ -69,6 +69,7 @@ include("../../Component/head.php");
                                 $kategori = htmlspecialchars($row['nama_kategori']);
                                 $deskripsi = htmlspecialchars($row['deskripsi']);
                                 $gambar_url = htmlspecialchars($row['gambar_url']);
+
                                 $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
                         ?>
                                 <tr>
@@ -97,7 +98,7 @@ include("../../Component/head.php");
                         } else {
                             ?>
                             <tr>
-                                <td colspan="6"> 
+                                <td colspan="6">
                                     <div class="empty-state">
                                         <i class="fas fa-inbox"></i>
                                         <p>Belum ada data menu. Klik tombol <strong>Tambah Menu</strong> untuk menambahkan.</p>

@@ -1,26 +1,25 @@
 <?php
-include("../../Koneksi/koneksi.php");
-include("../Component/session.php");
-include("../Component/head.php");
+// (File: koneksi.php) diasumsikan sudah membuat variabel $conn
+include("../../../Koneksi/koneksi.php");
+include("../../Component/session.php");
+include("../../Component/head.php");
 ?>
 
-<link rel="stylesheet" href="../assets/css/gallery.css">
-
 <div class="container">
-    <?php include("../Component/sidebar.php"); ?>
+    <?php include("../../Component/sidebar.php"); ?>
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-images"></i> Manajemen Galeri</h1>
+            <h1><i class="fas fa-mobile-screen"></i> Manajemen Menu Mobile</h1>
             <a href="add.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tambah Galeri
+                <i class="fas fa-plus"></i> Tambah Menu
             </a>
         </div>
 
         <div class="table-card">
             <div class="table-header">
-                <h2><i class="fas fa-list"></i> Data Galeri</h2>
-                <input type="text" id="searchGallery" placeholder="🔍 Cari galeri...">
+                <h2><i class="fas fa-list"></i> Data Menu Mobile</h2>
+                <input type="text" id="searchMenu" placeholder="🔍 Cari menu...">
             </div>
 
             <div class="table-responsive">
@@ -28,26 +27,31 @@ include("../Component/head.php");
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Judul</th>
+                            <th>Nama Menu</th>
+                            <th>Kategori</th>
+                            <th>Gambar</th>
                             <th>Deskripsi</th>
-                            <th>Tanggal</th>
-                            <th>Jumlah Foto</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="galleryTableBody">
+                    <tbody id="menuTableBody">
                         <?php
+                        // --- PERUBAHAN DIMULAI DI SINI ---
+
+                        // 1. Query diubah untuk mengambil data dari tabel 'menu' dan 'kategori_menu'
                         $query = "
                             SELECT 
-                                g.id_galery, 
-                                g.judul, 
-                                g.deskripsi, 
-                                g.tanggal,
-                                COUNT(d.id_detail_galery) as total_foto
-                            FROM galery g
-                            LEFT JOIN detail_galery d ON g.id_galery = d.id_galery
-                            GROUP BY g.id_galery, g.judul, g.deskripsi, g.tanggal
-                            ORDER BY g.id_galery DESC
+                                m.id_menu, 
+                                m.nama_menu, 
+                                m.deskripsi, 
+                                m.gambar_url, 
+                                k.nama_kategori 
+                            FROM 
+                                menu m 
+                            JOIN 
+                                kategori_menu k ON m.id_kategori = k.id_kategori_menu
+                            ORDER BY 
+                                m.nama_menu ASC
                         ";
 
                         $result = mysqli_query($conn, $query);
@@ -55,26 +59,22 @@ include("../Component/head.php");
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = 1;
                             while ($row = mysqli_fetch_assoc($result)) {
-                                $id = $row['id_galery'];
-                                $judul = htmlspecialchars($row['judul']);
+                                $id = $row['id_menu'];
+                                $nama_menu = htmlspecialchars($row['nama_menu']);
+                                $kategori = htmlspecialchars($row['nama_kategori']);
                                 $deskripsi = htmlspecialchars($row['deskripsi']);
-                                $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
-                                $tanggal = $row['tanggal'];
-                                $totalFoto = $row['total_foto'];
+                                $gambar_url = htmlspecialchars($row['gambar_url']);
 
-                                $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal);
-                                $tanggalFormat = $tanggal_obj ? $tanggal_obj->format('d/m/Y') : $tanggal;
+                                $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
                         ?>
                                 <tr>
                                     <td><?php echo $no; ?></td>
-                                    <td><strong><?php echo $judul; ?></strong></td>
-                                    <td><?php echo $deskripsi_short; ?></td>
-                                    <td><?php echo $tanggalFormat; ?></td>
+                                    <td><strong><?php echo $nama_menu; ?></strong></td>
+                                    <td><?php echo $kategori; ?></td>
                                     <td>
-                                        <span class="badge bg-primary">
-                                            <i class="fas fa-image"></i> <?php echo $totalFoto; ?> foto
-                                        </span>
+                                        <img src="<?php echo $gambar_url; ?>" alt="<?php echo $nama_menu; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                                     </td>
+                                    <td><?php echo $deskripsi_short; ?></td>
                                     <td>
                                         <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
@@ -96,7 +96,7 @@ include("../Component/head.php");
                                 <td colspan="6">
                                     <div class="empty-state">
                                         <i class="fas fa-inbox"></i>
-                                        <p>Belum ada data galeri. Klik tombol <strong>Tambah Galeri</strong> untuk menambahkan.</p>
+                                        <p>Belum ada data menu. Klik tombol <strong>Tambah Menu</strong> untuk menambahkan.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -110,18 +110,4 @@ include("../Component/head.php");
     </div>
 </div>
 
-<!-- POPUP DETAIL GAMBAR -->
-<div id="detailPopup" class="popup-overlay" style="display:none;">
-    <div class="popup-box">
-        <h2><i class="fas fa-images"></i> Detail Gambar Galeri</h2>
-        <div id="detailImages" class="image-grid"></div>
-        <div style="margin-top: 20px;">
-            <button class="btn btn-cancel" onclick="closeDetailPopup()">
-                <i class="fas fa-times"></i> Tutup
-            </button>
-        </div>
-    </div>
-</div>
-
-<script src="../assets/js/gallery.js"></script>
-<?php include("../Component/bottom.php"); ?>
+<?php include("../../Component/bottom.php"); ?>
