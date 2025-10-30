@@ -4,6 +4,7 @@ include("../Component/session.php");
 include("../Component/head.php");
 ?>
 
+<link rel="stylesheet" href="../assets/css/gallery.css">
 
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
@@ -23,7 +24,7 @@ include("../Component/head.php");
             </div>
 
             <div class="table-responsive">
-                <table class="gallery-table">
+                <table class="data-table gallery-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -61,7 +62,6 @@ include("../Component/head.php");
                                 $tanggal = $row['tanggal'];
                                 $totalFoto = $row['total_foto'];
 
-                                // Format tanggal ke dd/mm/yyyy
                                 $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal);
                                 $tanggalFormat = $tanggal_obj ? $tanggal_obj->format('d/m/Y') : $tanggal;
                         ?>
@@ -71,18 +71,18 @@ include("../Component/head.php");
                                     <td><?php echo $deskripsi_short; ?></td>
                                     <td><?php echo $tanggalFormat; ?></td>
                                     <td>
-                                        <span style="background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:500;">
+                                        <span class="badge badge-primary">
                                             <i class="fas fa-image"></i> <?php echo $totalFoto; ?> foto
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
+                                        <button class="btn btn-info btn-sm" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
+                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -112,7 +112,7 @@ include("../Component/head.php");
 
 <!-- POPUP DETAIL GAMBAR -->
 <div id="detailPopup" class="popup-overlay" style="display:none;">
-    <div class="popup-box light">
+    <div class="popup-box">
         <h2><i class="fas fa-images"></i> Detail Gambar Galeri</h2>
         <div id="detailImages" class="image-grid"></div>
         <div style="margin-top: 20px;">
