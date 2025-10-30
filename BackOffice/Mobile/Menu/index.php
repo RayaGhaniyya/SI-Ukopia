@@ -1,4 +1,6 @@
 <?php
+// (File: koneksi.php) diasumsikan sudah membuat variabel $conn
+include("../../../Koneksi/koneksi.php"); 
 include("../../Component/session.php");
 include("../../Component/head.php");
 ?>
@@ -8,99 +10,104 @@ include("../../Component/head.php");
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1>Dashboard</h1>
+            <h1><i class="fas fa-mobile-screen"></i> Manajemen Menu Mobile</h1>
+            <a href="add.php" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah Menu
+            </a>
         </div>
 
-        <!-- Stats Cards (3 CARD AJA, HAPUS PESANAN AKTIF) -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3>Produk Terdaftar</h3>
-                    <div class="stat-icon">
-                        <i class="fas fa-box"></i>
-                    </div>
-                </div>
-                <div class="stat-value" id="totalProducts">0</div>
-                <div class="stat-subtitle">
-                    <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 12%</span>
-                    dari bulan lalu
-                </div>
+        <div class="table-card">
+            <div class="table-header">
+                <h2><i class="fas fa-list"></i> Data Menu Mobile</h2>
+                <input type="text" id="searchMenu" placeholder="🔍 Cari menu...">
             </div>
 
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3>Total Penjualan</h3>
-                    <div class="stat-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                </div>
-                <div class="stat-value" id="totalSales">0</div>
-                <div class="stat-subtitle">
-                    <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 8%</span>
-                    minggu ini
-                </div>
-            </div>
+           <div class="table-responsive">
+                <table class="gallery-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Menu</th>
+                            <th>Kategori</th>
+                            <th>Gambar</th>
+                            <th>Deskripsi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="galleryTableBody">
+                        <?php
+                        // --- PERUBAHAN DIMULAI DI SINI ---
 
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3>Produk Terlaris</h3>
-                    <div class="stat-icon">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                </div>
-                <div class="stat-value" id="topProduct" style="font-size: 20px;">-</div>
-                <div class="stat-subtitle">
-                    Bulan ini
-                </div>
-            </div>
-        </div>
+                        // 1. Query diubah untuk mengambil data dari tabel 'menu' dan 'kategori_menu'
+                        $query = "
+                            SELECT 
+                                m.id_menu, 
+                                m.nama_menu, 
+                                m.deskripsi, 
+                                m.gambar_url, 
+                                k.nama_kategori 
+                            FROM 
+                                menu m 
+                            JOIN 
+                                kategori_menu k ON m.id_kategori = k.id_kategori_menu
+                            ORDER BY 
+                                m.nama_menu ASC
+                        ";
 
-        <!-- Charts -->
-        <div class="charts-grid">
-            <!-- Grafik Penjualan -->
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h2><i class="fas fa-chart-line"></i> Grafik Penjualan</h2>
-                    <select id="salesPeriod" onchange="updateSalesChart()">
-                        <option value="week">Minggu Ini</option>
-                        <option value="month">Bulan Ini</option>
-                    </select>
-                </div>
-                <div class="bar-chart" id="salesChart"></div>
-            </div>
+                        $result = mysqli_query($conn, $query);
 
-            <!-- Produk Terlaris -->
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h2><i class="fas fa-crown"></i> Produk Terlaris</h2>
-                </div>
-                <div class="h-bar-chart" id="topProductsChart"></div>
-            </div>
-        </div>
-
-        <!-- Bottom Section -->
-        <div class="bottom-grid">
-            <!-- Pesanan Terbaru -->
-            <div class="table-card">
-                <h2><i class="fas fa-receipt"></i> Pesanan Terbaru</h2>
-                <div class="orders-table" id="recentOrders"></div>
-            </div>
-
-            <!-- Peringatan Stok -->
-            <div class="table-card">
-                <h2><i class="fas fa-exclamation-triangle"></i> Peringatan Stok</h2>
-                <div class="alert-list" id="stockAlerts"></div>
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            $no = 1;
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $id = $row['id_menu'];
+                                $nama_menu = htmlspecialchars($row['nama_menu']);
+                                $kategori = htmlspecialchars($row['nama_kategori']);
+                                $deskripsi = htmlspecialchars($row['deskripsi']);
+                                $gambar_url = htmlspecialchars($row['gambar_url']);
+                                
+                                $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
+                        ?>
+                                <tr>
+                                    <td><?php echo $no; ?></td>
+                                    <td><strong><?php echo $nama_menu; ?></strong></td>
+                                    <td><?php echo $kategori; ?></td>
+                                    <td>
+                                        <img src="<?php echo $gambar_url; ?>" alt="<?php echo $nama_menu; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                                    </td>
+                                    <td><?php echo $deskripsi_short; ?></td>
+                                    <td>
+                                        <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php
+                                $no++;
+                            }
+                        } else {
+                            ?>
+                            <tr>
+                                <td colspan="6"> 
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>Belum ada data menu. Klik tombol <strong>Tambah Menu</strong> untuk menambahkan.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
-
-
-
-<?php if (!empty($notif)): ?>
-    <script>
-        showNotification("<?= htmlspecialchars($notif) ?>", "<?= $type ?>");
-    </script>
-<?php endif; ?>
 
 <?php include("../../Component/bottom.php"); ?>

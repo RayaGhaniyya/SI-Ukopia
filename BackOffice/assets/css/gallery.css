@@ -48,6 +48,51 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+/* Modern Select Styling */
+.form-container select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  appearance: none;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.form-container select:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-container select:hover {
+  border-color: #3b82f6;
+}
+
+/* Style for select options */
+.form-container select option {
+  padding: 10px;
+  font-size: 14px;
+  background: white;
+  color: #333;
+}
+
+.form-container select option:hover,
+.form-container select option:focus {
+  background-color: #f0f9ff;
+}
+
+/* Disabled select state */
+.form-container select:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .form-container textarea {
   resize: vertical;
   min-height: 80px;

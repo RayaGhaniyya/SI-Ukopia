@@ -1,0 +1,79 @@
+.form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: 20px; 
+    }
+
+    /* Styling untuk preview gambar */
+    #imagePreview {
+        aspect-ratio: 1 / 1; 
+        
+        /* 1. Mengganti width: 250px menjadi 200px */
+        width: 200px; 
+        
+        max-width: 100%; 
+        margin: 0 auto; 
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        display: none; 
+        justify-content: center;
+        align-items: center;
+        background-color: #f9f9f9;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.3s;
+        position: relative; 
+    }
+    
+    #imagePreview:hover {
+        border-color: #007bff;
+    }
+
+    #imagePreview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+    }
+    
+    #imagePreview span {
+        color: #888;
+        font-size: 14px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* CSS untuk tombol/overlay saat hover */
+    #imagePreview::after {
+        content: 'Ubah Gambar'; 
+        font-family: sans-serif;
+        font-weight: 600; 
+        font-size: 14px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6); 
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0; 
+        transition: opacity 0.3s ease; 
+        pointer-events: none; 
+    }
+
+    #imagePreview:hover::after {
+        opacity: 1;
+    }
+
+    /* Stack kolom di layar kecil */
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr; /* 1 kolom di mobile */
+        }
+        /* 2. Di mobile, ubah dari 200px menjadi 150px */
+        #imagePreview {
+            width: 150px;
+        }
+    }
