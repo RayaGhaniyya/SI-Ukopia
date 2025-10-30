@@ -1,12 +1,59 @@
 /* ============================================
    GALLERY.CSS - UKOPIA BACKOFFICE
-   Hanya komponen spesifik gallery
-   Komponen universal sudah dipindah ke global.css
+   Hanya styling spesifik gallery (tanpa duplikasi global.css)
    ============================================ */
 
-/* ============================================
-   IMAGE PREVIEW GRID (Gallery Specific)
-   ============================================ */
+/* ====== FORM CONTAINER ====== */
+.form-container.light {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 40px;
+}
+
+.form-container h1 {
+  font-size: 1.6rem;
+  color: #222;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-container label {
+  font-weight: 500;
+  color: #444;
+  display: block;
+  margin-top: 15px;
+}
+
+.form-container input[type="text"],
+.form-container input[type="date"],
+.form-container textarea,
+.form-container input[type="file"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 5px;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.form-container input:focus,
+.form-container textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-container textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* === IMAGE PREVIEW GRID === */
 .image-preview-grid {
   display: flex;
   flex-wrap: wrap;
@@ -28,17 +75,207 @@
   transform: scale(1.05);
 }
 
+/* === FORM BUTTONS === */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: #fff;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #3b82f6;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.btn-warning {
+  background: #f59e0b;
+}
+.btn-warning:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.btn-danger {
+  background: #ef4444;
+}
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn-info {
+  background: #06b6d4;
+}
+.btn-info:hover:not(:disabled) {
+  background: #0891b2;
+}
+
+.btn-cancel {
+  background: #9ca3af;
+}
+.btn-cancel:hover {
+  background: #6b7280;
+}
+
+.btn-success {
+  background: #10b981;
+}
+.btn-success:hover:not(:disabled) {
+  background: #059669;
+}
+
 /* ============================================
-   POPUP DETAIL GALERI (Gallery Specific)
+   TABEL GALERI
    ============================================ */
 
-/* Custom sizing untuk gallery popup */
-#detailPopup .popup-box {
-  max-width: 900px;
+.table-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  margin-top: 40px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.table-header h2 {
+  color: #111;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-header input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 220px;
+  transition: 0.2s;
+}
+
+.table-header input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 700px;
+}
+
+.gallery-table thead {
+  background: #f1f5f9;
+  color: #111;
+}
+
+.gallery-table th,
+.gallery-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.gallery-table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gallery-table tbody tr {
+  transition: background 0.2s;
+}
+
+.gallery-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.gallery-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.gallery-table img {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Action buttons in table */
+.gallery-table td .btn {
+  padding: 6px 10px;
+  font-size: 12px;
+  margin: 2px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #d1d5db;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.empty-state p {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+
+/* ============================================
+   POPUP DETAIL GALERI (Extend dari global.css)
+   ============================================ */
+
+/* Custom untuk popup gallery */
+#detailPopup .popup-box.light {
+  max-width: 800px;
 }
 
 #detailPopup h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: #111;
   margin-bottom: 20px;
   display: flex;
@@ -46,17 +283,17 @@
   gap: 8px;
 }
 
-/* Image grid untuk detail gallery */
-.image-grid {
+/* Override image grid dari global.css untuk gallery */
+#detailPopup .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 12px;
-  margin: 16px 0 20px;
+  margin-bottom: 20px;
 }
 
-.image-grid img {
+#detailPopup .image-grid img {
   width: 100%;
-  height: 140px;
+  height: 130px;
   object-fit: cover;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -64,49 +301,170 @@
   cursor: pointer;
 }
 
-.image-grid img:hover {
+#detailPopup .image-grid img:hover {
   transform: scale(1.05);
 }
 
 /* ============================================
-   GALLERY TABLE SPECIFIC (Extend from .data-table)
+   DASHBOARD HEADER
    ============================================ */
 
-/* Use .data-table from global.css and extend if needed */
-.gallery-table {
-  /* Inherit dari .data-table di global.css */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-/* Override khusus untuk gallery jika perlu */
-.gallery-table td .btn {
-  /* Sudah ada di global.css */
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-container {
+  padding-bottom: 50px;
 }
 
 /* ============================================
-   RESPONSIVE (Gallery Specific)
+   RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
-  #detailPopup .popup-box {
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-header input {
+    width: 100%;
+  }
+
+  .form-container.light,
+  .table-card {
+    padding: 20px;
+  }
+
+  .gallery-table {
+    min-width: 600px;
+  }
+
+  .gallery-table th,
+  .gallery-table td {
+    font-size: 13px;
+    padding: 10px 8px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  #detailPopup .popup-box.light {
     width: 95%;
     padding: 20px;
   }
 
-  .image-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  #detailPopup .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
 
-  .image-grid img {
+  #detailPopup .image-grid img {
     height: 100px;
   }
 }
 
 @media (max-width: 480px) {
+  .form-container.light {
+    padding: 15px;
+  }
+
+  .form-container h1 {
+    font-size: 1.3rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .gallery-table td .btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .table-card {
+    padding: 15px;
+  }
+
   .image-preview-grid img {
     width: 80px;
     height: 65px;
   }
+}
 
-  .image-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ============================================
+   FIX VISIBILITY ISSUES
+   ============================================ */
+
+/* Ensure body doesn't hide overflow for gallery page */
+body {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+
+/* Force table visibility */
+.gallery-table,
+.gallery-table thead,
+.gallery-table tbody,
+.gallery-table tr,
+.gallery-table th,
+.gallery-table td {
+  display: table !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.gallery-table thead {
+  display: table-header-group !important;
+}
+
+.gallery-table tbody {
+  display: table-row-group !important;
+}
+
+.gallery-table tr {
+  display: table-row !important;
+}
+
+.gallery-table th,
+.gallery-table td {
+  display: table-cell !important;
+}
+
+/* Ensure containers are visible */
+.container,
+.dashboard-container,
+.table-card,
+.table-responsive {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
 }

@@ -71,7 +71,7 @@ include("../Component/head.php");
                                     <td><?php echo $deskripsi_short; ?></td>
                                     <td><?php echo $tanggalFormat; ?></td>
                                     <td>
-                                        <span class="badge badge-primary">
+                                        <span class="badge bg-primary">
                                             <i class="fas fa-image"></i> <?php echo $totalFoto; ?> foto
                                         </span>
                                     </td>
