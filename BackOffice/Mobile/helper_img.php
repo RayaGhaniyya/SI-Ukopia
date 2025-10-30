@@ -8,7 +8,7 @@ define('WEBP_QUALITY', 85);
  * Mengoptimalkan, mengubah ukuran, dan menyimpan gambar sebagai WebP.
  *
  * @param array $file Data file dari $_FILES['nama_input']
- * @param string $uploadDir Direktori tujuan (e.g., '../../../Uploads/Menu/')
+ * @param string $uploadDir Direktori tujuan (e.g., '../Uploads/Menu/')
  * @return string|false Nama file baru jika berhasil, false jika gagal.
  */
 function optimizeAndSaveImage($file, $uploadDir) {
@@ -41,7 +41,6 @@ function optimizeAndSaveImage($file, $uploadDir) {
             break;
         case 'image/png':
             $sourceImage = imagecreatefrompng($tempName);
-            // Menjaga transparansi untuk PNG
             imagepalettetotruecolor($sourceImage);
             imagealphablending($sourceImage, true);
             imagesavealpha($sourceImage, true);
@@ -60,7 +59,6 @@ function optimizeAndSaveImage($file, $uploadDir) {
     // Buat canvas baru untuk gambar yang di-resize
     $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
 
-    // Jika PNG, jaga transparansi saat resize
     if ($fileType == 'image/png' || $fileType == 'image/webp') {
         imagealphablending($resizedImage, false);
         imagesavealpha($resizedImage, true);
@@ -78,7 +76,6 @@ function optimizeAndSaveImage($file, $uploadDir) {
 
     // Simpan gambar baru sebagai WebP
     if (imagewebp($resizedImage, $destination, WEBP_QUALITY)) {
-        // Bebaskan memori
         imagedestroy($sourceImage);
         imagedestroy($resizedImage);
         return $newFileName; // Kembalikan nama file baru

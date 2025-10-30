@@ -1,7 +1,7 @@
 <?php
 // (File: koneksi.php) diasumsikan sudah membuat variabel $conn
 include("../../../Koneksi/koneksi.php"); 
-include("../../Component/session.php");
+include("../../Component/session.php"); // Pastikan session_start() ada di sini
 include("../../Component/head.php");
 ?>
 
@@ -16,6 +16,21 @@ include("../../Component/head.php");
             </a>
         </div>
 
+        <?php
+        if (isset($_SESSION['message'])) {
+            // Tentukan kelas CSS berdasarkan tipe pesan
+            $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
+            $alert_class = ($message_type == 'error') ? 'alert alert-danger' : 'alert alert-success';
+            
+            echo '<div class="' . $alert_class . '" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">';
+            echo htmlspecialchars($_SESSION['message']);
+            echo '</div>';
+            
+            // Hapus pesan setelah ditampilkan
+            unset($_SESSION['message']);
+            unset($_SESSION['message_type']);
+        }
+        ?>
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Menu Mobile</h2>
@@ -36,24 +51,14 @@ include("../../Component/head.php");
                     </thead>
                     <tbody id="galleryTableBody">
                         <?php
-                        // --- PERUBAHAN DIMULAI DI SINI ---
-
-                        // 1. Query diubah untuk mengambil data dari tabel 'menu' dan 'kategori_menu'
                         $query = "
                             SELECT 
-                                m.id_menu, 
-                                m.nama_menu, 
-                                m.deskripsi, 
-                                m.gambar_url, 
+                                m.id_menu, m.nama_menu, m.deskripsi, m.gambar_url, 
                                 k.nama_kategori 
-                            FROM 
-                                menu m 
-                            JOIN 
-                                kategori_menu k ON m.id_kategori = k.id_kategori_menu
-                            ORDER BY 
-                                m.nama_menu ASC
+                            FROM menu m 
+                            JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
+                            ORDER BY m.nama_menu ASC
                         ";
-
                         $result = mysqli_query($conn, $query);
 
                         if ($result && mysqli_num_rows($result) > 0) {
@@ -64,7 +69,6 @@ include("../../Component/head.php");
                                 $kategori = htmlspecialchars($row['nama_kategori']);
                                 $deskripsi = htmlspecialchars($row['deskripsi']);
                                 $gambar_url = htmlspecialchars($row['gambar_url']);
-                                
                                 $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
                         ?>
                                 <tr>
@@ -76,13 +80,13 @@ include("../../Component/head.php");
                                     </td>
                                     <td><?php echo $deskripsi_short; ?></td>
                                     <td>
-                                        <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
+                                        <button class="btn btn-info" onclick="showDetailMenu(<?php echo $id; ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                         <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
+                                        <button class="btn btn-danger" onclick="confirmDeleteMenu(<?php echo $id; ?>)" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -110,4 +114,5 @@ include("../../Component/head.php");
     </div>
 </div>
 
+<script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>
