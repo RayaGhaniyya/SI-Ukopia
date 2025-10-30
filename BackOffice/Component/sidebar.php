@@ -11,14 +11,14 @@
 
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn">
-                <i class="fas fa-box"></i><span>Product</span>
+                <i class="fas fa-store"></i><span>MarketPlace</span>
             </a>
             <ul class="dropdown-menu" id="productDropdown">
-                <li><a href="#"><i class="fas fa-filter"></i><span>Filter</span></a></li>
-                <li><a href="#"><i class="fas fa-coffee"></i><span>Espresso</span></a></li>
-                <li><a href="#"><i class="fas fa-tshirt"></i><span>Merchandise</span></a></li>
-                <li><a href="#"><i class="fas fa-blender"></i><span>Brewing Tools</span></a></li>
-                <li><a href="#"><i class="fas fa-circle-check"></i><span>Ukopia Approve</span></a></li>
+                <li><a href="#"><i class="fas fa-box-open"></i><span>Product</span></a></li>
+                <li><a href="#"><i class="fas fa-grip-horizontal"></i><span>Grind Size</span></a></li>
+                <li><a href="#"><i class="fas fa-ruler-combined"></i><span>Size</span></a></li>
+                <li><a href="#"><i class="fas fa-tags"></i><span>Kategori</span></a></li>
+                <li><a href="#"><i class="fas fa-check-circle"></i><span>Stok</span></a></li>
             </ul>
         </li>
 

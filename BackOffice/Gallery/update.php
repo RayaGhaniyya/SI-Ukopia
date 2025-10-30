@@ -40,6 +40,7 @@ $existing_images = $result_img->fetch_all(MYSQLI_ASSOC);
 $stmt_img->close();
 ?>
 
+
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
@@ -75,25 +76,54 @@ $stmt_img->close();
                 <label>Gambar Saat Ini</label>
                 <div class="image-preview-grid" style="margin-bottom: 15px;">
                     <?php foreach ($existing_images as $img): ?>
-                        <img src="<?php echo htmlspecialchars($img['gambar']); ?>"
-                            alt="Gambar Galeri"
-                            style="width:100px; height:80px; object-fit:cover; border-radius:8px;">
+                        <?php
+                        // Fix path gambar
+                        $imgPath = $img['gambar'];
+                        if (!file_exists("../" . $imgPath)) {
+                            $imgPath = str_replace('assets/', '../assets/', $imgPath);
+                        } else {
+                            $imgPath = "../" . $imgPath;
+                        }
+                        ?>
+                        <div style="position: relative; display: inline-block;">
+                            <img src="<?php echo htmlspecialchars($imgPath); ?>"
+                                alt="Gambar Galeri"
+                                style="width:100px; height:80px; object-fit:cover; border-radius:8px; border: 2px solid #e5e7eb;"
+                                onerror="this.style.background='#f3f4f6'; this.alt='Error loading image';">
+                        </div>
                     <?php endforeach; ?>
                 </div>
-                <small style="color:#666; display:block; margin-bottom:10px;">
-                    <i class="fas fa-info-circle"></i> Total: <?php echo count($existing_images); ?> gambar
-                </small>
+                <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 10px; margin-bottom: 15px; border-radius: 6px;">
+                    <small style="color: #1e40af; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-info-circle"></i>
+                        Total: <strong><?php echo count($existing_images); ?> gambar</strong>
+                    </small>
+                </div>
             <?php endif; ?>
 
             <label>Upload Gambar Baru (Opsional)</label>
-            <small style="color:#666; display:block; margin-bottom:5px;">
-                * Jika diisi, akan <strong>mengganti semua gambar lama</strong>. Maksimal 4 gambar baru.
+            <small style="color:#666; display:block; margin-bottom:8px;">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                Jika diisi, akan <strong>mengganti semua gambar lama</strong>. Maksimal 4 gambar baru.<br>
+                Format: JPG, JPEG, PNG, GIF, WEBP. Max 5MB per file.
             </small>
+
+            <!-- Hidden file input -->
             <input type="file"
+                id="fileInput"
                 name="gambar[]"
                 multiple
                 accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                onchange="previewGalleryImages(this)">
+                onchange="addMoreImages(this)"
+                style="display: none;">
+
+            <!-- Custom button untuk trigger file input -->
+            <button type="button"
+                class="btn btn-info"
+                onclick="document.getElementById('fileInput').click()"
+                style="margin-bottom: 10px;">
+                <i class="fas fa-plus"></i> Pilih Gambar Baru (Max 4)
+            </button>
 
             <div id="previewContainer" class="image-preview-grid"></div>
 

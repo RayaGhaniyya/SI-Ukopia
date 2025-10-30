@@ -1,6 +1,48 @@
-<?php 
+<?php
+include("../../Koneksi/koneksi.php");
 include("../Component/NavBar.php");
 include("../Component/Loader.php");
+
+// Pagination
+$itemsPerPage = 5;
+$currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($currentPage - 1) * $itemsPerPage;
+
+// Count total galleries
+$countQuery = "SELECT COUNT(*) as total FROM galery";
+$countResult = mysqli_query($conn, $countQuery);
+$totalItems = mysqli_fetch_assoc($countResult)['total'];
+$totalPages = ceil($totalItems / $itemsPerPage);
+
+// Fetch galleries with images
+$query = "
+    SELECT 
+        g.id_galery,
+        g.judul,
+        g.deskripsi,
+        g.tanggal
+    FROM galery g
+    ORDER BY g.tanggal DESC, g.id_galery DESC
+    LIMIT $itemsPerPage OFFSET $offset
+";
+
+$result = mysqli_query($conn, $query);
+$galleries = [];
+
+while ($row = mysqli_fetch_assoc($result)) {
+    // Fetch images for this gallery
+    $id = $row['id_galery'];
+    $imgQuery = "SELECT gambar FROM detail_galery WHERE id_galery = $id LIMIT 4";
+    $imgResult = mysqli_query($conn, $imgQuery);
+
+    $images = [];
+    while ($img = mysqli_fetch_assoc($imgResult)) {
+        $images[] = $img['gambar'];
+    }
+
+    $row['images'] = $images;
+    $galleries[] = $row;
+}
 ?>
 
 <link rel="stylesheet" href="../assets/css/loader.css">
@@ -10,57 +52,120 @@ include("../Component/Loader.php");
 <section class="galery-section">
     <div class="container">
         <h1 class="section-title pt-3">Galery</h1>
-        <div class="galery-content">
 
-            <div class="galery-images">
-                <div class="img-grid">
-                    <img src="../assets/img/Gallery/g1.jpg" alt="Galery 1">
-                    <img src="../assets/img/Gallery/g2.jpg" alt="Galery 2">
-                    <img src="../assets/img/Gallery/g3.jpg" alt="Galery 3">
-                    <img src="../assets/img/Gallery/g4.jpg" alt="Galery 4">
+        <?php if (count($galleries) > 0): ?>
+            <div class="galery-content">
+                <?php
+                $index = 0;
+                foreach ($galleries as $gallery):
+                    $isEven = $index % 2 == 0;
+                    $tanggalFormat = date('d-m-y', strtotime($gallery['tanggal']));
+                ?>
+
+                    <!-- Pattern: Gambar dulu (untuk index genap: 0, 2, 4...) -->
+                    <?php if ($isEven): ?>
+                        <div class="galery-images">
+                            <div class="img-grid">
+                                <?php
+                                // Tampilkan max 4 gambar
+                                $imageCount = min(4, count($gallery['images']));
+                                for ($i = 0; $i < $imageCount; $i++):
+                                    $imgPath = "../../BackOffice/" . $gallery['images'][$i];
+                                ?>
+                                    <img src="<?php echo htmlspecialchars($imgPath); ?>"
+                                        alt="<?php echo htmlspecialchars($gallery['judul']); ?>"
+                                        onerror="this.src='../assets/img/placeholder.jpg'">
+                                <?php endfor; ?>
+
+                                <?php
+                                // Fill dengan placeholder jika kurang dari 4
+                                for ($i = $imageCount; $i < 4; $i++):
+                                ?>
+                                    <img src="../assets/img/placeholder.jpg" alt="Placeholder">
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Text Content -->
+                    <div class="galery-text">
+                        <h3><?php echo htmlspecialchars($gallery['judul']); ?></h3>
+                        <p><?php echo nl2br(htmlspecialchars($gallery['deskripsi'])); ?></p>
+                        <span class="date"><?php echo $tanggalFormat; ?></span>
+                    </div>
+
+                    <!-- Pattern: Gambar di belakang (untuk index ganjil: 1, 3, 5...) -->
+                    <?php if (!$isEven): ?>
+                        <div class="galery-images">
+                            <div class="img-grid">
+                                <?php
+                                $imageCount = min(4, count($gallery['images']));
+                                for ($i = 0; $i < $imageCount; $i++):
+                                    $imgPath = "../../BackOffice/" . $gallery['images'][$i];
+                                ?>
+                                    <img src="<?php echo htmlspecialchars($imgPath); ?>"
+                                        alt="<?php echo htmlspecialchars($gallery['judul']); ?>"
+                                        onerror="this.src='../assets/img/placeholder.jpg'">
+                                <?php endfor; ?>
+
+                                <?php
+                                for ($i = $imageCount; $i < 4; $i++):
+                                ?>
+                                    <img src="../assets/img/placeholder.jpg" alt="Placeholder">
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                <?php
+                    $index++;
+                endforeach;
+                ?>
+            </div>
+
+            <!-- Pagination -->
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
+                    <?php if ($currentPage > 1): ?>
+                        <a href="?page=<?php echo $currentPage - 1; ?>" class="pagination-btn">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    <?php endif; ?>
+
+                    <div class="pagination-numbers">
+                        <?php
+                        $start = max(1, $currentPage - 2);
+                        $end = min($totalPages, $currentPage + 2);
+
+                        for ($i = $start; $i <= $end; $i++):
+                        ?>
+                            <a href="?page=<?php echo $i; ?>"
+                                class="pagination-number <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endfor; ?>
+                    </div>
+
+                    <?php if ($currentPage < $totalPages): ?>
+                        <a href="?page=<?php echo $currentPage + 1; ?>" class="pagination-btn">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
-            </div>
+            <?php endif; ?>
 
-            <div class="galery-text">
-                <h3>Tiba-Tiba Japanese Iced Coffee Battle</h3>
-                <p>
-                    Suasana kompetisi berlangsung seru dengan kreativitas para peserta
-                    dalam meracik Japanese Iced Coffee yang unik dan penuh kejutan.
-                    Selamat kepada para pemenang yang berhasil membawa pulang hadiah alat kopi,
-                    dan apresiasi sebesar-besarnya untuk seluruh peserta atas penampilan yang luar biasa ini.
-                    Sampai jumpa di keseruan berikutnya di Ukopia!
-                </p>
-                <span class="date">17-09-25</span>
+        <?php else: ?>
+            <!-- Empty State -->
+            <div class="empty-gallery">
+                <i class="fas fa-images"></i>
+                <h3>Belum Ada Galeri</h3>
+                <p>Galeri akan segera hadir. Stay tuned!</p>
             </div>
+        <?php endif; ?>
 
-            <div class="galery-text">
-                <h3>Tiba-Tiba Japanese Iced Coffee Battle</h3>
-                <p>
-                    Suasana kompetisi berlangsung seru dengan kreativitas para peserta
-                    dalam meracik Japanese Iced Coffee yang unik dan penuh kejutan.
-                    Selamat kepada para pemenang yang berhasil membawa pulang hadiah alat kopi,
-                    dan apresiasi sebesar-besarnya untuk seluruh peserta atas penampilan yang luar biasa ini.
-                    Sampai jumpa di keseruan berikutnya di Ukopia!
-                </p>
-                <span class="date">17-09-25</span>
-            </div>
-
-            <div class="galery-images">
-                <div class="img-grid">
-                    <img src="../assets/img/Gallery/g1.jpg" alt="Galery 1">
-                    <img src="../assets/img/Gallery/g2.jpg" alt="Galery 2">
-                    <img src="../assets/img/Gallery/g3.jpg" alt="Galery 3">
-                    <img src="../assets/img/Gallery/g4.jpg" alt="Galery 4">
-                </div>
-            </div>
-
-        </div>
     </div>
 </section>
 
 <script src="../assets/js/galery.js"></script>
 
-
-<?php
-include("../Component/Footer.php");
-?>
+<?php include("../Component/Footer.php"); ?>
