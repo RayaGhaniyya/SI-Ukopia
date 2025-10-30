@@ -1,13 +1,13 @@
-<link rel="stylesheet" href="../assets/css/sidebar.css">
+<link rel="stylesheet" href="/SI-Ukopia/BackOffice/assets/css/sidebar.css">
 
 <div class="sidebar" id="sidebar">
     <div class="logo-section">
-        <img src="../assets/img/Logo/Logo-Ukopia.png" alt="Ukopia Logo" class="logo">
+    <img src="/SI-Ukopia/BackOffice/assets/img/Logo/Logo-Ukopia.png" alt="Ukopia Logo" class="logo">
         <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
     </div>
 
     <ul class="nav-list">
-        <li><a href="../Dashboard/index.php"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+    <li><a href="/SI-Ukopia/BackOffice/Dashboard/index.php"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
 
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn">
@@ -23,8 +23,16 @@
         </li>
 
         <li><a href="#"><i class="fas fa-calendar-check"></i><span>Reservation</span></a></li>
-        <li><a href="../Gallery/index.php"><i class="fas fa-image"></i><span>Gallery</span></a></li>
+    <li><a href="/SI-Ukopia/BackOffice/Gallery/index.php"><i class="fas fa-image"></i><span>Gallery</span></a></li>
         <li><a href="#"><i class="fas fa-receipt"></i><span>Riwayat Transaksi</span></a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="mobileBtn">
+                <i class="fas fa-mobile-screen"></i><span>Mobile</span>
+            </a>
+            <ul class="dropdown-menu" id="mobileDropdown">
+                <li><a href="/SI-Ukopia/BackOffice/Mobile/Menu/index.php"><i class="fas fa-mug-hot"></i><span>Menu</span></a></li>
+            </ul>
+        </li>
     </ul>
 
     <div class="profile-section">
@@ -32,5 +40,5 @@
     </div>
 </div>
 
-<script src="../assets/js/sidebar.js"></script>
-<script src="../assets/js/global.js"></script>
+<script src="/SI-Ukopia/BackOffice/assets/js/sidebar.js"></script>
+<script src="/SI-Ukopia/BackOffice/assets/js/global.js"></script>
