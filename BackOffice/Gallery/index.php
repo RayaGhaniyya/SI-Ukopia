@@ -24,7 +24,7 @@ include("../Component/head.php");
             </div>
 
             <div class="table-responsive">
-                <table class="data-table gallery-table">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -76,13 +76,13 @@ include("../Component/head.php");
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-info btn-sm" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
+                                        <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning btn-sm" title="Edit">
+                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
+                                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>

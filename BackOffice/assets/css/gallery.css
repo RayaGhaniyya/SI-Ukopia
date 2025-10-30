@@ -1,515 +1,212 @@
 /* ============================================
    GALLERY.CSS - UKOPIA BACKOFFICE
-   Hanya styling spesifik gallery (tanpa duplikasi global.css)
+   Hanya komponen spesifik gallery
+   Komponen universal sudah di global.css
    ============================================ */
-
-/* ====== FORM CONTAINER ====== */
-.form-container.light {
-  background: #fff;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  margin-top: 40px;
-}
-
-.form-container h1 {
-  font-size: 1.6rem;
-  color: #222;
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.form-container label {
-  font-weight: 500;
-  color: #444;
-  display: block;
-  margin-top: 15px;
-}
-
-.form-container input[type="text"],
-.form-container input[type="date"],
-.form-container textarea,
-.form-container input[type="file"] {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  margin-top: 5px;
-  font-size: 14px;
-  transition: 0.2s ease;
-}
-
-.form-container input:focus,
-.form-container textarea:focus {
-  border-color: #3b82f6;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-/* Modern Select Styling */
-.form-container select {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  margin-top: 5px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  appearance: none;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
-  background-size: 16px;
-  cursor: pointer;
-}
-
-.form-container select:focus {
-  border-color: #3b82f6;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.form-container select:hover {
-  border-color: #3b82f6;
-}
-
-/* Style for select options */
-.form-container select option {
-  padding: 10px;
-  font-size: 14px;
-  background: white;
-  color: #333;
-}
-
-.form-container select option:hover,
-.form-container select option:focus {
-  background-color: #f0f9ff;
-}
-
-/* Disabled select state */
-.form-container select:disabled {
-  background-color: #f3f4f6;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.form-container textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* === IMAGE PREVIEW GRID === */
-.image-preview-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.image-preview-grid img {
-  width: 100px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border: 2px solid #f0f0f0;
-  transition: transform 0.2s;
-}
-
-.image-preview-grid img:hover {
-  transform: scale(1.05);
-}
-
-/* === FORM BUTTONS === */
-.form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 25px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  color: #fff;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background: #3b82f6;
-}
-.btn-primary:hover:not(:disabled) {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-.btn-warning {
-  background: #f59e0b;
-}
-.btn-warning:hover:not(:disabled) {
-  background: #d97706;
-}
-
-.btn-danger {
-  background: #ef4444;
-}
-.btn-danger:hover:not(:disabled) {
-  background: #dc2626;
-}
-
-.btn-info {
-  background: #06b6d4;
-}
-.btn-info:hover:not(:disabled) {
-  background: #0891b2;
-}
-
-.btn-cancel {
-  background: #9ca3af;
-}
-.btn-cancel:hover {
-  background: #6b7280;
-}
-
-.btn-success {
-  background: #10b981;
-}
-.btn-success:hover:not(:disabled) {
-  background: #059669;
-}
 
 /* ============================================
-   TABEL GALERI
+   GALLERY IMAGES SECTION (Popup Detail)
    ============================================ */
-
-.table-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 25px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  margin-top: 40px;
+.gallery-images-section {
+  margin-top: 25px;
 }
 
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.table-header h2 {
-  color: #111;
-  font-size: 1.2rem;
+.gallery-images-header {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.table-header input {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  width: 220px;
-  transition: 0.2s;
-}
-
-.table-header input:focus {
-  border-color: #3b82f6;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.gallery-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  min-width: 700px;
-}
-
-.gallery-table thead {
-  background: #f1f5f9;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: 600;
   color: #111;
 }
 
-.gallery-table th,
-.gallery-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-}
-
-.gallery-table th {
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.gallery-table tbody tr {
-  transition: background 0.2s;
-}
-
-.gallery-table tbody tr:hover {
-  background: #f9fafb;
-}
-
-.gallery-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.gallery-table img {
-  width: 80px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Action buttons in table */
-.gallery-table td .btn {
-  padding: 6px 10px;
+.image-count-badge {
+  background: #3b82f6;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
   font-size: 12px;
-  margin: 2px;
+  font-weight: 500;
 }
 
-/* Empty state */
-.empty-state {
+/* Image Grid untuk Detail Gallery */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 16px 0 20px;
+}
+
+.image-grid-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: #f3f4f6;
+}
+
+.image-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.image-grid img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.image-grid-item:hover img {
+  transform: scale(1.08);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-grid-item:hover .image-overlay {
+  opacity: 1;
+}
+
+.image-overlay i {
+  color: white;
+  font-size: 24px;
+}
+
+/* Empty Gallery State */
+.empty-gallery {
   text-align: center;
   padding: 40px 20px;
-  color: #6b7280;
+  color: #9ca3af;
 }
 
-.empty-state i {
+.empty-gallery i {
   font-size: 3rem;
   color: #d1d5db;
   margin-bottom: 10px;
   display: block;
 }
 
-.empty-state p {
+.empty-gallery p {
   margin: 10px 0 0;
   font-size: 14px;
 }
 
 /* ============================================
-   POPUP DETAIL GALERI (Extend dari global.css)
+   IMAGE LIGHTBOX (Gallery Only)
    ============================================ */
-
-/* Custom untuk popup gallery */
-#detailPopup .popup-box.light {
-  max-width: 800px;
-}
-
-#detailPopup h2 {
-  font-size: 1.3rem;
-  color: #111;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Override image grid dari global.css untuk gallery */
-#detailPopup .image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-#detailPopup .image-grid img {
+.image-lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-lightbox.show {
+  display: flex;
+  opacity: 1;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-}
-
-#detailPopup .image-grid img:hover {
-  transform: scale(1.05);
-}
-
-/* ============================================
-   DASHBOARD HEADER
-   ============================================ */
-
-.dashboard-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 30px;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.dashboard-header h1 {
-  font-size: 1.8rem;
+  justify-content: center;
+  font-size: 24px;
   color: #111;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  transition: all 0.2s ease;
 }
 
-.dashboard-container {
-  padding-bottom: 50px;
+.lightbox-close:hover {
+  background: white;
+  transform: rotate(90deg);
 }
 
 /* ============================================
-   RESPONSIVE
+   GALLERY POPUP SIZING
+   ============================================ */
+#detailPopup .popup-box {
+  max-width: 900px;
+}
+
+/* ============================================
+   RESPONSIVE (Gallery Specific)
    ============================================ */
 @media (max-width: 768px) {
-  .table-header {
-    flex-direction: column;
-    align-items: stretch;
+  .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 
-  .table-header input {
-    width: 100%;
-  }
-
-  .form-container.light,
-  .table-card {
-    padding: 20px;
-  }
-
-  .gallery-table {
-    min-width: 600px;
-  }
-
-  .gallery-table th,
-  .gallery-table td {
-    font-size: 13px;
-    padding: 10px 8px;
-  }
-
-  .btn {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .dashboard-header h1 {
-    font-size: 1.5rem;
-  }
-
-  #detailPopup .popup-box.light {
-    width: 95%;
-    padding: 20px;
-  }
-
-  #detailPopup .image-grid {
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  }
-
-  #detailPopup .image-grid img {
+  .image-grid img {
     height: 100px;
   }
 }
 
 @media (max-width: 480px) {
-  .form-container.light {
-    padding: 15px;
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .form-container h1 {
-    font-size: 1.3rem;
+  .lightbox-close {
+    top: -35px;
+    width: 35px;
+    height: 35px;
   }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .form-actions .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .gallery-table td .btn {
-    padding: 5px 8px;
-    font-size: 11px;
-  }
-
-  .table-card {
-    padding: 15px;
-  }
-
-  .image-preview-grid img {
-    width: 80px;
-    height: 65px;
-  }
-}
-
-/* ============================================
-   FIX VISIBILITY ISSUES
-   ============================================ */
-
-/* Ensure body doesn't hide overflow for gallery page */
-body {
-  overflow-x: auto !important;
-  overflow-y: auto !important;
-}
-
-/* Force table visibility */
-.gallery-table,
-.gallery-table thead,
-.gallery-table tbody,
-.gallery-table tr,
-.gallery-table th,
-.gallery-table td {
-  display: table !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-.gallery-table thead {
-  display: table-header-group !important;
-}
-
-.gallery-table tbody {
-  display: table-row-group !important;
-}
-
-.gallery-table tr {
-  display: table-row !important;
-}
-
-.gallery-table th,
-.gallery-table td {
-  display: table-cell !important;
-}
-
-/* Ensure containers are visible */
-.container,
-.dashboard-container,
-.table-card,
-.table-responsive {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  overflow: visible !important;
 }

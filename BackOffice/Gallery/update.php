@@ -44,7 +44,7 @@ $stmt_img->close();
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
-    <div class="form-container light">
+    <div class="form-container">
         <h1><i class="fas fa-edit"></i> Edit Galeri</h1>
 
         <form id="galleryUpdateForm" enctype="multipart/form-data">

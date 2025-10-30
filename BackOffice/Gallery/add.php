@@ -7,7 +7,7 @@ include("../Component/head.php");
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
 
-    <div class="form-container light">
+    <div class="form-container">
         <h1><i class="fas fa-plus-circle"></i> Tambah Galeri</h1>
 
         <form id="galleryAddForm" enctype="multipart/form-data">
@@ -36,7 +36,7 @@ include("../Component/head.php");
 
             <!-- Custom button untuk trigger file input -->
             <button type="button"
-                class="btn btn-info"
+                class="btn btn-info btn-sm"
                 onclick="document.getElementById('fileInput').click()"
                 style="margin-bottom: 10px;">
                 <i class="fas fa-plus"></i> Pilih Gambar (Max 4)
