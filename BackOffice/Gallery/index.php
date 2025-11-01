@@ -2,9 +2,22 @@
 include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
-?>
 
-<link rel="stylesheet" href="../assets/css/gallery.css">
+// Query data gallery
+$query = "
+    SELECT 
+        g.id_galery, 
+        g.judul, 
+        g.deskripsi, 
+        g.tanggal,
+        COUNT(d.id_detail_galery) as total_foto
+    FROM galery g
+    LEFT JOIN detail_galery d ON g.id_galery = d.id_galery
+    GROUP BY g.id_galery, g.judul, g.deskripsi, g.tanggal
+    ORDER BY g.id_galery DESC
+";
+$result = mysqli_query($conn, $query);
+?>
 
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
@@ -24,7 +37,7 @@ include("../Component/head.php");
             </div>
 
             <div class="table-responsive">
-                <table class="data-table">
+                <table class="data-table gallery-table">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -35,54 +48,34 @@ include("../Component/head.php");
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="galleryTableBody">
+                    <tbody>
                         <?php
-                        $query = "
-                            SELECT 
-                                g.id_galery, 
-                                g.judul, 
-                                g.deskripsi, 
-                                g.tanggal,
-                                COUNT(d.id_detail_galery) as total_foto
-                            FROM galery g
-                            LEFT JOIN detail_galery d ON g.id_galery = d.id_galery
-                            GROUP BY g.id_galery, g.judul, g.deskripsi, g.tanggal
-                            ORDER BY g.id_galery DESC
-                        ";
-
-                        $result = mysqli_query($conn, $query);
-
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = 1;
                             while ($row = mysqli_fetch_assoc($result)) {
-                                $id = $row['id_galery'];
-                                $judul = htmlspecialchars($row['judul']);
-                                $deskripsi = htmlspecialchars($row['deskripsi']);
-                                $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
-                                $tanggal = $row['tanggal'];
-                                $totalFoto = $row['total_foto'];
-
-                                $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal);
-                                $tanggalFormat = $tanggal_obj ? $tanggal_obj->format('d/m/Y') : $tanggal;
+                                $tanggalFormat = date('d/m/Y', strtotime($row['tanggal']));
+                                $deskripsiShort = strlen($row['deskripsi']) > 60
+                                    ? substr(htmlspecialchars($row['deskripsi']), 0, 60) . '...'
+                                    : htmlspecialchars($row['deskripsi']);
                         ?>
                                 <tr>
-                                    <td><?php echo $no; ?></td>
-                                    <td><strong><?php echo $judul; ?></strong></td>
-                                    <td><?php echo $deskripsi_short; ?></td>
-                                    <td><?php echo $tanggalFormat; ?></td>
+                                    <td><?= $no ?></td>
+                                    <td><strong><?= htmlspecialchars($row['judul']) ?></strong></td>
+                                    <td><?= $deskripsiShort ?></td>
+                                    <td><?= $tanggalFormat ?></td>
                                     <td>
                                         <span class="badge bg-primary">
-                                            <i class="fas fa-image"></i> <?php echo $totalFoto; ?> foto
+                                            <i class="fas fa-image"></i> <?= $row['total_foto'] ?> foto
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-info" onclick="showDetail(<?php echo $id; ?>)" title="Lihat Detail">
+                                        <button class="btn btn-info btn-sm" onclick="showDetail(<?= $row['id_galery'] ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
+                                        <a href="update.php?id=<?= $row['id_galery'] ?>" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger" onclick="confirmDelete(<?php echo $id; ?>)" title="Hapus">
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $row['id_galery'] ?>)" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -100,9 +93,7 @@ include("../Component/head.php");
                                     </div>
                                 </td>
                             </tr>
-                        <?php
-                        }
-                        ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -111,7 +102,7 @@ include("../Component/head.php");
 </div>
 
 <!-- POPUP DETAIL GAMBAR -->
-<div id="detailPopup" class="popup-overlay" style="display:none;">
+<div id="detailPopup" class="popup-overlay">
     <div class="popup-box">
         <h2><i class="fas fa-images"></i> Detail Gambar Galeri</h2>
         <div id="detailImages" class="image-grid"></div>

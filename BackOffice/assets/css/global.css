@@ -356,6 +356,7 @@ body.sidebar-collapsed {
 
 /* Universal Data Table */
 .data-table {
+  justify-content: center;
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
@@ -367,16 +368,18 @@ body.sidebar-collapsed {
   color: #111;
 }
 
-.data-table th,
+.data-table th {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .data-table td {
   padding: 12px 14px;
   border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-}
-
-.data-table th {
-  font-weight: 600;
-  white-space: nowrap;
+  text-align: center;
 }
 
 .data-table tbody tr {
