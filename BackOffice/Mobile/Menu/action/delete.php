@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../../../Koneksi/koneksi.php");
+include("../../../../Koneksi/koneksi.php");
 
 // --- KONFIGURASI PENTING (DIPERBARUI) ---
 $BASE_URL = "http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/"; 

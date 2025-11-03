@@ -2,7 +2,6 @@
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-$current_host = $_SERVER['HTTP_HOST'];
 ?>
 
 <div class="container">
@@ -10,7 +9,7 @@ $current_host = $_SERVER['HTTP_HOST'];
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-mobile-screen"></i> Manajemen Menu Mobile</h1>
+            <h1><i class="fas fa-utensils"></i> Manajemen Menu</h1>
             <a href="add.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Tambah Menu
             </a>
@@ -33,34 +32,24 @@ $current_host = $_SERVER['HTTP_HOST'];
         ?>
         <div class="table-card">
             <div class="table-header">
-                <h2><i class="fas fa-list"></i> Data Menu Mobile</h2>
+                <h2><i class="fas fa-list"></i> Data Menu</h2>
                 <input type="text" id="searchMenu" placeholder="🔍 Cari menu...">
             </div>
 
             <div class="table-responsive">
-                <table class="data-table">
+                <table class="data-table" id="menuTable">
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Gambar</th>
                             <th>Nama Menu</th>
                             <th>Kategori</th>
-                            <th>Gambar</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="menuTableBody">
+                    <tbody>
                         <?php
-                        $query = "
-                            SELECT 
-                                m.id_menu, m.nama_menu, m.deskripsi, m.gambar_url, 
-                                k.nama_kategori 
-                            FROM menu m 
-                            JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
-                            ORDER BY m.nama_menu ASC
-                        ";
-                        $result = mysqli_query($conn, $query);
-
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = 1;
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -74,21 +63,21 @@ $current_host = $_SERVER['HTTP_HOST'];
                                 $gambar_dinamis = str_replace("localhost", $current_host, $gambar_url);
                         ?>
                                 <tr>
-                                    <td><?php echo $no; ?></td>
-                                    <td><strong><?php echo $nama_menu; ?></strong></td>
-                                    <td><?php echo $kategori; ?></td>
+                                    <td><?= $no ?></td>
                                     <td>
                                         <img src="<?php echo $gambar_dinamis; ?>" alt="<?php echo $nama_menu; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                                     </td>
-                                    <td><?php echo $deskripsi_short; ?></td>
+                                    <td><strong><?= htmlspecialchars($row['nama_menu']) ?></strong></td>
+                                    <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
+                                    <td><?= $deskripsiShort ?></td>
                                     <td>
-                                        <button class="btn btn-info" onclick="showDetailMenu(<?php echo $id; ?>)" title="Lihat Detail">
+                                        <button class="btn btn-info btn-sm" onclick="showDetailMenu(<?= $row['id_menu'] ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <a href="update.php?id=<?php echo $id; ?>" class="btn btn-warning" title="Edit">
+                                        <a href="update.php?id=<?= $row['id_menu'] ?>" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger" onclick="confirmDeleteMenu(<?php echo $id; ?>)" title="Hapus">
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteMenu(<?= $row['id_menu'] ?>)" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -106,9 +95,7 @@ $current_host = $_SERVER['HTTP_HOST'];
                                     </div>
                                 </td>
                             </tr>
-                        <?php
-                        }
-                        ?>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -116,5 +103,20 @@ $current_host = $_SERVER['HTTP_HOST'];
     </div>
 </div>
 
-<script src="../../assets/js/Mobile/menu.js"></script>
+<!-- POPUP DETAIL MENU -->
+<div id="detailPopup" class="popup-overlay">
+    <div class="popup-box">
+        <div class="popup-header">
+            <h2><i class="fas fa-utensils"></i> Detail Menu</h2>
+            <button class="popup-close-btn" onclick="closeMenuPopup()">×</button>
+        </div>
+        <div class="popup-content"></div>
+        <div style="margin-top: 20px; text-align: right;">
+            <button class="btn btn-cancel" onclick="closeMenuPopup()">
+                <i class="fas fa-times"></i> Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 <?php include("../../Component/bottom.php"); ?>

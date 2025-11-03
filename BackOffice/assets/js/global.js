@@ -1,5 +1,5 @@
 // ============================================
-// GLOBAL.JS - UKOPIA BACKOFFICE
+// GLOBAL.JS - UKOPIA BACKOFFICE (UPDATED)
 // ============================================
 
 // === NOTIFICATION SYSTEM ===
@@ -51,6 +51,192 @@ function showLoading(message = 'Loading...') {
 function hideLoading() {
   const loader = document.getElementById('global-loader');
   if (loader) loader.remove();
+}
+
+// ============================================
+// FORM AUTO-SAVE - Universal
+// ============================================
+function initFormAutoSave(form) {
+  if (!form) return;
+  
+  const formId = form.id;
+  const inputs = form.querySelectorAll('input[type="text"], input[type="date"], input[type="email"], input[type="number"], textarea, select');
+  
+  inputs.forEach(input => {
+    // Load saved value
+    const savedValue = localStorage.getItem(`${formId}_${input.name}`);
+    if (savedValue && !input.value) {
+      input.value = savedValue;
+    }
+    
+    // Save on input
+    input.addEventListener('input', () => {
+      localStorage.setItem(`${formId}_${input.name}`, input.value);
+    });
+  });
+  
+  // Clear saved data on successful submit
+  form.addEventListener('submit', () => {
+    setTimeout(() => {
+      inputs.forEach(input => {
+        localStorage.removeItem(`${formId}_${input.name}`);
+      });
+    }, 1000);
+  });
+}
+
+function loadSavedFormData() {
+  const forms = document.querySelectorAll('form[id]');
+  forms.forEach(form => {
+    const inputs = form.querySelectorAll('input[type="text"], input[type="email"], textarea, select');
+    let hasSavedData = false;
+    
+    inputs.forEach(input => {
+      const savedValue = localStorage.getItem(`${form.id}_${input.name}`);
+      if (savedValue) {
+        hasSavedData = true;
+      }
+    });
+    
+    if (hasSavedData) {
+      showNotification('Data form sebelumnya berhasil dipulihkan', 'info');
+    }
+  });
+}
+
+// ============================================
+// IMAGE PREVIEW - Universal
+// ============================================
+
+/**
+ * Single Image Preview (untuk menu, product, dll)
+ * @param {HTMLInputElement} input - File input element
+ * @param {string} previewContainerId - ID container preview
+ * @param {string} uploadButtonId - ID button upload (optional, akan disembunyikan)
+ */
+function handleImagePreview(input, previewContainerId = 'imagePreview', uploadButtonId = 'uploadButton') {
+  const file = input.files[0];
+  if (!file) return;
+
+  // Validasi tipe file
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+  if (!validTypes.includes(file.type)) {
+    showNotification('Format file tidak didukung! Gunakan JPG, PNG, atau WEBP.', 'error');
+    input.value = '';
+    return;
+  }
+
+  // Validasi ukuran (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    showNotification('Ukuran file terlalu besar! Maksimal 5MB.', 'warning');
+    input.value = '';
+    return;
+  }
+
+  const previewContainer = document.getElementById(previewContainerId);
+  const uploadButton = document.getElementById(uploadButtonId);
+
+  if (!previewContainer) {
+    console.error(`Preview container #${previewContainerId} tidak ditemukan`);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    previewContainer.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    img.alt = 'Preview Image';
+    previewContainer.appendChild(img);
+    previewContainer.style.display = 'flex';
+    
+    if (uploadButton) {
+      uploadButton.style.display = 'none';
+    }
+  };
+  
+  reader.onerror = function() {
+    showNotification('Gagal membaca file gambar', 'error');
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+// ============================================
+// TABLE SEARCH - Universal & Reusable
+// ============================================
+
+/**
+ * Universal Table Search Function
+ * @param {string} searchInputId - ID input search
+ * @param {string} tableBodySelector - Selector tbody (e.g., '.gallery-table tbody')
+ * @param {Array} searchColumns - Array index kolom yang mau disearch (e.g., [1, 2, 3])
+ */
+function initTableSearch(searchInputId, tableBodySelector, searchColumns = []) {
+  const searchInput = document.getElementById(searchInputId);
+  const tbody = document.querySelector(tableBodySelector);
+
+  if (!searchInput || !tbody) {
+    console.warn(`Search init failed: ${searchInputId} or ${tableBodySelector} not found`);
+    return;
+  }
+
+  searchInput.addEventListener('input', function() {
+    const filter = this.value.toLowerCase();
+    const rows = tbody.getElementsByTagName('tr');
+    let visibleCount = 0;
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('td');
+      let found = false;
+
+      // Jika searchColumns kosong, search semua kolom kecuali kolom aksi (terakhir)
+      const colsToSearch = searchColumns.length > 0 
+        ? searchColumns 
+        : Array.from({length: cells.length - 1}, (_, i) => i + 1); // Skip kolom 0 (No) dan terakhir (Aksi)
+
+      for (let j of colsToSearch) {
+        if (cells[j]) {
+          const cellText = cells[j].textContent || cells[j].innerText;
+          if (cellText.toLowerCase().indexOf(filter) > -1) {
+            found = true;
+            break;
+          }
+        }
+      }
+
+      if (found) {
+        rows[i].style.display = '';
+        visibleCount++;
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+
+    // Show empty state if no results
+    const colCount = tbody.querySelector('tr')?.cells.length || 5;
+    let emptyState = tbody.querySelector('.empty-search-row');
+    
+    if (visibleCount === 0 && filter !== '') {
+      if (!emptyState) {
+        emptyState = document.createElement('tr');
+        emptyState.className = 'empty-search-row';
+        emptyState.innerHTML = `
+          <td colspan="${colCount}" style="text-align: center; padding: 40px;">
+            <div class="empty-state">
+              <i class="fas fa-search" style="font-size: 2.5rem; color: #d1d5db; margin-bottom: 10px;"></i>
+              <p style="color: #6b7280; margin: 0;">Tidak ada hasil untuk "<strong>${escapeHtml(filter)}</strong>"</p>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(emptyState);
+      }
+    } else {
+      if (emptyState) {
+        emptyState.remove();
+      }
+    }
+  });
 }
 
 // === TABLE UTILITIES ===
@@ -143,28 +329,6 @@ function renderPagination(totalItems, currentPage, itemsPerPage, paginationId = 
   pagination.innerHTML = html;
 }
 
-// === UNIVERSAL SEARCH (NEW) ===
-function initTableSearch(inputId, tableBodyId, data, renderRowFn, fields = []) {
-  const input = document.getElementById(inputId);
-  const tbody = document.getElementById(tableBodyId);
-
-  if (!input || !tbody) return;
-
-  tbody.innerHTML = data.map((item, i) => renderRowFn(item, i + 1)).join("");
-
-  input.addEventListener("input", debounce(() => {
-    const keyword = input.value.toLowerCase();
-    const filtered = !keyword
-      ? data
-      : data.filter(item =>
-          fields.some(f =>
-            item[f] && item[f].toString().toLowerCase().includes(keyword)
-          )
-        );
-    tbody.innerHTML = filtered.map((item, i) => renderRowFn(item, i + 1)).join("");
-  }, 300));
-}
-
 // === DATE UTILITIES ===
 function isValidDate(dateString) {
   const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
@@ -252,15 +416,8 @@ function truncate(text, maxLength = 100, suffix = '...') {
 // ============================================
 // GLOBAL POPUP SYSTEM
 // ============================================
-
-/**
- * Buka popup global
- * @param {string} title - Judul popup
- * @param {string} contentHTML - Konten HTML di dalam popup
- * @param {Object} options - {width, showClose}
- */
 function openPopup(title = "Popup", contentHTML = "", options = {}) {
-  closePopup(); // tutup popup lama kalau ada
+  closePopup();
 
   const { width = "600px", showClose = true } = options;
 
@@ -279,9 +436,6 @@ function openPopup(title = "Popup", contentHTML = "", options = {}) {
   setTimeout(() => popup.classList.add("show"), 10);
 }
 
-/**
- * Tutup popup global
- */
 function closePopup() {
   const popup = document.querySelector(".popup-overlay");
   if (popup) {
@@ -290,6 +444,20 @@ function closePopup() {
   }
 }
 
+// ============================================
+// DEBOUNCE UTILITY
+// ============================================
+function debounce(func, wait = 300) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 // === CONSOLE MESSAGE ===
 console.log('%cUKOPIA BackOffice', 'font-size: 20px; font-weight: bold; color: #667eea;');
