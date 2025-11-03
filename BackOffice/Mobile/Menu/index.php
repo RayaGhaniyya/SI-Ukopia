@@ -2,6 +2,8 @@
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
+$current_host = $_SERVER['HTTP_HOST'];
+
 ?>
 
 <div class="container">
@@ -50,6 +52,17 @@ include("../../Component/head.php");
                     </thead>
                     <tbody>
                         <?php
+                        $query = "
+                            SELECT 
+                                m.id_menu, m.nama_menu, m.deskripsi, m.gambar_url, 
+                                k.nama_kategori 
+                            FROM menu m 
+                            JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
+                            ORDER BY m.nama_menu ASC
+                        ";
+                        $result = mysqli_query($conn, $query);
+
+
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = 1;
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -69,7 +82,7 @@ include("../../Component/head.php");
                                     </td>
                                     <td><strong><?= htmlspecialchars($row['nama_menu']) ?></strong></td>
                                     <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
-                                    <td><?= $deskripsiShort ?></td>
+                                    <td><?= $deskripsi_short ?></td>
                                     <td>
                                         <button class="btn btn-info btn-sm" onclick="showDetailMenu(<?= $row['id_menu'] ?>)" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
