@@ -4,7 +4,7 @@ $session_lifetime = 24 * 60 * 60; // 1x24 jam
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['username'])) {
-    header("Location: ../Auth/indexlogin.php");
+    header("Location: /SI-Ukopia/BackOffice/Auth/indexlogin.php");
     exit();
 }
 
@@ -20,7 +20,7 @@ if (time() - $_SESSION['login_time'] > $session_lifetime) {
     session_start();
     $_SESSION['notif'] = "Sesi kamu telah berakhir. Silakan login kembali.";
     $_SESSION['type'] = "error";
-    header("Location: ../Auth/indexlogin.php");
+    header("Location: /SI-Ukopia/BackOffice/Auth/indexlogin.php");
     exit();
 }
 

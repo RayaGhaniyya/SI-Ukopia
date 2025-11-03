@@ -1,8 +1,8 @@
 <?php
-// (File: koneksi.php) diasumsikan sudah membuat variabel $conn
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
+$current_host = $_SERVER['HTTP_HOST'];
 ?>
 
 <div class="container">
@@ -21,11 +21,11 @@ include("../../Component/head.php");
             // Tentukan kelas CSS berdasarkan tipe pesan
             $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
             $alert_class = ($message_type == 'error') ? 'alert alert-danger' : 'alert alert-success';
-            
+
             echo '<div class="' . $alert_class . '" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">';
             echo htmlspecialchars($_SESSION['message']);
             echo '</div>';
-            
+
             // Hapus pesan setelah ditampilkan
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
@@ -71,13 +71,14 @@ include("../../Component/head.php");
                                 $gambar_url = htmlspecialchars($row['gambar_url']);
 
                                 $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
+                                $gambar_dinamis = str_replace("localhost", $current_host, $gambar_url);
                         ?>
                                 <tr>
                                     <td><?php echo $no; ?></td>
                                     <td><strong><?php echo $nama_menu; ?></strong></td>
                                     <td><?php echo $kategori; ?></td>
                                     <td>
-                                        <img src="<?php echo $gambar_url; ?>" alt="<?php echo $nama_menu; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                                        <img src="<?php echo $gambar_dinamis; ?>" alt="<?php echo $nama_menu; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                                     </td>
                                     <td><?php echo $deskripsi_short; ?></td>
                                     <td>
