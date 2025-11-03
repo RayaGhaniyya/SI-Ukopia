@@ -1,6 +1,6 @@
 /* ============================================
    GLOBAL.CSS - UKOPIA BACKOFFICE
-   Universal components untuk semua modul
+   Update untuk kompatibilitas dengan sidebar baru
    ============================================ */
 
 /* === GLOBAL STYLING === */
@@ -10,12 +10,12 @@ body {
   background-color: #F4F4F4;
   color: #333;
   overflow-x: hidden;
-  padding: 30px 15px 30px 230px;
-  transition: padding-left 0.3s ease;
+  padding: 30px 15px 30px 260px;
+  transition: padding-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.sidebar-collapsed {
-  padding-left: 100px;
+  padding-left: 90px;
 }
 
 /* Utility classes */
@@ -761,7 +761,11 @@ body.sidebar-collapsed {
    ============================================ */
 @media (max-width: 768px) {
   body {
-    padding: 20px 10px 20px 100px;
+    padding: 20px 10px 20px 90px;
+  }
+
+  body.sidebar-collapsed {
+    padding-left: 90px;
   }
 
   .form-row {
@@ -841,7 +845,11 @@ body.sidebar-collapsed {
 
 @media (max-width: 480px) {
   body {
-    padding: 15px 10px 15px 80px;
+    padding: 15px 10px 15px 90px;
+  }
+
+  body.sidebar-collapsed {
+    padding-left: 90px;
   }
 
   .form-container,
