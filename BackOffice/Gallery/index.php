@@ -26,7 +26,7 @@ $result = mysqli_query($conn, $query);
         <div class="dashboard-header">
             <h1><i class="fas fa-images"></i> Manajemen Galeri</h1>
             <a href="add.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tambah Galeri
+                <i class="fas fa-plus"></i> Tambah
             </a>
         </div>
 
@@ -89,7 +89,7 @@ $result = mysqli_query($conn, $query);
                                 <td colspan="6">
                                     <div class="empty-state">
                                         <i class="fas fa-inbox"></i>
-                                        <p>Belum ada data galeri. Klik tombol <strong>Tambah Galeri</strong> untuk menambahkan.</p>
+                                        <p>Belum ada data galeri. Klik tombol <strong>Tambah</strong> untuk menambahkan.</p>
                                     </div>
                                 </td>
                             </tr>

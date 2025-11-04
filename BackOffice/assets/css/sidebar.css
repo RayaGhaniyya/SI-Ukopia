@@ -252,13 +252,13 @@
   display: block;
 }
 
-.sidebar.collapsed .dropdown-menu li a {
+/* .sidebar.collapsed .dropdown-menu li a {
   padding: 10px 20px;
   border-left: none;
-}
+} */
 
 .sidebar.collapsed .dropdown-menu li a:hover {
-  padding-left: 24px;
+
   background: rgba(255, 255, 255, 0.1);
 }
 

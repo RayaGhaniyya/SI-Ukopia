@@ -1,5 +1,5 @@
 /* ============================================
-   GALLERY.JS - UKOPIA BACKOFFICE
+   GALLERY.JS - UKOPIA BACKOFFICE (OPTIMIZED)
    Hanya fungsi spesifik gallery
    Fungsi universal sudah di global.js
    ============================================ */
@@ -35,18 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Search functionality - Gunakan fungsi universal dari global.js
-  // Kolom: [1]=Judul, [2]=Deskripsi, [3]=Tanggal, [4]=Jumlah Foto
   initTableSearch('searchGallery', '.gallery-table tbody', [1, 2, 3]);
 
   // Close popup dengan ESC key
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeGalleryPopup();
+    if (e.key === "Escape") closeDetailPopup();
   });
 
   // Click outside popup to close
   document.addEventListener("click", (e) => {
     const popup = document.getElementById("detailPopup");
-    if (popup && e.target === popup) closeGalleryPopup();
+    if (popup && e.target === popup) closeDetailPopup();
   });
   
   // Load saved form data (dari global.js)
@@ -295,17 +294,13 @@ async function showDetail(id) {
   }
 }
 
-// ===== CLOSE GALLERY POPUP =====
-function closeGalleryPopup() {
+// ===== CLOSE DETAIL POPUP =====
+function closeDetailPopup() {
   const popup = document.getElementById("detailPopup");
   if (!popup) return;
 
   popup.classList.remove("show");
   setTimeout(() => popup.style.display = "none", 300);
-}
-
-function closeDetailPopup() {
-  closeGalleryPopup();
 }
 
 // ===== DELETE GALLERY =====

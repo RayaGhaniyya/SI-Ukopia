@@ -39,7 +39,7 @@ include("../Component/head.php");
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Simpan Galeri
+                    <i class="fas fa-save"></i> Simpan
                 </button>
                 <a href="index.php" class="btn btn-cancel">
                     <i class="fas fa-times"></i> Batal

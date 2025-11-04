@@ -63,37 +63,37 @@
             </a>
             <ul class="dropdown-menu" id="mobileDropdown">
                 <li>
-                    <a href="#">
+                    <a href="/si-ukopia/BackOffice/List_Data/Grind_Size/index.php">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>Grind Size</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/si-ukopia/BackOffice/List_Data/Size/index.php">
                         <i class="fas fa-ruler-combined"></i>
                         <span>Size</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Kategori/index.php">
                         <i class="fas fa-tags"></i>
                         <span>Kategori</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Kategori_Menu/index.php">
                         <i class="fas fa-utensils"></i>
                         <span>Kategori Menu</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/si-ukopia/BackOffice/List_Data/Kategori_Alat/index.php">
                         <i class="fas fa-tools"></i>
                         <span>Kategori Alat</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/si-ukopia/BackOffice/List_Data/Status/index.php">
                         <i class="fas fa-signal"></i>
                         <span>Status</span>
                     </a>
