@@ -90,7 +90,9 @@ $current_host = $_SERVER['HTTP_HOST'];
                                         <a href="update.php?id=<?= $row['id_menu'] ?>" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteMenu(<?= $row['id_menu'] ?>)" title="Hapus">
+                                        <button class="btn btn-danger btn-sm"
+                                            onclick="confirmDelete(<?= $row['id_menu'] ?>)"
+                                            title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>

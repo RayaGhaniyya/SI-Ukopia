@@ -1,62 +1,87 @@
 <?php
-session_start();
+// [UBAH] Path koneksi sesuai lokasi (dari folder action)
 include("../../../../Koneksi/koneksi.php");
+header('Content-Type: application/json');
 
-// --- KONFIGURASI PENTING (DIPERBARUI) ---
-$BASE_URL = "http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/"; 
-$UPLOAD_DIR = '../Uploads/Menu/'; 
-// --- SELESAI KONFIGURASI ---
-
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    $_SESSION['message_type'] = 'error';
-    $_SESSION['message'] = 'ID Menu tidak valid.';
-    header("Location: index.php");
+// Validasi method
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Method tidak valid']);
     exit;
 }
 
-$id_menu = (int)$_GET['id'];
+// [UBAH] Validasi input - nama parameter ID
+$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
-// --- Hapus file gambar dari server ---
-$sql_select = "SELECT gambar_url FROM menu WHERE id_menu = ?";
-$stmt_select = $conn->prepare($sql_select);
-$stmt_select->bind_param("i", $id_menu);
-$stmt_select->execute();
-$result = $stmt_select->get_result();
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $gambar_url = $row['gambar_url'];
-    
-    $fileName = str_replace($BASE_URL, '', $gambar_url);
-    $filePath = $UPLOAD_DIR . $fileName;
-    if (file_exists($filePath)) {
-        @unlink($filePath);
-    }
+if ($id <= 0) {
+    echo json_encode(['success' => false, 'message' => 'ID Menu tidak valid!']);
+    exit;
 }
-$stmt_select->close();
-// --- Selesai Hapus File ---
 
-// Query DELETE
-$sql_delete = "DELETE FROM menu WHERE id_menu = ?";
-$stmt_delete = $conn->prepare($sql_delete);
+// [UBAH] Konfigurasi upload directory
+// Dari action/ ke Uploads/Menu/ = ../Uploads/Menu/
+$UPLOAD_DIR = '../Uploads/Menu/';
 
-if ($stmt_delete) {
-    $stmt_delete->bind_param("i", $id_menu);
+try {
+    // [UBAH] Cek apakah data exists
+    $stmt_check = $conn->prepare("SELECT id_menu FROM menu WHERE id_menu = ?");
+    $stmt_check->bind_param("i", $id);
+    $stmt_check->execute();
+    $result_check = $stmt_check->get_result();
+
+    if ($result_check->num_rows == 0) {
+        throw new Exception("Data menu tidak ditemukan!");
+    }
+    $stmt_check->close();
+
+    // [UBAH] Ambil gambar untuk dihapus dari server
+    $stmt_image = $conn->prepare("SELECT gambar_url FROM menu WHERE id_menu = ?");
+    $stmt_image->bind_param("i", $id);
+    $stmt_image->execute();
+    $result_image = $stmt_image->get_result();
     
-    if ($stmt_delete->execute()) {
-        $_SESSION['message_type'] = 'success';
-        $_SESSION['message'] = 'Menu berhasil dihapus.';
-    } else {
-        $_SESSION['message_type'] = 'error';
-        $_SESSION['message'] = 'Gagal menghapus data: ' . $stmt_delete->error;
+    $imageUrl = null;
+    if ($row = $result_image->fetch_assoc()) {
+        $imageUrl = $row['gambar_url'];
+    }
+    $stmt_image->close();
+
+    // [UBAH] Hapus data menu dari database
+    $stmt_delete = $conn->prepare("DELETE FROM menu WHERE id_menu = ?");
+    $stmt_delete->bind_param("i", $id);
+
+    if (!$stmt_delete->execute()) {
+        throw new Exception("Gagal menghapus data menu");
     }
     $stmt_delete->close();
-} else {
-    $_SESSION['message_type'] = 'error';
-    $_SESSION['message'] = 'Gagal mempersiapkan query: ' . $conn->error;
+
+    // Hapus file gambar dari server (setelah berhasil hapus dari DB)
+    $imageDeleted = false;
+    if ($imageUrl) {
+        // Extract filename dari URL
+        // Contoh URL: http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/menu_123_1234567890.jpg
+        // Extract: menu_123_1234567890.jpg
+        $fileName = basename($imageUrl);
+        $filePath = $UPLOAD_DIR . $fileName;
+        
+        if (file_exists($filePath)) {
+            if (unlink($filePath)) {
+                $imageDeleted = true;
+            }
+        }
+    }
+
+    // [UBAH] Success message
+    echo json_encode([
+        'success' => true,
+        'message' => 'Menu berhasil dihapus!',
+        'image_deleted' => $imageDeleted
+    ]);
+    
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 }
 
 $conn->close();
-header("Location: index.php");
-exit;
-?>
