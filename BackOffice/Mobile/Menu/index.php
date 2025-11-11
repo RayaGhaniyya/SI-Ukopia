@@ -1,9 +1,84 @@
 <?php
-include("../../../Koneksi/koneksi.php");
+include("../../../Koneksi/koneksi.php"); // Sesuaikan path
 include("../../Component/session.php");
 include("../../Component/head.php");
+include("../../Component/pagination.php"); // 1. INCLUDE PAGINATION
 $current_host = $_SERVER['HTTP_HOST'];
 
+// --- LOGIKA PAGINATION & SEARCH (VERSI MENU DENGAN JOIN) ---
+
+// 2. TENTUKAN BATASAN
+$limit = 20;
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($current_page < 1) $current_page = 1;
+$offset = ($current_page - 1) * $limit;
+
+// 3. AMBIL SEARCH TERM
+$search_term = $_GET['search'] ?? '';
+
+$base_url_pagin = '?';
+$where_conditions = [];
+$params = [];
+$types = "";
+
+// 4. LOGIKA SEARCH (Cari di nama_menu atau nama_kategori)
+if ($search_term != '') {
+    $search_like = "%" . $search_term . "%";
+    // Sesuaikan kolom search
+    $where_conditions[] = "(m.nama_menu LIKE ? OR k.nama_kategori LIKE ?)";
+    $params[] = $search_like;
+    $params[] = $search_like;
+    $types .= "ss"; // 2 string
+    $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
+}
+
+$where_sql = "";
+if (!empty($where_conditions)) {
+    $where_sql = " WHERE " . implode(" AND ", $where_conditions);
+}
+
+// 5. QUERY PERTAMA (Hitung Total Data dengan JOIN)
+$count_query = "
+    SELECT COUNT(*) as total 
+    FROM menu m 
+    JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
+    $where_sql 
+";
+
+$stmt_count = $conn->prepare($count_query);
+if (!empty($params)) {
+    $stmt_count->bind_param($types, ...$params);
+}
+$stmt_count->execute();
+$count_result = $stmt_count->get_result();
+$total_rows = $count_result->fetch_assoc()['total'];
+$total_pages = ceil($total_rows / $limit);
+$stmt_count->close();
+
+
+// 6. QUERY KEDUA (Ambil Data untuk Halaman Ini dengan JOIN)
+$order_by_sql = " ORDER BY m.nama_menu ASC LIMIT ? OFFSET ?"; // Urutan asli kamu
+
+$data_query = "
+    SELECT 
+        m.id_menu, m.nama_menu, m.deskripsi, m.gambar_url, 
+        k.nama_kategori 
+    FROM menu m 
+    JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
+    $where_sql
+    $order_by_sql
+";
+
+$data_params = $params;
+$data_params[] = $limit;
+$data_params[] = $offset;
+$data_types = $types . "ii";
+
+$stmt_data = $conn->prepare($data_query);
+$stmt_data->bind_param($data_types, ...$data_params);
+$stmt_data->execute();
+$result = $stmt_data->get_result();
+// --- LOGIKA SELESAI ---
 ?>
 
 <div class="container">
@@ -18,24 +93,33 @@ $current_host = $_SERVER['HTTP_HOST'];
         </div>
 
         <?php
+        // Notifikasi session kamu (AMAN, TIDAK DIUBAH)
         if (isset($_SESSION['message'])) {
-            // Tentukan kelas CSS berdasarkan tipe pesan
             $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
             $alert_class = ($message_type == 'error') ? 'alert alert-danger' : 'alert alert-success';
-
             echo '<div class="' . $alert_class . '" style="padding: 15px; border-radius: 5px; margin-bottom: 20px;">';
             echo htmlspecialchars($_SESSION['message']);
             echo '</div>';
-
-            // Hapus pesan setelah ditampilkan
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
         }
         ?>
         <div class="table-card">
             <div class="table-header">
-                <h2><i class="fas fa-list"></i> Data Menu</h2>
-                <input type="text" id="searchMenu" placeholder="🔍 Cari menu...">
+                <h2><i class="fas fa-list"></i> Data Menu (Total: <?= $total_rows ?> data)</h2>
+
+                <form action="index.php" method="GET" class="search-group">
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchMenu"
+                        placeholder="Search..."
+                        value="<?= htmlspecialchars($search_term) ?>">
+
+                    <button type="submit" class="btn" title="Cari">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
 
             <div class="table-responsive">
@@ -52,19 +136,9 @@ $current_host = $_SERVER['HTTP_HOST'];
                     </thead>
                     <tbody>
                         <?php
-                        $query = "
-                            SELECT 
-                                m.id_menu, m.nama_menu, m.deskripsi, m.gambar_url, 
-                                k.nama_kategori 
-                            FROM menu m 
-                            JOIN kategori_menu k ON m.id_kategori = k.id_kategori_menu
-                            ORDER BY m.nama_menu ASC
-                        ";
-                        $result = mysqli_query($conn, $query);
-
-
                         if ($result && mysqli_num_rows($result) > 0) {
-                            $no = 1;
+                            // 8. UBAH $no = 1 menjadi $no = $offset + 1
+                            $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $id = $row['id_menu'];
                                 $nama_menu = htmlspecialchars($row['nama_menu']);
@@ -105,20 +179,29 @@ $current_host = $_SERVER['HTTP_HOST'];
                             <tr>
                                 <td colspan="6">
                                     <div class="empty-state">
-                                        <i class="fas fa-inbox"></i>
-                                        <p>Belum ada data menu. Klik tombol <strong>Tambah Menu</strong> untuk menambahkan.</p>
+                                        <i class="fas fa-search"></i>
+                                        <p>Tidak ada data menu ditemukan<?php if ($search_term != '') echo " untuk pencarian '<b>" . htmlspecialchars($search_term) . "</b>'"; ?>.</p>
                                     </div>
                                 </td>
                             </tr>
-                        <?php } ?>
+                        <?php
+                        }
+                        $stmt_data->close(); // 10. TUTUP STATEMENT
+                        ?>
                     </tbody>
                 </table>
             </div>
+
+            <div class="table-footer" style="padding-top: 10px;">
+                <?php
+                renderPaginator($total_pages, $current_page, $base_url_pagin);
+                ?>
+            </div>
+
         </div>
     </div>
 </div>
 
-<!-- POPUP DETAIL MENU -->
 <div id="detailPopup" class="popup-overlay">
     <div class="popup-box">
         <div class="popup-header">

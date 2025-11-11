@@ -1,14 +1,119 @@
 <?php
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
+include("../../Koneksi/koneksi.php"); // koneksi database
+
+// SET ZONA WAKTU
+date_default_timezone_set('Asia/Jakarta');
+
+// === KONSTANTA ===
+// Total jam reservasi yang tersedia per hari (10,11,12,13,14,15,16,17,18,19,20,21,22)
+$total_jam_operasional = 13;
+
+// === LOGIKA 1: BUAT BLOK KALENDER MINGGUAN (MINGGU - SABTU) ===
+$dates = [];
+$today = new DateTime(); // Tanggal hari ini
+$today_str = $today->format('Y-m-d'); // String 'YYYY-MM-DD' hari ini
+
+$day_of_week = (int)$today->format('w');
+$start_of_week = clone $today;
+$start_of_week->modify("-$day_of_week days"); // Mundur ke hari Minggu
+
+for ($i = 0; $i < 7; $i++) {
+    $date = clone $start_of_week;
+    $date->modify("+$i days");
+    $date_str = $date->format('Y-m-d');
+
+    $is_past = ($date_str < $today_str); // Cek apakah tanggal sudah lewat
+
+    $dates[] = [
+        'value' => $date_str,             // 2025-11-05
+        'dayNum' => $date->format('j M'), // 5 Nov
+        'isDisabled' => $is_past,         // true jika sudah lewat
+        'isFullyBooked' => false          // Flag untuk cek penuh
+    ];
+}
+
+// === LOGIKA 2: AMBIL SEMUA JAM YANG SUDAH DI-BOOK ===
+$start_date_query = $dates[0]['value'];
+$end_date_query = $dates[6]['value'];
+
+$bookedHours = [];
+$stmt = $conn->prepare("SELECT tanggal, jam FROM reservasi WHERE status = 'Confirmed' AND tanggal BETWEEN ? AND ?");
+$stmt->bind_param("ss", $start_date_query, $end_date_query);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $tanggal = $row['tanggal'];
+    $jam_H = date('H', strtotime($row['jam']));
+    if (!isset($bookedHours[$tanggal])) {
+        $bookedHours[$tanggal] = [];
+    }
+    $bookedHours[$tanggal][$jam_H] = true;
+}
+$stmt->close();
+
+// === LOGIKA 3: CEK HARI YANG PENUH (LOGIKA BARU) ===
+foreach ($dates as $index => $date) {
+    $date_str = $date['value'];
+    if (isset($bookedHours[$date_str])) {
+        // Hitung jumlah jam unik yang sudah di-book pada tanggal ini
+        $jumlah_jam_booked = count($bookedHours[$date_str]);
+
+        // Bandingkan dengan total jam operasional
+        if ($jumlah_jam_booked >= $total_jam_operasional) {
+            // Jika Penuh, tandai sebagai Penuh dan Disabled
+            $dates[$index]['isFullyBooked'] = true;
+            $dates[$index]['isDisabled'] = true; // Otomatis nonaktifkan
+        }
+    }
+}
+
+// === LOGIKA 4: TENTUKAN DEFAULT SELECTED DAY (UPDATED) ===
+$default_selected_day = '';
+// Cari hari PERTAMA yang TIDAK disabled (belum lewat DAN tidak penuh)
+foreach ($dates as $date) {
+    if (!$date['isDisabled']) {
+        $default_selected_day = $date['value'];
+        break;
+    }
+}
+
+// Fallback: Jika semua hari (termasuk hari ini) penuh atau sudah lewat
+if (empty($default_selected_day)) {
+    // Cari hari ini di dalam array
+    $today_in_array = false;
+    foreach ($dates as $date) {
+        if ($date['value'] == $today_str) {
+            $default_selected_day = $date['value'];
+            $today_in_array = true;
+            break;
+        }
+    }
+    // Jika hari ini tidak ada (misal di hari Minggu, tgl 2),
+    // pilih saja hari pertama di array
+    if (!$today_in_array && !empty($dates)) {
+        $default_selected_day = $dates[0]['value'];
+    }
+}
 ?>
 
 <link rel="stylesheet" href="../assets/css/loader.css">
 <script src="../assets/js/loader.js"></script>
 <link rel="stylesheet" href="../assets/css/reservation.css">
 
+<script>
+    const bookedHours = <?php echo json_encode($bookedHours); ?>;
+</script>
+
+<script>
+    const serverTime = {
+        todayDateStr: "<?php echo $today_str; ?>", // "2025-11-05"
+        currentHour: <?php echo (int)date('H'); ?>, // Misal: 12
+        currentMinute: <?php echo (int)date('i'); ?> // Misal: 45
+    };
+</script>
 <section class="reservation-section">
-    <!-- Kiri: Deskripsi -->
     <div class="left-content">
         <div class="overlay"></div>
         <div class="text-box">
@@ -22,66 +127,69 @@ include("../Component/NavBar.php");
         </div>
     </div>
 
-    <!-- Kanan: Form Reservasi -->
     <div class="right-content">
         <div class="overlay"></div>
         <div class="form-box">
             <h2>Reservations</h2>
-            <form>
+
+            <form id="reservationForm">
                 <div class="input-group">
-                    <input type="text" placeholder="Name" required>
-                    <input type="text" placeholder="No Telepon" required>
+                    <input type="text" name="nama_pelanggan" placeholder="Name" required>
+                    <input type="text" name="no_telepon" placeholder="No Telepon" required>
                 </div>
 
                 <div class="days">
-                    <button type="button">1</button>
-                    <button type="button">2</button>
-                    <button type="button">3</button>
-                    <button type="button">4</button>
-                    <button type="button">5</button>
-                    <button type="button">6</button>
-                    <button type="button">7</button>
+                    <?php foreach ($dates as $date): ?>
+                        <button type="button"
+                            class="day-btn <?php echo ($date['value'] == $default_selected_day) ? 'active' : ''; ?>"
+                            data-value="<?php echo $date['value']; ?>"
+                            <?php
+                            // Tombol akan disabled jika sudah lewat ATAU sudah penuh
+                            if ($date['isDisabled']) echo 'disabled';
+
+                            // Beri 'title' agar user tahu kenapa disabled
+                            if ($date['isFullyBooked']) {
+                                echo ' title="Slot Penuh"';
+                            } elseif ($date['isDisabled']) {
+                                echo ' title="Tanggal sudah lewat"';
+                            }
+                            ?>>
+                            <?php echo $date['dayNum']; ?>
+                        </button>
+                    <?php endforeach; ?>
+
+                    <input type="hidden" name="tanggal" id="selectedDay" value="<?php echo $default_selected_day; ?>" required>
                 </div>
 
                 <div class="time-select">
                     <div class="custom-dropdown">
-                        <button type="button" class="dropdown-btn">07</button>
-                        <ul class="dropdown-list">
-                            <li>10</li>
-                            <li>11</li>
-                            <li>12</li>
-                            <li>13</li>
-                            <li>14</li>
-                            <li>15</li>
-                            <li>16</li>
-                            <li>17</li>
-                            <li>18</li>
-                            <li>19</li>
+                        <button type="button" class="dropdown-btn" id="hourBtn">10</button>
+                        <ul class="dropdown-list hour-list">
+                            <?php for ($h = 10; $h <= 22; $h++): ?>
+                                <li data-value="<?= str_pad($h, 2, "0", STR_PAD_LEFT) ?>"><?= str_pad($h, 2, "0", STR_PAD_LEFT) ?></li>
+                            <?php endfor; ?>
                         </ul>
                     </div>
 
                     <span>:</span>
 
                     <div class="custom-dropdown">
-                        <button type="button" class="dropdown-btn">00</button>
-                        <ul class="dropdown-list">
-                            <li>00</li>
-                            <li>10</li>
-                            <li>20</li>
-                            <li>30</li>
-                            <li>40</li>
-                            <li>50</li>
+                        <button type="button" class="dropdown-btn" id="minuteBtn">00</button>
+                        <ul class="dropdown-list minute-list">
+                            <?php for ($m = 0; $m < 60; $m += 10): ?>
+                                <li data-value="<?= str_pad($m, 2, "0", STR_PAD_LEFT) ?>"><?= str_pad($m, 2, "0", STR_PAD_LEFT) ?></li>
+                            <?php endfor; ?>
                         </ul>
                     </div>
+
+                    <input type="hidden" name="jam" id="selectedTime" value="10:00:00" required>
                 </div>
 
-                <button type="submit" class="confirm-btn">Confirm</button>
+                <button type="submit" id="confirmBtn" class="confirm-btn">Confirm</button>
             </form>
         </div>
     </div>
 </section>
 
 <script src="../assets/js/reservation.js"></script>
-<?php 
-include("../Component/Footer.php"); 
-?>
+<?php include("../Component/Footer.php"); ?>

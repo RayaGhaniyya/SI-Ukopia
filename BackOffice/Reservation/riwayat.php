@@ -5,16 +5,8 @@ include("../Component/head.php");
 include("../Component/pagination.php"); // File fungsi renderPaginator()
 
 // 1. SET VARIABEL UNTUK DIKIRIM KE HELPER
-$table_name = "reservasi";
-$base_order_by = " ORDER BY 
-    CASE status
-        WHEN 'Pending' THEN 1
-        WHEN 'Confirmed' THEN 2
-        WHEN 'Cancelled' THEN 3
-        ELSE 4
-    END, 
-    tanggal DESC, 
-    jam ASC";
+$table_name = "reservasi_arsip";
+$base_order_by = " ORDER BY tanggal DESC, jam ASC";
 
 // 2. INCLUDE HELPERNYA
 include("../Component/handle_search_pagination.php");
@@ -25,10 +17,17 @@ include("../Component/handle_search_pagination.php");
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1><i class="fas fa-calendar-check"></i> Manajemen Reservasi</h1>
-            <a href="riwayat.php" class="btn btn-primary">
-                <i class="fas fa-archive"></i> Riwayat Arsip
-            </a>
+            <h1><i class="fas fa-archive"></i> Riwayat Arsip</h1>
+
+            <div class="header-buttons" style="display: flex; gap: 10px;">
+                <a href="index.php" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
+                <a href="action/delete_all_permanent.php" class="btn btn-danger"
+                    onclick="return confirm('ANDA YAKIN 100%? Ini akan menghapus SEMUA riwayat arsip secara permanen dan tidak bisa dikembalikan.');">
+                    <i class="fas fa-fire"></i> Hapus Semua Permanen
+                </a>
+            </div>
         </div>
 
         <?php
@@ -49,14 +48,14 @@ include("../Component/handle_search_pagination.php");
         ?>
         <div class="table-card">
             <div class="table-header">
-                <h2><i class="fas fa-list"></i> Data Reservasi (Total: <?= $total_rows ?> data)</h2>
+                <h2><i class="fas fa-list"></i> Data Arsip (Total: <?= $total_rows ?> data)</h2>
 
-                <form action="index.php" method="GET" class="search-group">
+                <form action="riwayat.php" method="GET" class="search-group">
                     <input
                         type="text"
                         name="search"
-                        id="searchTable"
-                        placeholder="Search..."
+                        id="searchArsip"
+                        placeholder="🔍 Cari nama, no. telp, tgl..."
                         value="<?= htmlspecialchars($search_term) ?>">
 
                     <button type="submit" class="btn" title="Cari">
@@ -78,50 +77,29 @@ include("../Component/handle_search_pagination.php");
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="reservationTable">
+                    <tbody id="arsipTable">
                         <?php
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $tanggalFormat = date('d/m/Y', strtotime($row['tanggal']));
                                 $jamFormat = date('H:i', strtotime($row['jam']));
-
                                 $statusClass = match ($row['status']) {
                                     'Confirmed' => 'badge bg-success',
                                     'Cancelled' => 'badge bg-danger',
                                     default => 'badge bg-warning'
                                 };
-
-                                $nomor_display = htmlspecialchars($row['no_telepon']);
-                                $nomor_link = preg_replace('/[^0-9]/', '', $row['no_telepon']);
-
-                                if (substr($nomor_link, 0, 1) === '0') {
-                                    $nomor_link = '62' . substr($nomor_link, 1);
-                                } elseif (substr($nomor_link, 0, 1) === '8') {
-                                    $nomor_link = '62' . $nomor_link;
-                                }
                         ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><strong><?= htmlspecialchars($row['nama_pelanggan']) ?></strong></td>
-                                    <td><a href="https://wa.me/<?= $nomor_link ?>" target="_blank"><?= $nomor_display ?></a></td>
+                                    <td><?= htmlspecialchars($row['no_telepon']) ?></td>
                                     <td><?= $tanggalFormat ?></td>
                                     <td><?= $jamFormat ?></td>
                                     <td><span class="<?= $statusClass ?>"><?= htmlspecialchars($row['status']) ?></span></td>
                                     <td>
                                         <div class="action-buttons" style="display: flex; justify-content: center; gap: 5px;">
-                                            <?php if ($row['status'] == 'Pending') : ?>
-                                                <form action="action/update_status.php" method="POST" style="margin:0;"><input type="hidden" name="id_reservasi" value="<?= $row['id_reservasi'] ?>"><input type="hidden" name="status" value="Confirmed"><button type="submit" class="btn btn-success btn-sm" title="Konfirmasi Reservasi"><i class="fas fa-check"></i></button></form>
-                                                <form action="action/update_status.php" method="POST" style="margin:0;"><input type="hidden" name="id_reservasi" value="<?= $row['id_reservasi'] ?>"><input type="hidden" name="status" value="Cancelled"><button type="submit" class="btn btn-warning btn-sm" title="Batalkan Reservasi"><i class="fas fa-times"></i></button></form>
-                                            <?php elseif ($row['status'] == 'Confirmed') : ?>
-                                                <form action="action/update_status.php" method="POST" style="margin:0;"><input type="hidden" name="id_reservasi" value="<?= $row['id_reservasi'] ?>"><input type="hidden" name="status" value="Cancelled"><button type="submit" class="btn btn-warning btn-sm" title="Batalkan Reservasi"><i class="fas fa-times"></i></button></form>
-                                            <?php endif; ?>
-                                            <a href="action/delete.php?id=<?= $row['id_reservasi'] ?>"
-                                                class="btn btn-danger btn-sm"
-                                                title="Arsipkan"
-                                                onclick="return confirm('Yakin ingin meng-arsip reservasi ini?');">
-                                                <i class="fas fa-archive"></i>
-                                            </a>
+                                            <form action="action/delete_permanent.php" method="POST" style="margin:0;" onsubmit="return confirm('ANDA YAKIN? Data ini akan dihapus PERMANEN dan tidak bisa dikembalikan.');"><input type="hidden" name="id_reservasi" value="<?= $row['id_reservasi'] ?>"><button type="submit" class="btn btn-danger btn-sm" title="Hapus Permanen"><i class="fas fa-fire"></i></button></form>
                                         </div>
                                     </td>
                                 </tr>
@@ -133,7 +111,7 @@ include("../Component/handle_search_pagination.php");
                                 <td colspan="7">
                                     <div class="empty-state">
                                         <i class="fas fa-search"></i>
-                                        <p>Tidak ada data reservasi ditemukan<?php if ($search_term != '') echo " untuk pencarian '<b>" . htmlspecialchars($search_term) . "</b>'"; ?>.</p>
+                                        <p>Tidak ada riwayat arsip ditemukan<?php if ($search_term != '') echo " untuk pencarian '<b>" . htmlspecialchars($search_term) . "</b>'"; ?>.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -155,5 +133,4 @@ include("../Component/handle_search_pagination.php");
     </div>
 </div>
 
-<script src="../assets/js/reservation.js"></script>
 <?php include("../Component/bottom.php"); ?>

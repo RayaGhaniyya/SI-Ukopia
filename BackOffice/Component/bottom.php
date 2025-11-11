@@ -4,6 +4,8 @@
 
 <script src="/SI-Ukopia/BackOffice/assets/js/Mobile/menu.js"></script>
 
+<script src="/SI-Ukopia/BackOffice/assets/js/reservation.js"></script>
+
 <script src="/SI-Ukopia/BackOffice/assets/js/kategori.js"></script>
 
 <script src="/SI-Ukopia/BackOffice/assets/js/kategori_menu.js"></script>

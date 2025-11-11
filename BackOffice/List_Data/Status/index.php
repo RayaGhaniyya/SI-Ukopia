@@ -21,7 +21,7 @@ $result = mysqli_query($conn, $query);
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Status</h2>
-                <input type="text" id="searchStatus" placeholder="🔍 Cari status...">
+                <input type="text" id="searchStatus" placeholder="Search...">
             </div>
 
             <div class="table-responsive">

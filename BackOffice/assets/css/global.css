@@ -874,3 +874,119 @@ body.sidebar-collapsed {
     align-self: flex-end;
   }
 }
+
+/* === PAGINATION STYLE (GLOBAL) === */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    gap: 6px;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.pagination a {
+    background: #fff;
+    color: #3b82f6; /* Biru */
+    border: 1px solid #e0e0e0;
+}
+
+.pagination a:hover {
+    background: #f0f9ff;
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+}
+
+/* Tombol Aktif (Halaman Sekarang) */
+.pagination span.active {
+    background: #3b82f6;
+    color: #fff;
+    border: 1px solid #3b82f6;
+}
+
+/* Tombol Disabled (Prev/Next) */
+.pagination span.disabled {
+    background: #f4f4f4;
+    color: #aaa;
+    border: 1px solid #e0e0e0;
+}
+
+.pagination span.dots {
+    background: none;
+    border: none;
+    color: #aaa;
+    padding: 8px 0;
+}
+
+/* === GLOBAL SEARCH GROUP (NEW) === */
+/* Wrapper untuk search bar dan tombol */
+.search-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 320px; /* Atur lebar maksimal search bar di sini */
+}
+
+/* Style untuk <input> di dalam .search-group */
+.search-group input[type="text"] {
+    flex: 1; /* Biar inputnya memenuhi sisa ruang */
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+    
+    /* Bulat di kiri, rata di kanan */
+    border-radius: 10px 0 0 10px;
+    border-right: none; /* Hapus border kanan agar menyatu */
+}
+
+/* Style <input> saat di-klik */
+.search-group input[type="text"]:focus {
+    border-color: #3b82f6; /* Tetap pakai highlight biru saat fokus */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    z-index: 1; /* Bawa ke depan */
+}
+
+/* Style untuk <button> di dalam .search-group */
+.search-group .btn {
+    padding: 8px 12px;
+    font-size: 14px; /* Samakan dengan input */
+    
+    /* * Ini PENTING:
+     * Meng-override style .btn-primary (biru) 
+     * Menjadi style "putih" yang kamu minta
+    */
+    background: #fff;
+    color: #333; /* Warna icon jadi hitam/abu */
+    border: 1px solid #ccc;
+    
+    /* Bulat di kanan, rata di kiri */
+    border-radius: 0 10px 10px 0; 
+    
+    cursor: pointer;
+    transition: 0.2s ease;
+    
+    /* Hapus efek bawaan .btn */
+    transform: none;
+    box-shadow: none;
+}
+
+/* Hover untuk tombol "putih" */
+.search-group .btn:hover {
+    background: #f4f4f4; /* Jadi abu-abu sedikit */
+    color: #000;
+    transform: none;
+    z-index: 2; /* Bawa ke depan saat hover */
+}

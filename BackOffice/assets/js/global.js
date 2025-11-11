@@ -163,171 +163,17 @@ function handleImagePreview(input, previewContainerId = 'imagePreview', uploadBu
 }
 
 // ============================================
-// TABLE SEARCH - Universal & Reusable
+// TABLE SEARCH - Dihapus
+// Fungsi initTableSearch() telah dihapus karena
+// pencarian sekarang ditangani oleh Server-Side (PHP).
 // ============================================
 
-/**
- * Universal Table Search Function
- * @param {string} searchInputId - ID input search
- * @param {string} tableBodySelector - Selector tbody (e.g., '.gallery-table tbody')
- * @param {Array} searchColumns - Array index kolom yang mau disearch (e.g., [1, 2, 3])
- */
-function initTableSearch(searchInputId, tableBodySelector, searchColumns = []) {
-  const searchInput = document.getElementById(searchInputId);
-  const tbody = document.querySelector(tableBodySelector);
+// ============================================
+// TABLE UTILITIES - Dihapus
+// Fungsi renderTable() dan renderPagination() telah dihapus karena
+// pagination sekarang ditangani oleh Server-Side (PHP).
+// ============================================
 
-  if (!searchInput || !tbody) {
-    console.warn(`Search init failed: ${searchInputId} or ${tableBodySelector} not found`);
-    return;
-  }
-
-  searchInput.addEventListener('input', function() {
-    const filter = this.value.toLowerCase();
-    const rows = tbody.getElementsByTagName('tr');
-    let visibleCount = 0;
-
-    for (let i = 0; i < rows.length; i++) {
-      const cells = rows[i].getElementsByTagName('td');
-      let found = false;
-
-      // Jika searchColumns kosong, search semua kolom kecuali kolom aksi (terakhir)
-      const colsToSearch = searchColumns.length > 0 
-        ? searchColumns 
-        : Array.from({length: cells.length - 1}, (_, i) => i + 1); // Skip kolom 0 (No) dan terakhir (Aksi)
-
-      for (let j of colsToSearch) {
-        if (cells[j]) {
-          const cellText = cells[j].textContent || cells[j].innerText;
-          if (cellText.toLowerCase().indexOf(filter) > -1) {
-            found = true;
-            break;
-          }
-        }
-      }
-
-      if (found) {
-        rows[i].style.display = '';
-        visibleCount++;
-      } else {
-        rows[i].style.display = 'none';
-      }
-    }
-
-    // Show empty state if no results
-    const colCount = tbody.querySelector('tr')?.cells.length || 5;
-    let emptyState = tbody.querySelector('.empty-search-row');
-    
-    if (visibleCount === 0 && filter !== '') {
-      if (!emptyState) {
-        emptyState = document.createElement('tr');
-        emptyState.className = 'empty-search-row';
-        emptyState.innerHTML = `
-          <td colspan="${colCount}" style="text-align: center; padding: 40px;">
-            <div class="empty-state">
-              <i class="fas fa-search" style="font-size: 2.5rem; color: #d1d5db; margin-bottom: 10px;"></i>
-              <p style="color: #6b7280; margin: 0;">Tidak ada hasil untuk "<strong>${escapeHtml(filter)}</strong>"</p>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(emptyState);
-      }
-    } else {
-      if (emptyState) {
-        emptyState.remove();
-      }
-    }
-  });
-}
-
-// === TABLE UTILITIES ===
-function renderTable(data, renderRow, options = {}) {
-  const {
-    tableBodyId = 'tableBody',
-    emptyMessage = 'Tidak ada data',
-    emptyIcon = 'fa-inbox',
-    currentPage = 1,
-    itemsPerPage = 10,
-    showingCountId = 'showingCount',
-    totalCountId = 'totalCount',
-    paginationId = 'pagination',
-    colspan = 7
-  } = options;
-
-  const tbody = document.getElementById(tableBodyId);
-  if (!tbody) return;
-
-  const totalCount = data.length;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = data.slice(startIndex, endIndex);
-  
-  if (paginatedData.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="${colspan}">
-          <div class="empty-state">
-            <i class="fas ${emptyIcon}"></i>
-            <p>${emptyMessage}</p>
-          </div>
-        </td>
-      </tr>
-    `;
-    const showingEl = document.getElementById(showingCountId);
-    const totalEl = document.getElementById(totalCountId);
-    if (showingEl) showingEl.textContent = '0';
-    if (totalEl) totalEl.textContent = '0';
-    return;
-  }
-  
-  tbody.innerHTML = paginatedData.map((item, index) => 
-    renderRow(item, startIndex + index + 1)
-  ).join('');
-  
-  const showingEl = document.getElementById(showingCountId);
-  const totalEl = document.getElementById(totalCountId);
-  if (showingEl) showingEl.textContent = paginatedData.length;
-  if (totalEl) totalEl.textContent = totalCount;
-  
-  renderPagination(totalCount, currentPage, itemsPerPage, paginationId);
-}
-
-function renderPagination(totalItems, currentPage, itemsPerPage, paginationId = 'pagination') {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const pagination = document.getElementById(paginationId);
-  
-  if (!pagination) return;
-  if (totalPages <= 1) {
-    pagination.innerHTML = '';
-    return;
-  }
-  
-  let html = `
-    <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-      <i class="fas fa-chevron-left"></i>
-    </button>
-  `;
-  
-  let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(totalPages, currentPage + 2);
-  if (currentPage <= 3) endPage = Math.min(5, totalPages);
-  if (currentPage >= totalPages - 2) startPage = Math.max(1, totalPages - 4);
-  
-  for (let i = startPage; i <= endPage; i++) {
-    html += `
-      <button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">
-        ${i}
-      </button>
-    `;
-  }
-  
-  html += `
-    <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  `;
-  
-  pagination.innerHTML = html;
-}
 
 // === DATE UTILITIES ===
 function isValidDate(dateString) {
