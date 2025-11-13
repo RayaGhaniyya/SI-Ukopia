@@ -103,4 +103,6 @@ include("../Component/head.php");
     </script>
 <?php endif; ?>
 
+
+<script src="../assets/js/dashboard.js"></script>
 <?php include("../Component/bottom.php"); ?>

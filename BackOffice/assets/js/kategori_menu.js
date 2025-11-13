@@ -32,10 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm); // ✅ Dari global.js
   }
 
-  // [UBAH] Search - ID input dan class table
-  // Kolom yang disearch: [1]=Nama Kategori (sesuaikan dengan jumlah kolom tabel)
-  initTableSearch('searchKategoriMenu', '.kategorimenu-table tbody', [1]); // ✅ Dari global.js
-
   // Load saved form data
   loadSavedFormData(); // ✅ Dari global.js
 });

@@ -88,7 +88,7 @@ $result = $stmt_data->get_result();
         <div class="dashboard-header">
             <h1><i class="fas fa-utensils"></i> Manajemen Menu</h1>
             <a href="add.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tambah Menu
+                <i class="fas fa-plus"></i> Tambah
             </a>
         </div>
 
@@ -217,4 +217,5 @@ $result = $stmt_data->get_result();
     </div>
 </div>
 
+<script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>

@@ -1,14 +1,14 @@
 /* ============================================
-   KATEGORI.JS - UKOPIA BACKOFFICE (OPTIMIZED)
-   [UBAH] Ganti nama file dan fungsi sesuai modul
-   
-   Dependencies dari global.js:
-   - showNotification()
-   - showLoading() / hideLoading()
-   - initFormAutoSave()
-   - loadSavedFormData()
-   - initTableSearch()
-   ============================================ */
+    KATEGORI.JS - UKOPIA BACKOFFICE (OPTIMIZED)
+    [UBAH] Ganti nama file dan fungsi sesuai modul
+    
+    Dependencies dari global.js:
+    - showNotification()
+    - showLoading() / hideLoading()
+    - initFormAutoSave()
+    - loadSavedFormData()
+    // initTableSearch() SUDAH DIHAPUS
+    ============================================ */
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,10 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     initFormAutoSave(updateForm); // ✅ Dari global.js
   }
-
-  // [UBAH] Search - ID input dan class table
-  // Kolom yang disearch: [1]=Nama Kategori (sesuaikan dengan jumlah kolom tabel)
-  initTableSearch('searchKategori', '.kategori-table tbody', [1]); // ✅ Dari global.js
 
   // Load saved form data
   loadSavedFormData(); // ✅ Dari global.js

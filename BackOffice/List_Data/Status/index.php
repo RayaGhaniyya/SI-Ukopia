@@ -72,4 +72,5 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
 
+<script src="../../assets/js/status.js"></script>
 <?php include("../../Component/bottom.php"); ?>

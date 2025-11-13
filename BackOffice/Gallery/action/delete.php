@@ -1,6 +1,17 @@
 <?php
 include("../../../Koneksi/koneksi.php");
+// Hapus include head.php dan session.php (tidak perlu untuk file JSON)
+// include("../../Component/session.php");
+// include("../../Component/head.php");
 header('Content-Type: application/json');
+
+// Mulai session HANYA untuk cek login admin (jika perlu)
+session_start();
+// if (!isset($_SESSION['admin_username'])) {
+//     echo json_encode(['success' => false, 'message' => 'Akses ditolak']);
+//     exit;
+// }
+
 
 // Validasi method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -44,9 +55,9 @@ try {
     $stmt_images->close();
 
     // Hapus detail gambar dari database
+    // (Sebenarnya tidak perlu jika 'ON DELETE CASCADE' sudah aktif di DB kamu, tapi ini lebih aman)
     $stmt_delete_detail = $conn->prepare("DELETE FROM detail_galery WHERE id_galery = ?");
     $stmt_delete_detail->bind_param("i", $id);
-
     if (!$stmt_delete_detail->execute()) {
         throw new Exception("Gagal menghapus detail gambar dari database");
     }
@@ -55,7 +66,6 @@ try {
     // Hapus data galeri
     $stmt_delete = $conn->prepare("DELETE FROM galery WHERE id_galery = ?");
     $stmt_delete->bind_param("i", $id);
-
     if (!$stmt_delete->execute()) {
         throw new Exception("Gagal menghapus data galeri");
     }
@@ -66,7 +76,13 @@ try {
 
     // Hapus file gambar dari server (setelah berhasil hapus dari DB)
     foreach ($imagePaths as $path) {
-        $fullPath = "../../" . $path;
+
+        // VVVVV--- PERBAIKAN DI SINI ---VVVVV
+        // Kita buat path fisik server yang absolut
+        // dirname(__DIR__, 3) = /BackOffice
+        $fullPath = dirname(__DIR__, 3) . "/" . $path;
+        // ^^^^^--- SELESAI PERBAIKAN ---^^^^^
+
         if (file_exists($fullPath)) {
             unlink($fullPath);
         }

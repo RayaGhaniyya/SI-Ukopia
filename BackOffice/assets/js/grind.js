@@ -29,10 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm); // ✅ Dari global.js
   }
 
-  // Search - ID input dan class table
-  // Kolom yang disearch: [1]=Nama GrindSize
-  initTableSearch('searchGrindSize', '.grind-table tbody', [1]); // ✅ Dari global.js
-
   // Load saved form data
   loadSavedFormData(); // ✅ Dari global.js
 });

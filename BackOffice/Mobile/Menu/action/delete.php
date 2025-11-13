@@ -1,5 +1,5 @@
 <?php
-// [UBAH] Path koneksi sesuai lokasi (dari folder action)
+// Path koneksi ini sudah benar
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// [UBAH] Validasi input - nama parameter ID
+// Validasi input
 $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
 if ($id <= 0) {
@@ -17,12 +17,18 @@ if ($id <= 0) {
     exit;
 }
 
+//
+// VVVVV--- PERBAIKAN DI SINI ---VVVVV
+//
 // [UBAH] Konfigurasi upload directory
-// Dari action/ ke Uploads/Menu/ = ../Uploads/Menu/
-$UPLOAD_DIR = '../Uploads/Menu/';
+// Path dari 'action/' adalah: ../ (naik ke folder 'Menu') ../ (naik ke folder 'Mobile') /Uploads/Menu/
+$UPLOAD_DIR = '../../Uploads/Menu/';
+//
+// ^^^^^--- SELESAI PERBAIKAN ---^^^^^
+//
 
 try {
-    // [UBAH] Cek apakah data exists
+    // Cek apakah data exists
     $stmt_check = $conn->prepare("SELECT id_menu FROM menu WHERE id_menu = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
@@ -33,19 +39,20 @@ try {
     }
     $stmt_check->close();
 
-    // [UBAH] Ambil gambar untuk dihapus dari server
+    // Ambil gambar untuk dihapus dari server
     $stmt_image = $conn->prepare("SELECT gambar_url FROM menu WHERE id_menu = ?");
     $stmt_image->bind_param("i", $id);
     $stmt_image->execute();
     $result_image = $stmt_image->get_result();
-    
+
     $imageUrl = null;
     if ($row = $result_image->fetch_assoc()) {
         $imageUrl = $row['gambar_url'];
     }
     $stmt_image->close();
 
-    // [UBAH] Hapus data menu dari database
+    // Hapus data menu dari database
+    // (Kita asumsikan 'ulasan_menu' punya ON DELETE CASCADE, jadi tidak perlu transaksi)
     $stmt_delete = $conn->prepare("DELETE FROM menu WHERE id_menu = ?");
     $stmt_delete->bind_param("i", $id);
 
@@ -58,11 +65,9 @@ try {
     $imageDeleted = false;
     if ($imageUrl) {
         // Extract filename dari URL
-        // Contoh URL: http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/menu_123_1234567890.jpg
-        // Extract: menu_123_1234567890.jpg
         $fileName = basename($imageUrl);
         $filePath = $UPLOAD_DIR . $fileName;
-        
+
         if (file_exists($filePath)) {
             if (unlink($filePath)) {
                 $imageDeleted = true;
@@ -70,13 +75,12 @@ try {
         }
     }
 
-    // [UBAH] Success message
+    // Success message
     echo json_encode([
         'success' => true,
         'message' => 'Menu berhasil dihapus!',
         'image_deleted' => $imageDeleted
     ]);
-    
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,

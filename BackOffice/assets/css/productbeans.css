@@ -1,0 +1,39 @@
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.variant-section {
+    margin-top: 30px;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 20px;
+}
+
+.variant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.variant-row {
+    display: grid;
+    /* 4 kolom: Size, Grind, Harga, Stok + 1 kolom Tombol Hapus */
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.variant-row label {
+    margin-top: 0;
+    font-size: 13px;
+}
+
+/* Style untuk varian yang akan dihapus di update.php */
+.variant-row.deleting {
+    opacity: 0.5;
+    background: #fff0f0;
+    pointer-events: none; /* Nonaktifkan input di dalamnya */
+}

@@ -34,9 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm); // Dari global.js
   }
 
-  // Search functionality - Gunakan fungsi universal dari global.js
-  initTableSearch('searchGallery', '.gallery-table tbody', [1, 2, 3]);
-
   // Close popup dengan ESC key
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeDetailPopup();

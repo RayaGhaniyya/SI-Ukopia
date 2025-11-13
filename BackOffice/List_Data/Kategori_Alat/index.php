@@ -145,4 +145,6 @@ $result = $stmt_data->get_result();
     </div>
 </div>
 
+
+<script src="../../assets/js/kategori_alat.js"></script>
 <?php include("../../Component/bottom.php"); ?>

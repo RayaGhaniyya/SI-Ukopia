@@ -1,0 +1,16 @@
+/*
+ * CSS KHUSUS UNTUK FORM MERCHANDISE
+ * (productbeans.css harus di-load SEBELUM file ini)
+ */
+
+/* * Override style 5 kolom dari productbeans.css
+ * menjadi 4 kolom (Size, Harga, Stok, Aksi)
+*/
+.variant-row.merch-variant {
+    grid-template-columns: 2fr 1fr 1fr 0.5fr;
+}
+
+/* Sembunyikan kolom 'Grind Size' yang tidak perlu */
+.variant-row.merch-variant .col-grind {
+    display: none;
+}

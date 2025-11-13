@@ -1,7 +1,28 @@
 <?php
-// include("../koneksi/koneksi.php");
+include("../../Koneksi/koneksi.php"); // <-- (1) KONEKSI DATABASE DI-AKTIFKAN
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
+$current_host = $_SERVER['HTTP_HOST']; // <-- (2) AMBIL HOST UNTUK GAMBAR
+
+// --- (3) LOGIKA PENGAMBILAN PRODUK ARABICA (ID = 1) ---
+$id_kategori_arabica = 1;
+$stmt = $conn->prepare(
+    "SELECT 
+        p.id_produk, 
+        p.nama_produk, 
+        p.gambar_url, 
+        -- Subquery untuk mengambil harga termurah dari varian
+        (SELECT MIN(dp.harga) 
+         FROM detail_produk dp 
+         WHERE dp.id_produk = p.id_produk) as harga_terendah
+    FROM produk p
+    WHERE p.id_kategori = ?
+    ORDER BY p.nama_produk ASC"
+);
+$stmt->bind_param("i", $id_kategori_arabica);
+$stmt->execute();
+$result_produk = $stmt->get_result();
+// --- LOGIKA SELESAI ---
 ?>
 
 <link rel="stylesheet" href="../assets/css/loader.css">
@@ -39,85 +60,37 @@ include("../Component/NavBar.php");
 <main class="product-section">
     <div class="product-grid">
 
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
+        <?php if ($result_produk->num_rows > 0): ?>
+            <?php while ($produk = $result_produk->fetch_assoc()):
 
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
+                // Format URL gambar
+                $gambar_dinamis = str_replace("localhost", $current_host, $produk['gambar_url']);
 
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
+                // Tentukan link ke halaman detail
+                $link_detail = "../Product-Detail/filter-detail.php?id=" . $produk['id_produk'];
 
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
+                // Format harga (Sesuai screenshot 'Mulai dari')
+                $harga_display = "Harga Belum Diatur"; // Default jika admin lupa isi
+                if ($produk['harga_terendah']) {
+                    $harga_display = " RP. " . number_format($produk['harga_terendah'], 0, ',', '.');
+                }
+            ?>
+                <a href="<?= $link_detail ?>" class="product-card-link">
+                    <div class="product-card">
+                        <img src="<?= htmlspecialchars($gambar_dinamis) ?>" alt="<?= htmlspecialchars($produk['nama_produk']) ?>" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title"><?= htmlspecialchars($produk['nama_produk']) ?></h3>
+                            <p class="product-price"><?= $harga_display ?></p>
+                        </div>
+                    </div>
+                </a>
 
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="https://placehold.co/200x200/2d2d2d/ffffff?text=Kopi" alt="Ijen Carbonic Maceration" class="product-image">
-            <div class="product-info">
-                <h3 class="product-title">Ijen Carbonic Maceration</h3>
-                <p class="product-price">RP. 200.000 IDR</p>
-            </div>
-        </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <p style="color: #333; grid-column: 1 / -1; text-align: center;">Belum ada produk yang tersedia.</p>
+        <?php endif;
+        $stmt->close();
+        ?>
 
     </div>
 </main>

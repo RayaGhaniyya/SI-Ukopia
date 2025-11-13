@@ -10,11 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize form handlers
   initFormHandlers();
-
-  // Initialize table search - Gunakan function dari global.js
-  // Parameter: (searchInputId, tableBodySelector, searchColumns)
-  // searchColumns: [1]=Gambar, [2]=Nama, [3]=Kategori, [4]=Deskripsi
-  initTableSearch('searchMenu', '#menuTable tbody', [2, 3, 4]);
 });
 
 // ===== FORM HANDLERS =====

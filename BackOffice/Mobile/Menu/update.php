@@ -98,7 +98,7 @@ if (!$kategori_result) {
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Simpan Perubahan
+                        <i class="fas fa-save"></i> Simpan
                     </button>
                     <a href="index.php" class="btn btn-cancel">
                         <i class="fas fa-times"></i> Batal
@@ -109,4 +109,5 @@ if (!$kategori_result) {
     </div>
 </div>
 
+<script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>

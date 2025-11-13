@@ -51,7 +51,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 <section class="galery-section">
     <div class="container">
-        <h1 class="section-title pt-3">Galery</h1>
+        <h1 class="section-title pt-3">Gallery</h1>
 
         <?php if (count($galleries) > 0): ?>
             <div class="galery-content">

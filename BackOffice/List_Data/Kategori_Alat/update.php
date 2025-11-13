@@ -58,5 +58,5 @@ $stmt->close();
     </div>
 </div>
 
-<!-- [UBAH] Script JS sesuai nama modul -->
+<script src="../../assets/js/kategori_alat.js"></script>
 <?php include("../../Component/bottom.php"); ?>

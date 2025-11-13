@@ -27,4 +27,5 @@ include("../../Component/head.php");
     </div>
 </div>
 
+<script src="../../assets/js/size.js"></script>
 <?php include("../../Component/bottom.php"); ?>

@@ -55,7 +55,7 @@ include("../Component/handle_search_pagination.php");
                         type="text"
                         name="search"
                         id="searchArsip"
-                        placeholder="🔍 Cari nama, no. telp, tgl..."
+                        placeholder="Search..."
                         value="<?= htmlspecialchars($search_term) ?>">
 
                     <button type="submit" class="btn" title="Cari">
@@ -133,4 +133,5 @@ include("../Component/handle_search_pagination.php");
     </div>
 </div>
 
+<script src="../assets/js/reservation.js"></script>
 <?php include("../Component/bottom.php"); ?>

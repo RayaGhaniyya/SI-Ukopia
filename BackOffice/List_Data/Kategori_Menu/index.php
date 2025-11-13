@@ -145,4 +145,5 @@ $result = $stmt_data->get_result();
     </div>
 </div>
 
+<script src="../../assets/js/kategori_menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>

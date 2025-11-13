@@ -15,26 +15,26 @@
         </li>
 
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" id="productBtn">
-                <i class="fas fa-store"></i>
-                <span>MarketPlace</span>
+            <a href="#" class="dropdown-toggle" id="productBtn"> <i class="fas fa-box-open"></i> <span>Manajemen Produk</span>
             </a>
             <ul class="dropdown-menu" id="productDropdown">
                 <li>
-                    <a href="#">
-                        <i class="fas fa-box-open"></i>
-                        <span>Product</span>
+                    <a href="/SI-Ukopia/BackOffice/Product/ProductBeans/index.php">
+                        <i class="fas fa-coffee"></i> <span>Beans</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Stok</span>
+                    <a href="/SI-Ukopia/BackOffice/Product/ProductMerch/index.php">
+                        <i class="fas fa-tshirt"></i> <span>Merchandise</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Product/ProductTools/index.php">
+                        <i class="fas fa-tools"></i> <span>Brewing Tools & Lainnya</span>
                     </a>
                 </li>
             </ul>
         </li>
-
         <li>
             <a href="/SI-Ukopia/BackOffice/Reservation/index.php">
                 <i class="fas fa-calendar-check"></i>
@@ -57,8 +57,7 @@
         </li>
 
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" id="mobileBtn">
-                <i class="fas fa-list-alt"></i>
+            <a href="#" class="dropdown-toggle" id="mobileBtn"> <i class="fas fa-list-alt"></i>
                 <span>List Data</span>
             </a>
             <ul class="dropdown-menu" id="mobileDropdown">
@@ -103,8 +102,7 @@
 
 
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" id="mobileBtn">
-                <i class="fas fa-mobile-screen"></i>
+            <a href="#" class="dropdown-toggle" id="mobileBtn"> <i class="fas fa-mobile-screen"></i>
                 <span>Mobile</span>
             </a>
             <ul class="dropdown-menu" id="mobileDropdown">
@@ -125,6 +123,3 @@
         </a>
     </div>
 </div>
-
-<script src="/SI-Ukopia/BackOffice/assets/js/sidebar.js"></script>
-<script src="/SI-Ukopia/BackOffice/assets/js/global.js"></script>

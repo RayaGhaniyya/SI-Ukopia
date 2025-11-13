@@ -48,4 +48,5 @@ $stmt->close();
     </div>
 </div>
 
+<script src="../../assets/js/size.js"></script>
 <?php include("../../Component/bottom.php"); ?>

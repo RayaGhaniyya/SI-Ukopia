@@ -33,5 +33,5 @@ include("../../Component/head.php");
     </div>
 </div>
 
-<!-- [UBAH] Script JS sesuai nama modul -->
+<script src="../../assets/js/kategori.js"></script>
 <?php include("../../Component/bottom.php"); ?>

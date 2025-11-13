@@ -58,5 +58,5 @@ $stmt->close();
     </div>
 </div>
 
-<!-- [UBAH] Script JS sesuai nama modul -->
+<script src="../../assets/js/grind.js"></script>
 <?php include("../../Component/bottom.php"); ?>

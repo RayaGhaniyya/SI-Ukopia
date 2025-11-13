@@ -29,9 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm);
   }
 
-  // Search - kolom [1]=Nama Status
-  initTableSearch('searchStatus', '.status-table tbody', [1]);
-
   // Load saved form data
   loadSavedFormData();
 });

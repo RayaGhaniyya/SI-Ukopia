@@ -165,14 +165,14 @@ section.reservation-section {
     opacity: 0.7;
 }
 
-.days button:disabled:hover,
+/* .days button:disabled:hover,
 .days button:disabled.active {
     transform: none;
     border: none;
     box-shadow: none;
     background: #555;
     color: #888;
-}
+} */
 
 .time-select {
     display: flex;
