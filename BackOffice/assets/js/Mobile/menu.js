@@ -4,6 +4,13 @@
    Semua fungsi universal dari global.js
    ============================================ */
 
+// ==========================================================
+// [PERBAIKAN 1] Tentukan Base URL untuk gambar
+// Sesuaikan path ini jika lokasi upload Anda berbeda
+// ==========================================================
+const BASE_IMAGE_URL = "../../Uploads/Menu/";
+// ==========================================================
+
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Menu.js initialized");
@@ -28,9 +35,9 @@ function initFormHandlers() {
 }
 
 // ===== HANDLE MENU ADD =====
+// (Tidak ada perubahan di sini, sudah benar)
 async function handleMenuAdd(e) {
   e.preventDefault();
-
   const form = e.target;
   const formData = new FormData(form);
 
@@ -44,23 +51,19 @@ async function handleMenuAdd(e) {
     showNotification('Semua field wajib diisi!', 'error');
     return;
   }
-
   if (!gambar || gambar.size === 0) {
     showNotification('Gambar wajib dipilih!', 'error');
     return;
   }
 
   showLoading('Menyimpan menu...');
-
   try {
     const response = await fetch('action/store.php', {
       method: 'POST',
       body: formData
     });
-
     const result = await response.json();
     hideLoading();
-
     if (result.success) {
       showNotification(result.message, 'success');
       setTimeout(() => {
@@ -69,7 +72,6 @@ async function handleMenuAdd(e) {
     } else {
       showNotification(result.message, 'error');
     }
-
   } catch (error) {
     hideLoading();
     console.error('Error:', error);
@@ -78,9 +80,9 @@ async function handleMenuAdd(e) {
 }
 
 // ===== HANDLE MENU UPDATE =====
+// (Tidak ada perubahan di sini, sudah benar)
 async function handleMenuUpdate(e) {
   e.preventDefault();
-
   const form = e.target;
   const formData = new FormData(form);
 
@@ -95,16 +97,13 @@ async function handleMenuUpdate(e) {
   }
 
   showLoading('Menyimpan perubahan...');
-
   try {
     const response = await fetch('action/update.php', {
       method: 'POST',
       body: formData
     });
-
     const result = await response.json();
     hideLoading();
-
     if (result.success) {
       showNotification(result.message, 'success');
       setTimeout(() => {
@@ -113,7 +112,6 @@ async function handleMenuUpdate(e) {
     } else {
       showNotification(result.message, 'error');
     }
-
   } catch (error) {
     hideLoading();
     console.error('Error:', error);
@@ -121,8 +119,11 @@ async function handleMenuUpdate(e) {
   }
 }
 
-// ===== DELETE MENU =====
-function confirmDeleteMenu(id) {
+// ==========================================================
+// [PERBAIKAN 2] Fungsi Hapus diubah total
+// Menggunakan fetch(POST) agar sesuai dengan delete.php
+// ==========================================================
+async function confirmDelete(id) { // Mengganti nama fungsi agar sesuai panggilan di index.php
   if (!id) {
     showNotification("ID menu tidak valid", "error");
     return;
@@ -130,9 +131,41 @@ function confirmDeleteMenu(id) {
 
   if (confirm('⚠️ Yakin ingin menghapus menu ini?\n\nData yang dihapus tidak dapat dikembalikan!')) {
     showLoading('Menghapus menu...');
-    window.location.href = 'action/delete.php?id=' + id;
+
+    try {
+      // Kirim data sebagai POST
+      const formData = new FormData();
+      formData.append('id', id);
+
+      const response = await fetch('action/delete.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      hideLoading();
+
+      if (result.success) {
+        showNotification(result.message, 'success');
+        // Reload halaman untuk melihat perubahan
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        showNotification(result.message, 'error');
+      }
+
+    } catch (error) {
+      hideLoading();
+      console.error('Error:', error);
+      showNotification('Terjadi kesalahan saat menghapus data', 'error');
+    }
   }
 }
+// ==========================================================
+// (Fungsi lama confirmDeleteMenu dihapus, diganti confirmDelete)
+// ==========================================================
+
 
 // ===== SHOW DETAIL MENU =====
 async function showDetailMenu(id) {
@@ -144,6 +177,7 @@ async function showDetailMenu(id) {
   showLoading("Memuat detail menu...");
 
   try {
+    // [PERHATIAN] Pastikan action/view_detail.php?id=${id} adalah file GET
     const res = await fetch(`action/view_detail.php?id=${id}`);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
@@ -155,14 +189,20 @@ async function showDetailMenu(id) {
       return;
     }
 
-    // Tampilkan popup dengan data menu
     const popup = document.getElementById("detailPopup");
     if (!popup) {
       showNotification("Element popup tidak ditemukan", "error");
       return;
     }
 
-    // Update konten popup - Gunakan escapeHtml dari global.js
+    // ==========================================================
+    // [PERBAIKAN 1] Perbarui cara gambar ditampilkan
+    // ==========================================================
+    // Bangun URL lengkap untuk gambar
+    const gambarNama = escapeHtml(result.data.gambar);
+    const gambarUrlLengkap = gambarNama ? (BASE_IMAGE_URL + gambarNama) : '';
+    // ==========================================================
+
     const popupContent = popup.querySelector(".popup-content");
     if (popupContent) {
       popupContent.innerHTML = `
@@ -183,7 +223,7 @@ async function showDetailMenu(id) {
         ${result.data.gambar ? `
           <div style="margin-top: 20px;">
             <h4 style="margin-bottom: 10px; color: #111;">Gambar Menu:</h4>
-            <img src="${escapeHtml(result.data.gambar)}" alt="${escapeHtml(result.data.nama)}" 
+            <img src="${gambarUrlLengkap}" alt="${escapeHtml(result.data.nama)}" 
                  style="width: 100%; max-width: 500px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);"
                  onerror="this.src='../../assets/img/no-image.png'">
           </div>
@@ -191,7 +231,6 @@ async function showDetailMenu(id) {
       `;
     }
 
-    // Show popup dengan style dari global.css
     popup.style.display = "flex";
     setTimeout(() => popup.classList.add("show"), 10);
 

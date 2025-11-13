@@ -3,6 +3,15 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
+// ==========================================================
+// PERUBAHAN 1: Definisikan base URL untuk gambar
+// ==========================================================
+$current_host = $_SERVER['HTTP_HOST'];
+// Pastikan ini sesuai dengan path ke folder Uploads Anda
+$BASE_IMAGE_URL = "http://{$current_host}/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
+// ==========================================================
+
+
 $id_menu = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id_menu <= 0) {
@@ -26,7 +35,6 @@ $stmt->close();
 $kategori_query = "SELECT id_kategori_menu, nama_kategori FROM kategori_menu ORDER BY nama_kategori ASC";
 $kategori_result = mysqli_query($conn, $kategori_query);
 
-// Debug: Cek apakah query berhasil
 if (!$kategori_result) {
     die("<div style='background:red;color:white;padding:20px;margin:20px;'>Error Query Kategori: " . mysqli_error($conn) . "</div>");
 }
@@ -62,8 +70,8 @@ if (!$kategori_result) {
 
                         <div id="imagePreview" class="image-preview-single"
                             onclick="document.getElementById('fileInput').click()" style="display:flex;">
-                            <img src="<?= htmlspecialchars($menu['gambar_url']) ?>" alt="Preview">
-                        </div>
+                            <img src="<?= $BASE_IMAGE_URL . htmlspecialchars($menu['gambar_url']) ?>" alt="Preview">
+                            </div>
 
                         <button type="button" id="uploadButton" class="btn btn-info btn-sm"
                             onclick="document.getElementById('fileInput').click()" style="display:none; margin-top:10px;">
@@ -78,9 +86,7 @@ if (!$kategori_result) {
                             <?php
                             if ($kategori_result && mysqli_num_rows($kategori_result) > 0) {
                                 while ($row = mysqli_fetch_assoc($kategori_result)) {
-                                    // PENTING: Bandingkan dengan id_kategori dari menu
                                     $selected = ($row['id_kategori_menu'] == $menu['id_kategori']) ? 'selected' : '';
-                                    // PENTING: Value yang dikirim adalah id_kategori_menu
                                     echo "<option value=\"{$row['id_kategori_menu']}\" $selected>" . htmlspecialchars($row['nama_kategori']) . "</option>";
                                 }
                             } else {

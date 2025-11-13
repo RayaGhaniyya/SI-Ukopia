@@ -16,15 +16,13 @@ $id_kategori = intval($_POST['id_kategori'] ?? 0);
 if ($id_menu <= 0) {
     exit(json_encode(['success' => false, 'message' => 'ID tidak valid!']));
 }
-
+// ... (Validasi lainnya) ...
 if (empty($nama_menu)) {
     exit(json_encode(['success' => false, 'message' => 'Nama menu wajib diisi!']));
 }
-
 if (empty($deskripsi)) {
     exit(json_encode(['success' => false, 'message' => 'Deskripsi wajib diisi!']));
 }
-
 if ($id_kategori <= 0) {
     exit(json_encode(['success' => false, 'message' => 'Kategori wajib dipilih!']));
 }
@@ -44,19 +42,22 @@ $gambar_url = $oldData['gambar_url']; // Default: keep old image
 $stmt_check->close();
 
 // Config upload
-$BASE_URL = "http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
+$BASE_URL = "http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/"; // Hanya untuk hapus
 $UPLOAD_DIR = '../../Uploads/Menu/'; // Relative dari action/
+
+$newFileName = null; // Inisialisasi
+$hasNewImage = false;
 
 // Cek jika ada gambar baru
 if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
-    // Validasi tipe file
+    // ... (Validasi tipe file) ...
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     $fileType = $_FILES['gambar']['type'];
     if (!in_array($fileType, $allowedTypes)) {
         exit(json_encode(['success' => false, 'message' => 'Tipe file tidak valid! Gunakan JPG, PNG, atau WEBP.']));
     }
 
-    // Validasi ukuran file (5MB)
+    // ... (Validasi ukuran file) ...
     if ($_FILES['gambar']['size'] > 5 * 1024 * 1024) {
         exit(json_encode(['success' => false, 'message' => 'Ukuran file terlalu besar! Maksimal 5MB.']));
     }
@@ -70,17 +71,34 @@ if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK) {
     $newFileName = optimizeAndSaveImage($_FILES['gambar'], $UPLOAD_DIR);
 
     if ($newFileName) {
-        $gambar_url = $BASE_URL . $newFileName;
+        // ==========================================================
+        // PERUBAHAN 1: Simpan hanya nama file
+        // ==========================================================
+        $gambar_url = $newFileName; // <-- UBAH BARIS INI
+        $hasNewImage = true;
+        // ==========================================================
+
 
         // Delete old image
-        $oldFileName = str_replace($BASE_URL, '', $oldData['gambar_url']);
+        // ==========================================================
+        // PERUBAHAN 2: Gunakan basename untuk keamanan
+        // ==========================================================
+        $oldFileName = basename($oldData['gambar_url']); // <-- UBAH BARIS INI
         $oldFilePath = $UPLOAD_DIR . $oldFileName;
+        // ==========================================================
+        
         if (file_exists($oldFilePath)) {
             @unlink($oldFilePath);
         }
     } else {
         exit(json_encode(['success' => false, 'message' => 'Gagal mengoptimalkan gambar baru!']));
     }
+} else {
+    // ==========================================================
+    // PERUBAHAN 3: Pastikan data lama adalah filename
+    // ==========================================================
+    $gambar_url = basename($oldData['gambar_url']); // <-- UBAH BARIS INI
+    // ==========================================================
 }
 
 // Begin transaction
@@ -108,6 +126,14 @@ try {
 } catch (Exception $e) {
     // Rollback transaction
     $conn->rollback();
+    
+    // Jika update DB gagal, hapus gambar baru yang terlanjur diupload
+    if ($hasNewImage && $newFileName) {
+        $newFilePath = $UPLOAD_DIR . $newFileName;
+        if (file_exists($newFilePath)) {
+            @unlink($newFilePath);
+        }
+    }
     
     echo json_encode([
         'success' => false, 

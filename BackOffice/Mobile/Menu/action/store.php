@@ -54,7 +54,6 @@ if ($_FILES['gambar']['size'] > 5 * 1024 * 1024) {
 }
 
 // Config upload
-$BASE_URL = "http://localhost/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
 $UPLOAD_DIR = '../../Uploads/Menu/'; // Relative dari action/
 
 if (!is_dir($UPLOAD_DIR)) {
@@ -70,7 +69,11 @@ if (!$newFileName) {
     exit(json_encode(['success' => false, 'message' => 'Gagal mengoptimalkan gambar!']));
 }
 
-$gambar_url = $BASE_URL . $newFileName;
+// ==========================================================
+// PERUBAHAN DI SINI: Simpan hanya nama file
+// ==========================================================
+$gambar_url = $newFileName; // <-- UBAH BARIS INI
+// ==========================================================
 
 // Begin transaction
 $conn->begin_transaction();
@@ -111,3 +114,4 @@ try {
 }
 
 $conn->close();
+?>
