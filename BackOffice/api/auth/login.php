@@ -30,7 +30,7 @@ if (!empty($data->email) && !empty($data->password)) {
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
         $uid_db = $row['uid'];
@@ -38,9 +38,7 @@ if (!empty($data->email) && !empty($data->password)) {
         $email_db = $row['email'];
         $password_db = $row['password'];
 
-        // Verifikasi password yang diinput dengan hash di database
         if (password_verify($password, $password_db)) {
-            // Jika password cocok
             http_response_code(200);
             $user_data = array(
                 "uid" => $uid_db,
@@ -52,12 +50,10 @@ if (!empty($data->email) && !empty($data->password)) {
                 "data" => $user_data
             ));
         } else {
-            // Jika password salah
             http_response_code(401);
             echo json_encode(array("message" => "Login gagal. Password salah."));
         }
     } else {
-        // Jika email tidak ditemukan
         http_response_code(404);
         echo json_encode(array("message" => "Login gagal. Email tidak ditemukan."));
     }
@@ -68,4 +64,3 @@ if (!empty($data->email) && !empty($data->password)) {
 }
 
 $db->close();
-?>

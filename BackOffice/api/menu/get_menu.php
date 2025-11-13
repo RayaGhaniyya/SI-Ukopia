@@ -1,0 +1,104 @@
+<?php
+header('Content-Type: application/json');
+include_once '../../config/database.php'; // Ini HARUSNYA sudah berisi fungsi di bawah
+
+$database = new Database();
+$db = $database->getConnection();
+
+if (!$db) {
+    echo json_encode(['status' => 'error', 'message' => 'Koneksi database gagal.']);
+    die();
+}
+
+function perbaiki_url_gambar($url_dari_db) {
+    if (empty($url_dari_db)) {
+        return null;
+    }
+
+    // 1. Ambil host (IP/domain) dari request saat ini.
+    $current_host = $_SERVER['HTTP_HOST'];
+
+    // 2. Buat daftar "placeholder" yang mungkin ada di DB
+    $placeholders = [
+        "http://localhost",
+        "http://127.0.0.1"
+    ];
+
+    // 3. Buat host pengganti yang benar
+    $replacement_host = "http://" . $current_host;
+
+    // 4. Ganti semua placeholder dengan host yang benar
+    $correct_url = str_replace($placeholders, $replacement_host, $url_dari_db);
+
+    return $correct_url;
+}
+// ▲▲▲ FUNGSI SELESAI ▲▲▲
+
+
+// --- Logika Filter Kategori ---
+$id_kategori = isset($_GET['id_kategori']) ? intval($_GET['id_kategori']) : 0;
+
+$where_clause = "";
+if ($id_kategori > 0) {
+    $where_clause = "WHERE m.id_kategori = ?";
+}
+// --------------------------------
+
+$response = []; 
+$menu_list = []; 
+
+$sql = "SELECT 
+            m.id_menu, 
+            km.nama_kategori,
+            m.deskripsi, 
+            m.gambar_url, 
+            m.nama_menu,
+            TRUNCATE(AVG(um.rating), 1) AS average_rating,
+            COUNT(um.id_menu) AS total_reviews
+        FROM 
+            menu m
+        JOIN 
+            kategori_menu km ON m.id_kategori = km.id_kategori_menu
+        LEFT JOIN 
+            ulasan_menu um ON m.id_menu = um.id_menu
+        $where_clause
+        GROUP BY 
+            m.id_menu, km.nama_kategori, m.deskripsi, m.gambar_url, m.nama_menu";
+
+$stmt = $db->prepare($sql);
+
+if ($id_kategori > 0) {
+    $stmt->bind_param("i", $id_kategori);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+// ------------------------------------
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        
+        // Panggil fungsi yang sudah kita definisikan di atas
+        $row['gambar_url'] = perbaiki_url_gambar($row['gambar_url']);
+        
+        // Mengatasi jika ratingnya NULL (belum ada ulasan)
+        if (is_null($row['average_rating'])) {
+            $row['average_rating'] = 0;
+        }
+
+        $menu_list[] = $row;
+    }
+    
+    $response['status'] = 'success';
+    $response['data'] = $menu_list;
+    
+} else {
+    $response['status'] = 'success';
+    $response['message'] = 'Data menu tidak ditemukan';
+    $response['data'] = []; 
+}
+
+echo json_encode($response, JSON_NUMERIC_CHECK);
+$stmt->close();
+$db->close();
+?>
