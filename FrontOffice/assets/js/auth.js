@@ -1,8 +1,8 @@
 // File: FrontOffice/assets/js/auth.js
-// V14 (Sudah digabung dengan notifikasi + logika lupa password)
+// V16 (FIXED - Mengembalikan showNotification agar self-contained)
 
 // 
-// VVVVV--- (A) FUNGSI NOTIFIKASI (DARI GLOBAL.JS) ---VVVVV
+// VVVVV--- (A) FUNGSI NOTIFIKASI DIKEMBALIKAN ---VVVVV
 // 
 function showNotification(message, type = 'info') {
   const oldNotif = document.querySelector('.notification');
@@ -93,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('status') && urlParams.get('status') === 'success') {
         const message = urlParams.get('message') || 'Operasi berhasil!';
-        showNotification(message, 'success');
+        // Panggil showNotification (dari file ini sendiri)
+        showNotification(message, 'success'); 
         
         // Hapus parameter dari URL
         const view = urlParams.get('view');
@@ -102,8 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (urlParams.has('status') && urlParams.get('status') === 'error') {
         const message = urlParams.get('message') || 'Terjadi kesalahan.';
+         // Panggil showNotification (dari file ini sendiri)
         showNotification(message, 'error');
         
+        // Hapus parameter dari URL
         const view = urlParams.get('view');
         let cleanURL = window.location.pathname + (view ? '?view=' + view : '');
         window.history.pushState(null, '', cleanURL);
@@ -123,21 +126,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (password !== confirmPassword) {
                 e.preventDefault(); 
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password dan Konfirmasi Password tidak cocok.', 'error');
                 return;
             }
             if (password.length < 8) {
                 e.preventDefault(); 
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password minimal harus 8 karakter.', 'error');
                 return;
             }
             if (!/[A-Z]/.test(password)) {
                 e.preventDefault();
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password harus memiliki minimal 1 huruf besar (A-Z).', 'error');
                 return;
             }
             if (!/[a-z]/.test(password)) {
                 e.preventDefault();
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password harus memiliki minimal 1 huruf kecil (a-z).', 'error');
                 return;
             }
@@ -153,21 +160,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (password !== confirmPassword) {
                 e.preventDefault(); 
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password baru tidak cocok.', 'error');
                 return;
             }
             if (password.length < 8) {
                 e.preventDefault(); 
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password minimal harus 8 karakter.', 'error');
                 return;
             }
             if (!/[A-Z]/.test(password)) {
                 e.preventDefault();
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password harus memiliki minimal 1 huruf besar (A-Z).', 'error');
                 return;
             }
             if (!/[a-z]/.test(password)) {
                 e.preventDefault();
+                 // Panggil showNotification (dari file ini sendiri)
                 showNotification('Password harus memiliki minimal 1 huruf kecil (a-z).', 'error');
                 return;
             }

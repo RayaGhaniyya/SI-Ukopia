@@ -1,3 +1,27 @@
+<?php
+// [PERBAIKAN] Cek dulu jika session SUDAH aktif atau BELUM
+if (session_status() === PHP_SESSION_NONE) {
+    // --- BLOK INI HANYA JALAN JIKA SESSION BELUM DIMULAI ---
+
+    // [PERUBAHAN] Atur masa berlaku session (30 hari)
+    // 30 hari * 24 jam * 60 menit * 60 detik = 2,592,000 detik
+    $session_lifetime = 2592000;
+
+    // Atur parameter cookie SEBELUM session_start()
+    session_set_cookie_params([
+        'lifetime' => $session_lifetime,
+        'path' => '/', // Berlaku untuk seluruh website
+        'domain' => '', // (Kosongkan agar default ke domain saat ini)
+        'secure' => isset($_SERVER['HTTPS']), // Hanya kirim via HTTPS jika ada
+        'httponly' => true // Cookie tidak bisa diakses oleh JavaScript
+    ]);
+
+
+    // [PERUBAHAN] Mulai session
+    session_start();
+}
+// --- Jika session sudah aktif, blok kode di atas akan di-skip ---
+?>
 <!doctype html>
 <html lang="en">
 
@@ -38,6 +62,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="../Reservation/index.php">Reservations</a>
                     </li>
+                    <?php
+                    // Cek session login dari file auth/login.php
+                    if (isset($_SESSION['customer_uid'])) {
+                        // Jika SUDAH LOGIN: Tampilkan link "Profile"
+                        // (Saya asumsikan file profile.php Anda ada di folder 'Akun' berdasarkan file auth/login.php)
+                        echo '
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Profile/index.php">Profile</a>
+                    </li>';
+                    } else {
+                        // Jika BELUM LOGIN: Tampilkan link "Sign In"
+                        echo '
+                    <li class="nav-item">
+                        <a class="nav-link" href="../auth/login.php">Sign In</a>
+                    </li>';
+                    }
+                    ?>
                 </ul>
             </div>
         </div>

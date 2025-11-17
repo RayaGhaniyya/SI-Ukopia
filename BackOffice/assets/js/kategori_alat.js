@@ -1,5 +1,5 @@
 /* ============================================
-   KATEGORI.JS - UKOPIA BACKOFFICE (OPTIMIZED)
+   KATEGORI_ALAT.JS - UKOPIA BACKOFFICE (OPTIMIZED)
    [UBAH] Ganti nama file dan fungsi sesuai modul
    
    Dependencies dari global.js:

@@ -3,7 +3,6 @@ session_start();
 // Path 2x ../ (dari auth/ -> FrontOffice/ -> SI-Ukopia/ -> Koneksi/)
 include("../../Koneksi/koneksi.php");
 
-// (Logika PHP kamu SAMA PERSIS, tidak diubah)
 if (isset($_SESSION['customer_uid'])) {
     header('Location: ../Akun/index.php');
     exit;
@@ -13,23 +12,30 @@ $success_message = '';
 
 // (1) Kita ubah logika Login agar me-REDIRECT dengan pesan error
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST['form_type'] == 'login') {
-    $email = $_POST['email'];
+
+    // [UPDATE] Terima 'login_identifier' (bisa email atau username)
+    $login_identifier = $_POST['login_identifier'];
     $password = $_POST['password'];
 
-    if (empty($email) || empty($password)) {
-        header('Location: login.php?status=error&message=Email dan Password wajib diisi');
+    if (empty($login_identifier) || empty($password)) {
+        header('Location: login.php?status=error&message=Email/Username dan Password wajib diisi');
         exit;
     } else {
-        $stmt = $conn->prepare("SELECT uid, nama, password, is_verified FROM akun_customer WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        // [UPDATE] Query WHERE mengecek ke email ATAU username
+        $stmt = $conn->prepare(
+            "SELECT uid, nama, password, is_verified FROM akun_customer WHERE email = ? OR username = ?"
+        );
+        $stmt->bind_param("ss", $login_identifier, $login_identifier);
         $stmt->execute();
         $result = $stmt->get_result();
+
         if ($result->num_rows === 1) {
             $customer = $result->fetch_assoc();
             if (password_verify($password, $customer['password'])) {
 
                 if ($customer['is_verified'] == 0) {
-                    header('Location: login.php?status=error&message=Akun Anda belum diverifikasi. Silakan cek email Anda.');
+                    // [UPDATE] Pesan error disesuaikan
+                    header('Location: login.php?status=error&message=Akun Anda belum diverifikasi. Silakan cek email.');
                     exit;
                 } else {
                     // --- LOGIN BERHASIL ---
@@ -43,11 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
                     exit;
                 }
             } else {
-                header('Location: login.php?status=error&message=Email atau Password salah.');
+                // [UPDATE] Pesan error disesuaikan
+                header('Location: login.php?status=error&message=Email/Username atau Password salah.');
                 exit;
             }
         } else {
-            header('Location: login.php?status=error&message=Email atau Password salah.');
+            // [UPDATE] Pesan error disesuaikan
+            header('Location: login.php?status=error&message=Email/Username atau Password salah.');
             exit;
         }
         $stmt->close();
@@ -70,6 +78,9 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
     <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- [PERBAIKAN] Hapus script global.js yang tidak ada -->
+    <!-- <script src="../assets/js/global.js?v=<?php echo time(); ?>"></script> -->
+
 </head>
 
 <body>
@@ -88,6 +99,13 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
                         <label for="nama">Nama Lengkap</label>
                         <input type="text" id="nama" name="nama" placeholder="Budi Santoso" required>
                     </div>
+
+                    <!-- [BARU] Input field untuk Username -->
+                    <div class="form-group">
+                        <label for="username_reg">Username</label>
+                        <input type="text" id="username_reg" name="username" placeholder="Buat username unik (cth: budi_s)" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="email_reg">Email</label>
                         <input type="email" id="email_reg" name="email" placeholder="contoh@email.com" required>
@@ -121,8 +139,10 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
                     <input type="hidden" name="form_type" value="login">
 
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+                        <!-- [UPDATE] Label diubah -->
+                        <label for="login_identifier">Email or Username</label>
+                        <!-- [UPDATE] name diubah ke 'login_identifier' -->
+                        <input type="text" id="login_identifier" name="login_identifier" placeholder="contoh@email.com atau budi_s" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -152,6 +172,8 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
         </div>
 
     </div>
+
+    <!-- auth.js dimuat seperti biasa -->
     <script src="../assets/js/auth.js?v=<?php echo time(); ?>"></script>
 </body>
 

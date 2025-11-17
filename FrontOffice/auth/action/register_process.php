@@ -15,14 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $base_url_login = "/SI-Ukopia/FrontOffice/auth/login.php"; // URL untuk error
 
     $nama = $_POST['nama'];
+    $username = $_POST['username']; // [BARU] Ambil username
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    if (empty($nama) || empty($email) || empty($password)) {
+    // ...
+    if (empty($nama) || empty($username) || empty($email) || empty($password)) {
+        // BENAR: Tanda kutip ( ' ) ditutup sebelum titik ( . )
         header('Location: ' . $base_url_login . '?view=register&status=error&message=Semua field wajib diisi');
         exit;
     }
+    // ...
 
     // Cek apakah email sudah terdaftar (SAMA)
     $stmt_check = $conn->prepare("SELECT email FROM akun_customer WHERE email = ?");
@@ -35,15 +39,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt_check->close();
 
+    // [BARU] Cek apakah username sudah terdaftar
+    $stmt_check_user = $conn->prepare("SELECT username FROM akun_customer WHERE username = ?");
+    $stmt_check_user->bind_param("s", $username);
+    $stmt_check_user->execute();
+    $result_check_user = $stmt_check_user->get_result();
+    if ($result_check_user->num_rows > 0) {
+        header('Location: ' . $base_url_login . '?view=register&status=error&message=Username sudah terpakai, coba yang lain');
+        exit;
+    }
+    $stmt_check_user->close();
+
+
     // (Hash password & Buat kode - SAMA)
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $verification_code = bin2hex(random_bytes(16));
 
+    // [UPDATE] Query INSERT ditambahkan kolom 'username'
     $stmt_insert = $conn->prepare(
-        "INSERT INTO akun_customer (nama, email, password, verification_code, is_verified) 
-         VALUES (?, ?, ?, ?, 0)"
+        "INSERT INTO akun_customer (nama, username, email, password, verification_code, is_verified) 
+         VALUES (?, ?, ?, ?, ?, 0)"
     );
-    $stmt_insert->bind_param("ssss", $nama, $email, $hashed_password, $verification_code);
+    // [UPDATE] bind_param diubah dari "ssss" menjadi "sssss"
+    $stmt_insert->bind_param("sssss", $nama, $username, $email, $hashed_password, $verification_code);
 
     if ($stmt_insert->execute()) {
         $_SESSION['verification_email'] = $email;

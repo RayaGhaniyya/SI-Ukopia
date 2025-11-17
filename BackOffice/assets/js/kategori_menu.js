@@ -1,13 +1,5 @@
 /* ============================================
-   KATEGORI.JS - UKOPIA BACKOFFICE (OPTIMIZED)
-   [UBAH] Ganti nama file dan fungsi sesuai modul
-   
-   Dependencies dari global.js:
-   - showNotification()
-   - showLoading() / hideLoading()
-   - initFormAutoSave()
-   - loadSavedFormData()
-   - initTableSearch()
+   KATEGORI_MENU.JS - UKOPIA BACKOFFICE (OPTIMIZED)
    ============================================ */
 
 // ===== INITIALIZATION =====
@@ -16,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const addForm = document.getElementById("kategoriMenuAddForm");
   if (addForm) {
     addForm.addEventListener("submit", (e) =>
-      // [UBAH] URL action dan success message
-      handleKategoriSubmit(e, "action/store.php", "Kategori berhasil ditambahkan!")
+      // [FIX] Namanya diubah agar SAMA dengan nama fungsi di bawah
+      handleKategoriMenuSubmit(e, "action/store.php", "Kategori berhasil ditambahkan!")
     );
     initFormAutoSave(addForm); // ✅ Dari global.js
   }
@@ -26,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateForm = document.getElementById("kategoriMenuUpdateForm");
   if (updateForm) {
     updateForm.addEventListener("submit", (e) =>
-      // [UBAH] URL action dan success message
-      handleKategoriSubmit(e, "action/update.php", "Kategori berhasil diperbarui!")
+      // [FIX] Namanya diubah agar SAMA dengan nama fungsi di bawah
+      handleKategoriMenuSubmit(e, "action/update.php", "Kategori berhasil diperbarui!")
     );
     initFormAutoSave(updateForm); // ✅ Dari global.js
   }
@@ -37,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ===== FORM SUBMIT HANDLER (Simple Version) =====
-// [UBAH] Nama fungsi bisa disesuaikan (contoh: handleKategoriSubmit, handleProductSubmit)
+// [FIX] Nama fungsi ini (handleKategoriMenuSubmit) sudah benar
 async function handleKategoriMenuSubmit(e, url, successMessage) {
   e.preventDefault();
   
