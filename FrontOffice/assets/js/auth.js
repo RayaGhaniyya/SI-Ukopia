@@ -1,42 +1,6 @@
-// File: FrontOffice/assets/js/auth.js
-// V16 (FIXED - Mengembalikan showNotification agar self-contained)
-
-// 
-// VVVVV--- (A) FUNGSI NOTIFIKASI DIKEMBALIKAN ---VVVVV
-// 
-function showNotification(message, type = 'info') {
-  const oldNotif = document.querySelector('.notification');
-  if (oldNotif) oldNotif.remove();
-
-  const notification = document.createElement('div');
-  notification.className = `notification notification-${type}`;
-  
-  let icon = 'ℹ';
-  if (type === 'success') icon = '✓';
-  if (type === 'error') icon = '✕';
-  if (type === 'warning') icon = '⚠';
-  
-  notification.innerHTML = `
-    <div class="notification-content">
-      <span class="notification-icon">${icon}</span>
-      <span class="notification-message">${message}</span>
-      <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  setTimeout(() => notification.classList.add('show'), 10);
-  setTimeout(() => {
-    notification.classList.remove('show');
-    setTimeout(() => notification.remove(), 300);
-  }, 4000);
-}
-// ^^^^^--- SELESAI BLOK A ---^^^^^
-
-
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- (1) LOGIKA SLIDESHOW ---
+    // --- (1) LOGIKA SLIDESHOW (SAMA) ---
     const slides = document.querySelectorAll(".auth-slideshow .slide");
     if (slides.length > 0) {
         let currentSlide = 0;
@@ -52,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setInterval(nextSlide, 6000); 
     }
 
-    // --- (2) LOGIKA SHOW/HIDE PASSWORD (SEMUA FORM) ---
+    // --- (2) LOGIKA SHOW/HIDE PASSWORD (SAMA) ---
     function initTogglePassword(inputId, toggleId) {
         const input = document.getElementById(inputId);
         const toggle = document.getElementById(toggleId);
@@ -65,14 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }
-    initTogglePassword('password', 'togglePassword'); // Form Login
-    initTogglePassword('password_reg', 'togglePasswordReg'); // Form Register
-    initTogglePassword('confirm_password', 'toggleConfirmPassword'); // Form Register
-    initTogglePassword('password_new', 'togglePasswordNew'); // Form Lupa Password
-    initTogglePassword('confirm_password_new', 'toggleConfirmNew'); // Form Lupa Password
+    initTogglePassword('password', 'togglePassword');
+    initTogglePassword('password_reg', 'togglePasswordReg');
+    initTogglePassword('confirm_password', 'toggleConfirmPassword');
+    initTogglePassword('password_new', 'togglePasswordNew');
+    initTogglePassword('confirm_password_new', 'toggleConfirmNew');
 
 
-    // --- (3) LOGIKA SLIDING FORMS (LOGIN/REGISTER) ---
+    // --- (3) LOGIKA SLIDING FORMS (SAMA) ---
     const authWrapper = document.querySelector('.auth-wrapper');
     const toggleToRegisterBtn = document.getElementById('toggleToRegister');
     const toggleToLoginBtn = document.getElementById('toggleToLogin');
@@ -87,37 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 
-    // VVVVV--- (B) LOGIKA NOTIFIKASI DARI URL ---VVVVV
-    // 
+    // --- (4) LOGIKA NOTIFIKASI DARI URL (UPDATE PAKE TOAST) ---
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('status') && urlParams.get('status') === 'success') {
-        const message = urlParams.get('message') || 'Operasi berhasil!';
-        // Panggil showNotification (dari file ini sendiri)
-        showNotification(message, 'success'); 
-        
-        // Hapus parameter dari URL
-        const view = urlParams.get('view');
-        let cleanURL = window.location.pathname + (view ? '?view=' + view : '');
-        window.history.pushState(null, '', cleanURL);
-    }
-    if (urlParams.has('status') && urlParams.get('status') === 'error') {
+    
+    if (urlParams.has('status')) {
+        const status = urlParams.get('status'); // 'success' atau 'error'
         const message = urlParams.get('message') || 'Terjadi kesalahan.';
-         // Panggil showNotification (dari file ini sendiri)
-        showNotification(message, 'error');
         
-        // Hapus parameter dari URL
+        // Panggil showToast (dari file toast.js)
+        // Pastikan type-nya sesuai dengan css toast ('success' / 'error')
+        if (typeof showToast === 'function') {
+            showToast(message, status);
+        } else {
+            alert(message); // Fallback
+        }
+
+        // Hapus parameter URL agar bersih
         const view = urlParams.get('view');
         let cleanURL = window.location.pathname + (view ? '?view=' + view : '');
         window.history.pushState(null, '', cleanURL);
     }
-    // ^^^^^--- SELESAI BLOK B ---^^^^^
 
 
-    // 
-    // VVVVV--- (C) LOGIKA VALIDASI FORM (CLIENT-SIDE) ---VVVVV
-    //
-    // (Validasi Form Register)
+    // --- (5) LOGIKA VALIDASI FORM REGISTER (UPDATE PAKE TOAST) ---
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
@@ -126,32 +82,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (password !== confirmPassword) {
                 e.preventDefault(); 
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password dan Konfirmasi Password tidak cocok.', 'error');
+                showToast('Password dan Konfirmasi tidak cocok.', 'error');
                 return;
             }
             if (password.length < 8) {
                 e.preventDefault(); 
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password minimal harus 8 karakter.', 'error');
+                showToast('Password minimal 8 karakter.', 'error');
                 return;
             }
             if (!/[A-Z]/.test(password)) {
                 e.preventDefault();
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password harus memiliki minimal 1 huruf besar (A-Z).', 'error');
+                showToast('Password harus ada huruf besar (A-Z).', 'error');
                 return;
             }
-            if (!/[a-z]/.test(password)) {
-                e.preventDefault();
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password harus memiliki minimal 1 huruf kecil (a-z).', 'error');
-                return;
-            }
+            // (Opsional: Tambah validasi huruf kecil jika perlu)
         });
     }
     
-    // (Validasi Form Lupa Password)
+    // --- (6) VALIDASI FORM RESET PASSWORD (UPDATE PAKE TOAST) ---
     const resetForm = document.getElementById('resetForm');
     if (resetForm) {
         resetForm.addEventListener('submit', function(e) {
@@ -160,29 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (password !== confirmPassword) {
                 e.preventDefault(); 
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password baru tidak cocok.', 'error');
+                showToast('Password baru tidak cocok.', 'error');
                 return;
             }
             if (password.length < 8) {
                 e.preventDefault(); 
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password minimal harus 8 karakter.', 'error');
-                return;
-            }
-            if (!/[A-Z]/.test(password)) {
-                e.preventDefault();
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password harus memiliki minimal 1 huruf besar (A-Z).', 'error');
-                return;
-            }
-            if (!/[a-z]/.test(password)) {
-                e.preventDefault();
-                 // Panggil showNotification (dari file ini sendiri)
-                showNotification('Password harus memiliki minimal 1 huruf kecil (a-z).', 'error');
+                showToast('Password minimal 8 karakter.', 'error');
                 return;
             }
         });
     }
-    // ^^^^^--- SELESAI BLOK C ---^^^^^
 });

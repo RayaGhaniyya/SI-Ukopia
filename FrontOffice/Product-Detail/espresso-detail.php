@@ -1,52 +1,101 @@
 <?php
-// include("../koneksi/koneksi.php");
+session_start();
+include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
-// include("../Component/NavBar.php");
+
+$db_connection = $conn;
+$id_produk = isset($_GET['id']) ? $_GET['id'] : 0;
+
+// Ambil Data Produk
+$queryProduk = mysqli_query($db_connection, "SELECT * FROM produk WHERE id_produk = '$id_produk'");
+$produk = mysqli_fetch_assoc($queryProduk);
+
+if (!$produk) {
+    echo "<script>alert('Produk tidak ditemukan!'); window.history.back();</script>";
+    exit;
+}
+
+// Ambil Data Variasi
+$queryDetail = mysqli_query($db_connection, "
+    SELECT dp.*, s.ukuran, g.nama_grind 
+    FROM detail_produk dp
+    JOIN size s ON dp.id_size = s.id_size
+    LEFT JOIN grind_size g ON dp.id_grind = g.id_grind
+    WHERE dp.id_produk = '$id_produk'
+    ORDER BY s.id_size ASC
+");
+
+$variasi = [];
+while ($row = mysqli_fetch_assoc($queryDetail)) {
+    $variasi[] = $row;
+}
+$jsonVariasi = json_encode($variasi);
 ?>
 
-<link rel="stylesheet" href="../assets/css/loader.css">
-<link rel="stylesheet" href="../assets/css/product-detail.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="id">
 
-<script src="../assets/js/loader.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $produk['nama_produk'] ?> - Ukopia</title>
 
-<main class="product-detail-section">
-    <button class="back-button" onclick="window.location.href='../Product/espresso.php'">
-        <i class="fa-solid fa-arrow-left"></i>
-    </button>
+    <link rel="stylesheet" href="../assets/css/loader.css">
+    <link rel="stylesheet" href="../assets/css/product-detail.css">
 
-    <table class="product-layout">
-        <tr>
-            <td class="left-panel">
+    <link rel="stylesheet" href="../assets/css/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <main class="product-detail-section">
+        <div class="product-layout">
+
+            <div class="left-panel">
                 <div class="image-container">
-                    <img src="../assets/img/Product-Homepage/arabica.png" alt="Watermelon Smash">
+                    <button class="back-button" onclick="window.history.back()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <img src="<?= $produk['gambar_url'] ?>" alt="<?= $produk['nama_produk'] ?>">
                 </div>
-            </td>
+            </div>
 
-            <td class="right-panel">
-                <div class="scroll-area">
-                    <div class="content">
-                        <h1 class="product-title">Watermelon Smash</h1>
-                        <p class="product-price">Rp 200.000,00</p>
+            <div class="right-panel">
+                <div class="content-wrapper">
 
-                        <p><strong>Origin:</strong> Argopuro, West Java, Indonesia</p>
-                        <p><strong>Processing:</strong> Anaerobic Natural</p>
-                        <p><strong>Variety:</strong> Typica, Kartika, Lini S & Sigararutang</p>
-                        <p><strong>Altitude:</strong> 1500 masl</p>
-                        <p><strong>Taste Notes:</strong> Watermelon, Strawberry & Mandarin Orange</p>
+                    <div class="product-info">
+                        <h1 class="product-title"><?= $produk['nama_produk'] ?></h1>
+                        <p class="product-price" id="display-price">Rp 0</p>
+
+                        <?php if (!empty($produk['origin'])) : ?>
+                            <p><strong>Origin:</strong> <?= $produk['origin'] ?></p>
+                        <?php endif; ?>
+                        <p style="margin-top:10px; line-height:1.6; color:#555;"><?= nl2br($produk['deskripsi']) ?></p>
 
                         <div class="product-options">
-                            <h4>Grind Size</h4>
-                            <button class="active">Whole Beans</button>
-                            <button>Espresso</button>
-                            <button>Fine</button>
-                            <button>Medium</button>
-                            <button>Coarse</button>
+                            <?php
+                            $grinds = array_unique(array_column($variasi, 'nama_grind'));
+                            if (!empty($grinds) && $grinds[0] != null):
+                            ?>
+                                <h4>Grind Size</h4>
+                                <div id="grind-options">
+                                    <?php foreach ($grinds as $index => $g): ?>
+                                        <button class="option-btn grind-btn <?= $index === 0 ? 'active' : '' ?>"
+                                            data-value="<?= $g ?>"><?= $g ?></button>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
 
                             <h4>Size</h4>
-                            <button class="active">100 Gr</button>
-                            <button>200 Gr</button>
-                            <button>500 Gr</button>
+                            <div id="size-options">
+                                <?php
+                                $sizes = array_unique(array_column($variasi, 'ukuran'));
+                                foreach ($sizes as $index => $s):
+                                ?>
+                                    <button class="option-btn size-btn <?= $index === 0 ? 'active' : '' ?>"
+                                        data-value="<?= $s ?>"><?= $s ?></button>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
 
                         <div class="product-quantity">
@@ -55,8 +104,7 @@ include("../Component/Loader.php");
                             <span class="count">1</span>
                             <button class="plus">+</button>
                         </div>
-
-                        <p class="stock">Stock: <span id="stock">11</span></p>
+                        <p class="stock">Stock: <span id="stock-display">0</span></p>
 
                         <div class="product-buttons">
                             <button class="add">Add to Cart</button>
@@ -65,13 +113,32 @@ include("../Component/Loader.php");
 
                         <div class="pickup-info">
                             <p>📍 Pickup available at:</p>
-                            <p>bJl. Mastrip No.48, Krajan Timur, Sumbersari, Jember, Jawa Timur</p>
+                            <p>Jl. Mastrip No.48, Krajan Timur, Sumbersari, Jember, Jawa Timur</p>
                         </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-    </table>
-</main>
+                    <div class="review-section-wrapper">
+                        <?php include("../Component/ReviewSection.php"); ?>
+                    </div>
 
-<script src="../assets/js/product-detail.js"></script>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../assets/js/loader.js"></script>
+
+    <script src="../assets/js/toast.js"></script>
+
+    <script>
+        const productData = <?= $jsonVariasi ?>;
+    </script>
+
+    <script src="../assets/js/product-detail.js"></script>
+
+</body>
+
+</html>
+
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+#toast-container {
+    position: fixed;
+    top: 30px;           /* Jarak dari atas */
+    left: 50%;           /* Posisikan di tengah horizontal */
+    transform: translateX(-50%); /* Geser balik 50% agar benar-benar di tengah */
+    z-index: 9999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; /* Pastikan item di dalamnya juga rata tengah */
+}
+
+/* Style Kartu Notifikasi */
+.toast-box {
+    min-width: 300px;
+    background: #1e1e1e; /* Warna Dark sesuai gambar */
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    
+    /* Animasi Masuk */
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.3s forwards;
+}
+
+/* Icon Check (Hijau) */
+.toast-box.success i.icon {
+    color: #00c853; /* Hijau terang */
+    font-size: 1.2rem;
+}
+
+/* Icon Error (Merah) */
+.toast-box.error i.icon {
+    color: #ff3d00; /* Merah terang */
+    font-size: 1.2rem;
+}
+
+/* Tombol Close */
+.toast-close {
+    margin-left: auto;
+    background: #333;
+    border: none;
+    color: #aaa;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: 0.2s;
+}
+
+.toast-close:hover {
+    background: #444;
+    color: #fff;
+}
+
+/* ... (Kode Toast sebelumnya biarkan saja) ... */
+
+/* =========================================
+   CUSTOM CONFIRM MODAL (POPUP HITAM)
+   ========================================= */
+.confirm-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Layar gelap transparan */
+    z-index: 1000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.confirm-box {
+    background: #1e1e1e; /* Warna Dark sesuai tema */
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    transform: scale(0.9);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.confirm-icon {
+    font-size: 3rem;
+    color: #ff3d00; /* Warna Merah Peringatan */
+    margin-bottom: 15px;
+}
+
+.confirm-box h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+
+.confirm-box p {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.confirm-btn {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel {
+    background: #333;
+    color: #fff;
+}
+.btn-cancel:hover { background: #444; }
+
+.btn-confirm {
+    background: #ff3d00;
+    color: #fff;
+}
+.btn-confirm:hover { background: #d50000; }
+
+/* Animasi */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* Animasi Keyframes */
+@keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+}

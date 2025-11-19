@@ -72,36 +72,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================================
-    // === FUNGSI CEK SLOT (LOGIKA UTAMA) - (FIXED) ===
+    // === FUNGSI CEK SLOT (LOGIKA UTAMA) ===
     // ==========================================================
     function checkSlotAvailability() {
         
-        // Cek apakah variabel dari PHP sudah dimuat
         if (typeof bookedHours === 'undefined' || typeof serverTime === 'undefined') {
-            console.error("bookedHours atau serverTime tidak ditemukan. (Cek file index.php)");
+            console.error("bookedHours atau serverTime tidak ditemukan.");
             return;
         }
 
-        // --- Gunakan variabel 'serverTime' dari PHP (Anti-Timezone Bug) ---
-        const todayDateStr = serverTime.todayDateStr;     // "2025-11-05"
-        const currentHour = serverTime.currentHour;     // Misal: 13 (dari 13:01)
-        const currentMinute = serverTime.currentMinute;   // Misal: 01 (dari 13:01)
+        const todayDateStr = serverTime.todayDateStr;
+        const currentHour = serverTime.currentHour;
+        const currentMinute = serverTime.currentMinute;
 
         const selectedDate = hiddenDay.value; 
-        
-        // Cek apakah tanggal yang dipilih adalah HARI INI
         const isToday = (selectedDate === todayDateStr);
         
         const hoursBookedOnThisDate = bookedHours[selectedDate] || {};
 
-        // --- 1. Cek Ketersediaan JAM ---
+        // 1. Cek JAM
         hourListItems.forEach(hourItem => {
-            const hour = parseInt(hourItem.dataset.value, 10); // "10", "11", "12"
-            
+            const hour = parseInt(hourItem.dataset.value, 10);
             const isBooked = !!hoursBookedOnThisDate[hour];
-            
-            // Cek jam lewat
-            // (isToday=true) AND (jam tombol '11' < jam server '13') -> true (disable)
             const isPast = (isToday && hour < currentHour); 
             
             if (isBooked || isPast) {
@@ -113,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // --- 2. Cek apakah JAM yang DIPILIH SEKARANG valid ---
+        // 2. Cek Jam Terpilih
         const selectedHour = hourBtn.textContent.trim();
         const selectedHourEl = Array.from(hourListItems).find(li => li.dataset.value === selectedHour);
         
@@ -121,28 +113,24 @@ document.addEventListener("DOMContentLoaded", () => {
             let foundNewHour = false;
             for (const hourItem of hourListItems) {
                 if (!hourItem.classList.contains('disabled')) {
-                    hourBtn.textContent = hourItem.dataset.value; // Pindah ke jam pertama yg valid
+                    hourBtn.textContent = hourItem.dataset.value;
                     foundNewHour = true;
                     break;
                 }
             }
             if (!foundNewHour) {
-                console.warn("Semua jam penuh di tanggal ini.");
+                console.warn("Semua jam penuh.");
             }
         }
         
-        // --- 3. Cek Ketersediaan MENIT ---
+        // 3. Cek MENIT
         const finalSelectedHour = parseInt(hourBtn.textContent.trim(), 10);
-        
         const isHourBooked = !!hoursBookedOnThisDate[finalSelectedHour];
-        
-        // Cek apakah jam yang dipilih adalah JAM SEKARANG
-        // (isToday=true) AND (jam tombol '13' === jam server '13')
         const isCurrentHour = (isToday && finalSelectedHour === currentHour);
 
         let firstAvailableMinuteFound = false;
         minuteListItems.forEach(minItem => {
-            const minute = parseInt(minItem.dataset.value, 10); // 0, 10, 20
+            const minute = parseInt(minItem.dataset.value, 10); 
 
             if (isHourBooked) {
                 minItem.classList.add('disabled');
@@ -150,8 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             
-            // Cek menit lewat (HANYA jika ini adalah jam sekarang)
-            // (isCurrentHour=true) AND (menit tombol '0' < menit server '1') -> true (disable)
             const isMinutePast = (isCurrentHour && minute < currentMinute);
             
             if (isMinutePast) {
@@ -167,14 +153,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
         
-        // --- 4. Atur status tombol Menit & Confirm ---
+        // 4. Atur Tombol Confirm
         const finalSelectedHourEl = Array.from(hourListItems).find(li => li.dataset.value === String(finalSelectedHour).padStart(2,'0'));
         const isFinalHourDisabled = (finalSelectedHourEl && finalSelectedHourEl.classList.contains('disabled'));
 
         if (isHourBooked || isFinalHourDisabled || !firstAvailableMinuteFound) {
-            if (!firstAvailableMinuteFound) {
-                minuteBtn.textContent = "00";
-            }
+            if (!firstAvailableMinuteFound) minuteBtn.textContent = "00";
+            
             minuteBtn.disabled = true;
             minuteBtn.title = 'Jam ini tidak tersedia';
             confirmBtn.disabled = true;
@@ -186,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmBtn.textContent = "Confirm";
         }
         
-        // --- 5. Cek Hari ---
+        // 5. Cek Hari
         dayButtons.forEach(btn => {
             if (btn.dataset.value === selectedDate && btn.disabled) {
                  confirmBtn.disabled = true;
@@ -200,10 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         updateSelectedTime();
     }
-    // ==========================================================
-    // === AKHIR FUNGSI CHECK SLOT ===
-    // ==========================================================
-
 
     // === FUNGSI SUBMIT FORM (AJAX/FETCH) ===
     if (form) {
@@ -223,7 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const result = await response.json(); 
 
                 if (result.success) {
-                    showPopup("✅ Reservasi berhasil! Silakan tunggu konfirmasi admin.", 'success');
+                    // === GANTI DENGAN TOAST ===
+                    showToast("Reservasi berhasil! Silakan tunggu konfirmasi admin.", 'success');
+                    
                     form.reset();
                     
                     let firstAvailableDayBtn = null;
@@ -244,48 +227,33 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateSelectedTime();
                     
                     setTimeout(() => {
-                        location.reload(); // Reload halaman untuk data slot baru
+                        location.reload(); // Reload untuk update slot
                     }, 2000); 
 
                 } else {
-                    showPopup(`🚫 ${result.message}`, 'error');
+                    // === GANTI DENGAN TOAST ===
+                    showToast(result.message, 'error');
+                    
                     confirmBtn.disabled = false;
                     confirmBtn.textContent = "Confirm";
                 }
 
             } catch (error) {
-                showPopup("🚫 Terjadi kesalahan. Coba beberapa saat lagi.", 'error');
+                // === GANTI DENGAN TOAST ===
+                showToast("Terjadi kesalahan sistem. Coba lagi nanti.", 'error');
+                
                 console.error("Error submitting form:", error);
                 confirmBtn.disabled = false;
                 confirmBtn.textContent = "Confirm";
             }
         });
     }
-
-    // === FUNGSI POPUP ===
-    function showPopup(message, type = 'success') {
-        const popup = document.createElement("div");
-        popup.className = "reservation-popup";
-        popup.textContent = message;
-        
-        if (type === 'error') {
-            popup.style.background = "#dc3545"; // Merah
-        }
-        
-        document.body.appendChild(popup);
-        setTimeout(() => popup.classList.add("show"), 50);
-        setTimeout(() => {
-            popup.classList.remove("show");
-            setTimeout(() => popup.remove(), 400);
-        }, 3000);
-    }
     
     // === Inisialisasi ===
     if (dayButtons.length > 0) {
-        checkSlotAvailability(); // Cek slot saat halaman dimuat
+        checkSlotAvailability();
     }
     
-    // Efek focus/blur dari CSS asli kamu
     document.querySelectorAll(".input-group input").forEach(input => {
         input.addEventListener("focus", () => input.classList.add("focused"));
         input.addEventListener("blur", () => input.classList.remove("focused"));

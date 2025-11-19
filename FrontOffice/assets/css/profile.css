@@ -1,15 +1,10 @@
-/* =================================
-PROFILE_MODERN.CSS (FrontOffice)
-Desain terintegrasi yang bersih
-================================= */
-
-/* [RESET CSS] Reset margin dasar */
-html, body {
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-/* 1. Body & Header */
 .profile-body {
     background-color: #f4f7f6; /* Latar abu-abu sangat muda */
     min-height: 100vh;

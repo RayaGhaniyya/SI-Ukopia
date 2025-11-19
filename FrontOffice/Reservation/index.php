@@ -99,8 +99,10 @@ if (empty($default_selected_day)) {
 ?>
 
 <link rel="stylesheet" href="../assets/css/loader.css">
-<script src="../assets/js/loader.js"></script>
+<link rel="stylesheet" href="../assets/css/toast.css">
 <link rel="stylesheet" href="../assets/css/reservation.css">
+
+<script src="../assets/js/loader.js"></script>
 
 <script>
     const bookedHours = <?php echo json_encode($bookedHours); ?>;
@@ -191,5 +193,6 @@ if (empty($default_selected_day)) {
     </div>
 </section>
 
+<script src="../assets/js/toast.js"></script>
 <script src="../assets/js/reservation.js"></script>
 <?php include("../Component/Footer.php"); ?>

@@ -11,9 +11,9 @@ if (!isset($_SESSION['verification_email'])) {
 }
 $email = $_SESSION['verification_email'];
 
-// (2) Ambil pesan notifikasi (jika ada)
-$error_message = $_GET['error'] ?? '';
-$success_message = $_GET['success'] ?? '';
+// (2) Ambil pesan notifikasi dari URL (jika ada)
+$status = $_GET['status'] ?? '';
+$message = $_GET['message'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -23,10 +23,11 @@ $success_message = $_GET['success'] ?? '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Email Anda - Ukopia</title>
-    <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <script src="../assets/js/global.js?v=<?php echo time(); ?>"></script>
+    <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/toast.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         /* CSS Tambahan untuk tombol disabled dan countdown */
@@ -45,7 +46,6 @@ $success_message = $_GET['success'] ?? '';
             color: #888;
             margin-top: 10px;
             display: block;
-            /* Agar muncul di bawah tombol */
         }
     </style>
 </head>
@@ -56,7 +56,8 @@ $success_message = $_GET['success'] ?? '';
 
         <div class="verification-status">
 
-            <div class="verification-icon" style="background: #f59e0b;"> <i class="fas fa-envelope"></i>
+            <div class="verification-icon" style="background: #f59e0b;">
+                <i class="fas fa-envelope"></i>
             </div>
 
             <h2>Cek Email Anda</h2>
@@ -75,6 +76,8 @@ $success_message = $_GET['success'] ?? '';
         </div>
 
     </div>
+
+    <script src="../assets/js/toast.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -105,29 +108,28 @@ $success_message = $_GET['success'] ?? '';
                 }, 1000); // 1 detik
             }
 
-            // Cek jika notifikasi (dari PHP) ada
-            <?php if (!empty($success_message)): ?>
-                showNotification('<?= $success_message ?>', 'success');
-                startCooldown(); // Mulai cooldown jika baru kirim ulang
-            <?php endif; ?>
+            // --- CEK NOTIFIKASI DARI PHP (URL PARAMETER) ---
+            const status = "<?= htmlspecialchars($status) ?>";
+            const message = "<?= htmlspecialchars($message) ?>";
 
-            <?php if (!empty($error_message)): ?>
-                showNotification('<?= $error_message ?>', 'error');
-            <?php endif; ?>
+            if (status === 'success') {
+                showToast(message, 'success');
+                // Jika sukses kirim ulang, mulai cooldown
+                localStorage.setItem('cooldown_start', Date.now());
+                startCooldown();
+            } else if (status === 'error') {
+                showToast(message, 'error');
+            }
 
-            // Cek jika kita baru klik "Kirim Ulang"
+            // --- LOGIKA TOMBOL KIRIM ULANG ---
             resendButton.addEventListener('click', function(e) {
                 if (resendButton.classList.contains('disabled')) {
                     e.preventDefault(); // Hentikan klik jika masih cooldown
-                    showNotification('Harap tunggu 60 detik sebelum mengirim ulang.', 'warning');
-                } else {
-                    // (Jika tidak cooldown, biarkan link berjalan ke 'resend_code.php')
-                    // (Kita tidak panggil startCooldown() di sini, 
-                    // tapi di 'DOMContentLoaded' saat halaman di-reload)
+                    showToast('Harap tunggu 60 detik sebelum mengirim ulang.', 'error'); // Ganti warning jadi error/info style
                 }
             });
 
-            // Cek jika halaman di-refresh saat masih cooldown
+            // --- CEK COOLDOWN SAAT REFRESH ---
             const cooldownStart = localStorage.getItem('cooldown_start');
             if (cooldownStart) {
                 const timePassed = Math.floor((Date.now() - cooldownStart) / 1000);
@@ -137,10 +139,6 @@ $success_message = $_GET['success'] ?? '';
                 } else {
                     localStorage.removeItem('cooldown_start');
                 }
-            } else {
-                // Jika ini pertama kali, mulai cooldown
-                localStorage.setItem('cooldown_start', Date.now());
-                startCooldown();
             }
         });
     </script>

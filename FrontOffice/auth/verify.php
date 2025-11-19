@@ -6,7 +6,6 @@ include("../../Koneksi/koneksi.php");
 $message = "";
 $is_success = false;
 
-// (Logika PHP kamu SAMA PERSIS, tidak diubah)
 if (isset($_GET['code']) && !empty($_GET['code'])) {
     $verification_code = $_GET['code'];
     $stmt = $conn->prepare("SELECT uid FROM akun_customer WHERE verification_code = ?");
@@ -45,7 +44,10 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi Akun - Ukopia</title>
+
     <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/toast.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -68,6 +70,8 @@ $conn->close();
         </div>
 
     </div>
+
+    <script src="../assets/js/toast.js"></script>
 </body>
 
 </html>

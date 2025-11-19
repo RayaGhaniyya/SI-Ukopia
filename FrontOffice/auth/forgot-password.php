@@ -13,8 +13,8 @@ $view = $_GET['view'] ?? 'email';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - Ukopia</title>
-
     <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -96,8 +96,8 @@ $view = $_GET['view'] ?? 'email';
             </div>
         </div>
     </div>
+    <script src="../assets/js/toast.js"></script>
     <script src="../assets/js/auth.js?v=<?php echo time(); ?>"></script>
-
 </body>
 
 </html>
