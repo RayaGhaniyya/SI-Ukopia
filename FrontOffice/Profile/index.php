@@ -199,27 +199,55 @@ include("../Component/NavBar.php");
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ganti Password</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Ganti Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="passwordChangeForm">
+
+                <form id="passStep1Form">
                     <div class="mb-3">
                         <label class="form-label">Password Lama</label>
-                        <div class="password-wrapper"><input type="password" class="form-control" id="oldPassword" name="old_password" required><i class="fas fa-eye password-icon" id="toggleOldPassword"></i></div>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-control" name="old_password" id="oldPassword" required>
+                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
+                        </div>
                         <div class="form-text text-end">
                             <a href="../auth/forgot-password.php" class="text-decoration-none" style="font-size: 0.85rem;">Lupa Password lama?</a>
                         </div>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Password Baru</label>
-                        <div class="password-wrapper"><input type="password" class="form-control" id="newPassword" name="new_password" required><i class="fas fa-eye password-icon" id="toggleNewPassword"></i></div>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-control" name="new_password" id="newPasswordInput" placeholder="Min. 8 Karakter, Huruf Besar & Kecil" required>
+                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
+                        </div>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Konfirmasi Password Baru</label>
-                        <div class="password-wrapper"><input type="password" class="form-control" id="confirmNewPassword" name="confirm_new_password" required><i class="fas fa-eye password-icon" id="toggleConfirmNewPassword"></i></div>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-control" name="confirm_new_password" id="confirmNewPasswordInput" required>
+                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-dark w-100">Simpan Password Baru</button>
+
+                    <button type="submit" class="btn btn-dark w-100">Kirim Kode Verifikasi</button>
                 </form>
+
+                <form id="passStep2Form" style="display: none;">
+                    <div class="alert alert-success" style="font-size: 0.9rem;">
+                        Kode verifikasi keamanan dikirim ke email Anda (<strong><?php echo htmlspecialchars($customer['email']); ?></strong>).
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Masukkan Kode 6 Digit</label>
+                        <input type="text" class="form-control text-center" name="verification_code"
+                            style="letter-spacing: 5px; font-size: 1.2rem;" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100">Verifikasi & Simpan Password</button>
+                    <button type="button" class="btn btn-link w-100 mt-2" id="btnBatalPass">Batal</button>
+                </form>
+
             </div>
         </div>
     </div>

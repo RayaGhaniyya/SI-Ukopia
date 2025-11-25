@@ -53,7 +53,7 @@ $jsonVariasi = json_encode($variasi);
 
             <div class="left-panel">
                 <div class="image-container">
-                    <button class="back-button" onclick="window.history.back()">
+                    <button class="back-button" onclick="window.location.href='../Product/merchandise.php'">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
                     <img src="<?= $produk['gambar_url'] ?>" alt="<?= $produk['nama_produk'] ?>">

@@ -1,5 +1,6 @@
 /* =================================
    Logika Halaman Profil
+   (Updated: Validasi Typo Email)
    ================================= */
 
 // Fungsi Toggle Password
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initTogglePassword('newPassword', 'toggleNewPassword');
     initTogglePassword('confirmNewPassword', 'toggleConfirmNewPassword');
 
-    // --- 1. Edit Data Diri ---
+    // --- 1. EDIT DATA DIRI ---
     const editBtn = document.getElementById("editProfileBtn");
     const namaInput = document.getElementById("namaLengkap");
     const usernameInput = document.getElementById("username");
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 2. Ganti Email (2 Langkah) ---
+    // --- 2. GANTI EMAIL (2 LANGKAH + VALIDASI TYPO) ---
     const step1Form = document.getElementById("emailStep1Form");
     const step2Form = document.getElementById("emailStep2Form");
     const btnBatalEmail = document.getElementById("btnBatalEmail");
@@ -82,6 +83,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if (step1Form) {
         step1Form.addEventListener("submit", async (e) => {
             e.preventDefault();
+            
+            const emailInput = step1Form.querySelector('input[name="new_email"]');
+            const emailValue = emailInput.value.trim().toLowerCase();
+            
+            // A. Validasi Format Dasar (Regex)
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailValue)) {
+                showToast('Format email tidak valid (contoh: nama@email.com)', 'error');
+                emailInput.focus();
+                return;
+            }
+
+            // B. Validasi Typo Domain (Anti @gmai.com)
+            const domainPart = emailValue.split('@')[1];
+            const typos = {
+                'gmai.com': 'gmail.com',
+                'gmil.com': 'gmail.com',
+                'gail.com': 'gmail.com',
+                'gmail.co': 'gmail.com',
+                'yaho.com': 'yahoo.com',
+                'yahoo.co': 'yahoo.com',
+                'hotmai.com': 'hotmail.com'
+            };
+
+            if (typos[domainPart]) {
+                showToast(`Typo terdeteksi! Maksud Anda @${typos[domainPart]}?`, 'error');
+                emailInput.focus();
+                return; // Stop proses agar tidak terkirim
+            }
+
             const btn = step1Form.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.disabled = true;
@@ -147,46 +178,114 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 3. Ganti Password ---
-    const passwordForm = document.getElementById("passwordChangeForm");
-    if (passwordForm) {
-        passwordForm.addEventListener("submit", async (e) => {
+    // --- 3. GANTI PASSWORD ---
+    // --- 3. GANTI PASSWORD (2 LANGKAH + VALIDASI) ---
+    const passStep1 = document.getElementById("passStep1Form");
+    const passStep2 = document.getElementById("passStep2Form");
+    const btnBatalPass = document.getElementById("btnBatalPass");
+
+    // STEP 1: Request Kode
+    if (passStep1) {
+        passStep1.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const newPass = document.getElementById('newPassword').value;
-            const confirmPass = document.getElementById('confirmNewPassword').value;
             
+            // --- VALIDASI PASSWORD (CLIENT SIDE) ---
+            const newPass = document.getElementById('newPasswordInput').value;
+            const confirmPass = document.getElementById('confirmNewPasswordInput').value;
+            
+            // 1. Cek Kesamaan
             if (newPass !== confirmPass) {
                 showToast('Password baru dan konfirmasi tidak cocok.', 'error');
                 return;
             }
+            // 2. Cek Minimal 8 Karakter
+            if (newPass.length < 8) {
+                showToast('Password minimal 8 karakter.', 'error');
+                return;
+            }
+            // 3. Cek Huruf Besar (A-Z)
+            if (!/[A-Z]/.test(newPass)) {
+                showToast('Password harus mengandung minimal 1 Huruf Besar (A-Z).', 'error');
+                return;
+            }
+            // 4. Cek Huruf Kecil (a-z)
+            if (!/[a-z]/.test(newPass)) {
+                showToast('Password harus mengandung minimal 1 Huruf Kecil (a-z).', 'error');
+                return;
+            }
+            // ---------------------------------------
 
-            const btn = passwordForm.querySelector('button[type="submit"]');
+            const btn = passStep1.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Memproses...';
+
+            const formData = new FormData(passStep1);
+
+            try {
+                const response = await fetch('action/request_password_code.php', { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Kode verifikasi terkirim ke email Anda.', 'success');
+                    passStep1.style.display = 'none';
+                    passStep2.style.display = 'block';
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                showToast('Gagal menghubungi server.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+    }
+
+    // STEP 2: Verifikasi Kode & Simpan
+    if (passStep2) {
+        passStep2.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = passStep2.querySelector('button[type="submit"]');
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
 
-            const formData = new FormData(passwordForm);
+            const formData = new FormData(passStep2);
+
             try {
-                const response = await fetch('action/update_password.php', { method: 'POST', body: formData });
+                const response = await fetch('action/verify_password_change.php', { method: 'POST', body: formData });
                 const result = await response.json();
 
                 if (result.success) {
                     showToast(result.message, 'success');
                     const modal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
                     modal.hide();
-                    passwordForm.reset();
+                    passStep1.reset();
+                    passStep2.reset();
+                    // Kembali ke step 1 untuk penggunaan berikutnya
+                    passStep2.style.display = 'none';
+                    passStep1.style.display = 'block';
                 } else {
                     showToast(result.message, 'error');
                 }
             } catch (error) {
-                showToast('Terjadi kesalahan jaringan.', 'error');
+                showToast('Terjadi kesalahan verifikasi.', 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = 'Simpan Password Baru';
+                btn.textContent = 'Verifikasi & Simpan Password';
             }
         });
     }
+
+    // Tombol Batal
+    if (btnBatalPass) {
+        btnBatalPass.addEventListener('click', () => {
+            passStep2.style.display = 'none';
+            passStep1.style.display = 'block';
+        });
+    }
     
-    // --- 4. Alamat Baru ---
+    // --- 4. TAMBAH ALAMAT BARU ---
     const alamatForm = document.getElementById("alamatChangeForm");
     if (alamatForm) {
        alamatForm.addEventListener("submit", async (e) => { 
@@ -216,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
        });
     }
 
-    // --- 5. Load Alamat ---
+    // --- 5. LOAD ALAMAT ---
     const alamatContainer = document.getElementById('daftarAlamatContainer');
     
     async function loadAlamatList() {
@@ -267,7 +366,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(logoutBtn){
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            // Gunakan parameter untuk mengubah teks popup
             showConfirm(
                 'Yakin ingin keluar dari akun?', 
                 () => { window.location.href = 'action/logout.php'; },
@@ -278,10 +376,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- Fungsi Global ---
+// --- FUNGSI GLOBAL ---
 
 function hapusAlamat(id) {
-    // Gunakan default (Konfirmasi Hapus, Hapus)
     showConfirm('Yakin ingin menghapus alamat ini?', async () => {
         const formData = new FormData();
         formData.append('id_alamat', id);

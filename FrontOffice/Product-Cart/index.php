@@ -47,10 +47,10 @@ $queryCart = mysqli_query($conn, "
 
     <main class="cart-section">
         <div class="cart-header">
-            Your Cart
             <a href="../Product/filter.php" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
+            Your Cart
         </div>
 
         <?php if (mysqli_num_rows($queryCart) > 0): ?>
