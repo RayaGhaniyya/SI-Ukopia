@@ -62,6 +62,12 @@
             </a>
             <ul class="dropdown-menu" id="mobileDropdown">
                 <li>
+                    <a href="/si-ukopia/BackOffice/List_Data/Alat/index.php">
+                        <i class="fas fa-toolbox"></i>
+                        <span>Alat</span>
+                    </a>
+                </li>
+                <li>
                     <a href="/si-ukopia/BackOffice/List_Data/Grind_Size/index.php">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>Grind Size</span>
@@ -110,6 +116,24 @@
                     <a href="/SI-Ukopia/BackOffice/Mobile/Menu/index.php">
                         <i class="fas fa-mug-hot"></i>
                         <span>Menu</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Mobile/Resep/index.php">
+                        <i class="fas fa-book-open"></i>sual
+                        <span>Resep</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Mobile/Reward/klaim.php">
+                        <i class="fas fa-gift"></i>
+                        <span>Reward</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Mobile/Loyalty/index.php">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>Loyalty</span>
                     </a>
                 </li>
             </ul>

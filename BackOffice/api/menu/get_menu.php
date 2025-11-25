@@ -10,29 +10,39 @@ if (!$db) {
     die();
 }
 
-function perbaiki_url_gambar($url_dari_db) {
-    if (empty($url_dari_db)) {
-        return null;
+// ===================================================================
+// ▼▼▼ FUNGSI INI DIUBAH TOTAL ▼▼▼
+// ===================================================================
+/**
+ * Membangun URL gambar yang lengkap dari nama file di database.
+ * Database sekarang hanya menyimpan "nama_file.webp".
+ * Fungsi ini mengubahnya menjadi "http://[host_anda]/[path_upload]/nama_file.webp"
+ */
+function perbaiki_url_gambar($nama_file_dari_db) {
+    if (empty($nama_file_dari_db)) {
+        return null; // Kembalikan null jika tidak ada gambar
     }
 
     // 1. Ambil host (IP/domain) dari request saat ini.
+    // Hasilnya: "192.168.1.5" atau "localhost" atau "ukopia.com"
     $current_host = $_SERVER['HTTP_HOST'];
 
-    // 2. Buat daftar "placeholder" yang mungkin ada di DB
-    $placeholders = [
-        "http://localhost",
-        "http://127.0.0.1"
-    ];
+    // 2. Tentukan jalur (path) ke folder upload Anda
+    //    Ini adalah path dari root website Anda ke folder gambar.
+    //    SESUAIKAN JIKA SALAH!
+    $base_path = "/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
 
-    // 3. Buat host pengganti yang benar
-    $replacement_host = "http://" . $current_host;
+    // 3. Gabungkan semuanya menjadi URL lengkap
+    //    Gunakan 'http://' (atau 'https://' jika Anda pakai SSL)
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-    // 4. Ganti semua placeholder dengan host yang benar
-    $correct_url = str_replace($placeholders, $replacement_host, $url_dari_db);
+    $correct_url = $protocol . $current_host . $base_path . $nama_file_dari_db;
 
     return $correct_url;
 }
+// ===================================================================
 // ▲▲▲ FUNGSI SELESAI ▲▲▲
+// ===================================================================
 
 
 // --- Logika Filter Kategori ---
@@ -51,7 +61,7 @@ $sql = "SELECT
             m.id_menu, 
             km.nama_kategori,
             m.deskripsi, 
-            m.gambar_url, 
+            m.gambar_url, -- Ini sekarang berisi 
             m.nama_menu,
             TRUNCATE(AVG(um.rating), 1) AS average_rating,
             COUNT(um.id_menu) AS total_reviews
@@ -78,7 +88,9 @@ $result = $stmt->get_result();
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         
-        // Panggil fungsi yang sudah kita definisikan di atas
+        // Panggil fungsi BARU kita
+        // $row['gambar_url'] berisi nama file (mis: "menu_123.webp")
+        // Fungsi ini akan mengubahnya menjadi URL lengkap
         $row['gambar_url'] = perbaiki_url_gambar($row['gambar_url']);
         
         // Mengatasi jika ratingnya NULL (belum ada ulasan)
