@@ -1,14 +1,23 @@
 <?php
 session_start();
+// Path: dari auth/ -> FrontOffice/ -> SI-Ukopia/ -> Koneksi/
 include("../../Koneksi/koneksi.php");
 
+// 1. Cek apakah user SUDAH login?
 if (isset($_SESSION['customer_uid'])) {
-    header('Location: ../Akun/index.php');
+    // Jika user iseng buka halaman login padahal sudah login
+    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        header('Location: ../Product-Checkout/index.php');
+    } else {
+        // [UPDATE] Arahkan ke HomePage (bukan Profile)
+        header('Location: ../HomePage/index.php');
+    }
     exit;
 }
 
-// Logika Login
+// 2. Logika Proses Login
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST['form_type'] == 'login') {
+
     $login_identifier = $_POST['login_identifier'];
     $password = $_POST['password'];
 
@@ -16,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
         header('Location: login.php?status=error&message=Email/Username dan Password wajib diisi');
         exit;
     } else {
+        // Cek Email ATAU Username
         $stmt = $conn->prepare("SELECT uid, nama, password, is_verified FROM akun_customer WHERE email = ? OR username = ?");
         $stmt->bind_param("ss", $login_identifier, $login_identifier);
         $stmt->execute();
@@ -23,28 +33,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
 
         if ($result->num_rows === 1) {
             $customer = $result->fetch_assoc();
+
+            // Verifikasi Password
             if (password_verify($password, $customer['password'])) {
+
+                // Cek Status Verifikasi Email
                 if ($customer['is_verified'] == 0) {
-                    header('Location: login.php?status=error&message=Akun Anda belum diverifikasi. Silakan cek email.');
+                    $_SESSION['verification_email'] = $login_identifier;
+                    header('Location: login.php?status=error&message=Akun belum aktif. Silakan cek email atau login ulang.');
                     exit;
                 } else {
+                    // --- LOGIN BERHASIL ---
                     $_SESSION['customer_uid'] = $customer['uid'];
                     $_SESSION['customer_nama'] = $customer['nama'];
-                    // [TOAST] Simpan pesan sukses di session flash message agar muncul di halaman tujuan
-                    // (Tapi karena ini redirect ke halaman lain yg mungkin belum punya toast, kita biarkan redirect biasa dulu)
+
+                    // Simpan session sekarang juga sebelum redirect
+                    session_write_close();
+
+                    // Redirect Cerdas
                     if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                         header('Location: ../Product-Checkout/index.php');
                     } else {
+                        // [UPDATE] GANTI DARI PROFILE KE HOMEPAGE DI SINI
                         header('Location: ../HomePage/index.php');
                     }
                     exit;
                 }
             } else {
-                header('Location: login.php?status=error&message=Email/Username atau Password salah.');
+                header('Location: login.php?status=error&message=Password salah.');
                 exit;
             }
         } else {
-            header('Location: login.php?status=error&message=Email/Username atau Password salah.');
+            header('Location: login.php?status=error&message=Akun tidak ditemukan.');
             exit;
         }
         $stmt->close();
@@ -52,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
 }
 $conn->close();
 
+// Cek apakah user sedang membuka tab Register (dari URL)
 $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
 ?>
 
@@ -81,15 +102,15 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
                 <form action="action/register_process.php" method="POST" class="auth-form" id="registerForm">
                     <div class="form-group">
                         <label for="nama">Nama Lengkap</label>
-                        <input type="text" id="nama" name="nama" placeholder="Budi Santoso" required>
+                        <input type="text" id="nama" name="nama" placeholder="Nama" required>
                     </div>
                     <div class="form-group">
                         <label for="username_reg">Username</label>
-                        <input type="text" id="username_reg" name="username" placeholder="Buat username unik" required>
+                        <input type="text" id="username_reg" name="username" placeholder="Username" required>
                     </div>
                     <div class="form-group">
                         <label for="email_reg">Email</label>
-                        <input type="email" id="email_reg" name="email" placeholder="contoh@email.com" required>
+                        <input type="email" id="email_reg" name="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <label for="password_reg">Password</label>
@@ -118,9 +139,10 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
 
                 <form action="login.php" method="POST" class="auth-form">
                     <input type="hidden" name="form_type" value="login">
+
                     <div class="form-group">
-                        <label for="login_identifier">Email or Username</label>
-                        <input type="text" id="login_identifier" name="login_identifier" placeholder="contoh@email.com" required>
+                        <label for="login_identifier">Email atau Username</label>
+                        <input type="text" id="login_identifier" name="login_identifier" placeholder="Email auat Username" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -140,6 +162,7 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
             </div>
 
         </div>
+
         <div class="auth-overlay-panel">
             <div class="auth-slideshow">
                 <div class="slide" style="background-image: url('../assets/img/Gallery-Homepage/foto 1.JPG');"></div>
@@ -148,10 +171,12 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
                 <div class="slide" style="background-image: url('../assets/img/Gallery-Homepage/foto 4.JPG');"></div>
             </div>
         </div>
+
     </div>
 
     <script src="../assets/js/toast.js"></script>
     <script src="../assets/js/auth.js?v=<?php echo time(); ?>"></script>
+
 </body>
 
 </html>

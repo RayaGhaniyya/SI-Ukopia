@@ -2,7 +2,7 @@
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-include("../../Component/pagination.php"); // 1. INCLUDE PAGINATION
+include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 
 // --- LOGIKA PAGINATION & SEARCH (KHUSUS TOOLS & APPROVE) ---
@@ -18,9 +18,9 @@ $base_url_pagin = '?';
 $params = [];
 $types = "";
 
-// 2. KONDISI WAJIB: KATEGORI 4 (Brewing Tools) & 5 (Ukopia Approve)
-// (Asumsi ID 5 untuk 'Ukopia Approve', tambahkan dulu di DB jika belum)
-$where_conditions = ["p.id_kategori IN (4, 5)"];
+// 2. KONDISI WAJIB: KATEGORI 4 (Brewing Tools) & 6 (Ukopia Approve)
+// [PERBAIKAN] Mengganti ID 5 menjadi 6 sesuai database kamu
+$where_conditions = ["p.id_kategori IN (4, 6)"];
 
 // 3. LOGIKA SEARCH (Cari di nama atau link)
 if ($search_term != '') {
