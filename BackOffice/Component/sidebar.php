@@ -14,6 +14,13 @@
             </a>
         </li>
 
+        <li>
+            <a href="/SI-Ukopia/BackOffice/Transaksi/index.php">
+                <i class="fas fa-receipt"></i>
+                <span>Transaksi</span>
+            </a>
+        </li>
+
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn"> <i class="fas fa-box-open"></i> <span>Manajemen Produk</span>
             </a>
@@ -46,13 +53,6 @@
             <a href="/SI-Ukopia/BackOffice/Gallery/index.php">
                 <i class="fas fa-image"></i>
                 <span>Gallery</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="#">
-                <i class="fas fa-receipt"></i>
-                <span>Riwayat Transaksi</span>
             </a>
         </li>
 
@@ -97,12 +97,6 @@
                         <span>Kategori Alat</span>
                     </a>
                 </li>
-                <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Status/index.php">
-                        <i class="fas fa-signal"></i>
-                        <span>Status</span>
-                    </a>
-                </li>
             </ul>
         </li>
 
@@ -120,7 +114,7 @@
                 </li>
                 <li>
                     <a href="/SI-Ukopia/BackOffice/Mobile/Resep/index.php">
-                        <i class="fas fa-book-open"></i>sual
+                        <i class="fas fa-book-open"></i>
                         <span>Resep</span>
                     </a>
                 </li>
