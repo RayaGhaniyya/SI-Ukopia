@@ -4,23 +4,20 @@ if (session_status() === PHP_SESSION_NONE) {
     // --- BLOK INI HANYA JALAN JIKA SESSION BELUM DIMULAI ---
 
     // [PERUBAHAN] Atur masa berlaku session (30 hari)
-    // 30 hari * 24 jam * 60 menit * 60 detik = 2,592,000 detik
     $session_lifetime = 2592000;
 
     // Atur parameter cookie SEBELUM session_start()
     session_set_cookie_params([
         'lifetime' => $session_lifetime,
-        'path' => '/', // Berlaku untuk seluruh website
-        'domain' => '', // (Kosongkan agar default ke domain saat ini)
-        'secure' => isset($_SERVER['HTTPS']), // Hanya kirim via HTTPS jika ada
-        'httponly' => true // Cookie tidak bisa diakses oleh JavaScript
+        'path' => '/', 
+        'domain' => '', 
+        'secure' => isset($_SERVER['HTTPS']), 
+        'httponly' => true 
     ]);
-
 
     // [PERUBAHAN] Mulai session
     session_start();
 }
-// --- Jika session sudah aktif, blok kode di atas akan di-skip ---
 ?>
 <!doctype html>
 <html lang="en">
@@ -32,8 +29,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
     <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
@@ -62,23 +57,27 @@ if (session_status() === PHP_SESSION_NONE) {
                     <li class="nav-item">
                         <a class="nav-link" href="../Reservation/index.php">Reservations</a>
                     </li>
+                    
                     <?php
-                    // Cek session login dari file auth/login.php
+                    // LOGIKA BUTTON KHUSUS MEMBER (LOGIN)
                     if (isset($_SESSION['customer_uid'])) {
-                        // Jika SUDAH LOGIN: Tampilkan link "Profile"
-                        // (Saya asumsikan file profile.php Anda ada di folder 'Akun' berdasarkan file auth/login.php)
+                        // Jika SUDAH LOGIN: Tampilkan Profile & My Orders
                         echo '
-                    <li class="nav-item">
-                        <a class="nav-link" href="../Profile/index.php">Profile</a>
-                    </li>';
+                        <li class="nav-item">
+                            <a class="nav-link" href="../Profile/index.php">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../Orders/index.php">My Orders</a>
+                        </li>';
                     } else {
-                        // Jika BELUM LOGIN: Tampilkan link "Sign In"
+                        // Jika BELUM LOGIN: Tampilkan Sign In
                         echo '
-                    <li class="nav-item">
-                        <a class="nav-link" href="../auth/login.php">Sign In</a>
-                    </li>';
+                        <li class="nav-item">
+                            <a class="nav-link" href="../auth/login.php">Sign In</a>
+                        </li>';
                     }
                     ?>
+                    
                 </ul>
             </div>
         </div>

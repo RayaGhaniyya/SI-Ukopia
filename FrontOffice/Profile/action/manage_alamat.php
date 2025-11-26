@@ -1,95 +1,58 @@
 <?php
 session_start();
-// [PATH] Sesuaikan path ke file koneksi Anda
 include("../../../Koneksi/koneksi.php");
-
 header('Content-Type: application/json');
 
-$response = [
-    'success' => false,
-    'message' => 'Terjadi kesalahan saat menyimpan alamat.'
-];
-
-// 1. Validasi Sesi Login
 if (!isset($_SESSION['customer_uid'])) {
-    $response['message'] = 'Sesi tidak valid. Silakan login kembali.';
-    echo json_encode($response);
+    echo json_encode(['success' => false, 'message' => 'Sesi habis.']);
     exit;
 }
-$customer_uid = $_SESSION['customer_uid'];
+$uid = $_SESSION['customer_uid'];
 
-// 2. Ambil semua data dari POST
-// (Kita asumsikan JS sudah memvalidasi 'required', 
-//  tapi idealnya PHP juga validasi ulang)
-$label_alamat = $_POST['label_alamat'] ?? '';
-$nama_penerima = $_POST['nama_penerima'] ?? '';
-$no_telepon = $_POST['no_telepon'] ?? '';
-$kode_pos = $_POST['kode_pos'] ?? '';
-$kota = $_POST['kota'] ?? ''; // Anda sudah perbaiki ini di HTML
+// Ambil Data
+$id_alamat = isset($_POST['id_alamat']) ? intval($_POST['id_alamat']) : 0; // ID untuk Edit (0 = Baru)
+$label = $_POST['label_alamat'] ?? '';
+$penerima = $_POST['nama_penerima'] ?? '';
+$telp = $_POST['no_telepon'] ?? '';
+$kodepos = $_POST['kode_pos'] ?? '';
+$kota = $_POST['kota'] ?? '';
 $provinsi = $_POST['provinsi'] ?? '';
-$alamat_lengkap = $_POST['alamat_lengkap'] ?? '';
-
-// Cek 'is_utama'. Jika checkbox dicentang, nilainya "1", jika tidak, 'isset' akan false.
+$detail = $_POST['alamat_lengkap'] ?? '';
 $is_utama = isset($_POST['is_utama']) ? 1 : 0;
 
-// Validasi sederhana di sisi server
-if (empty($label_alamat) || empty($nama_penerima) || empty($no_telepon) || empty($alamat_lengkap)) {
-    $response['message'] = 'Semua field wajib diisi.';
-    echo json_encode($response);
+if (empty($label) || empty($penerima) || empty($telp) || empty($detail)) {
+    echo json_encode(['success' => false, 'message' => 'Data wajib diisi.']);
     exit;
 }
 
-// 3. Gunakan Transaksi Database
-// Ini penting untuk memastikan konsistensi data
 $conn->begin_transaction();
-
 try {
-    // 3a. JIKA ini adalah alamat utama, set semua alamat lain milik user ini ke is_utama = 0
+    // 1. Jika diset Utama, reset alamat lain jadi 0
     if ($is_utama == 1) {
-        $sql_clear_utama = "UPDATE alamat_customer SET is_utama = 0 WHERE uid_customer = ?";
-        $stmt_clear = $conn->prepare($sql_clear_utama);
-        $stmt_clear->bind_param("i", $customer_uid);
-        $stmt_clear->execute();
-        $stmt_clear->close();
+        $conn->query("UPDATE alamat_customer SET is_utama = 0 WHERE uid_customer = '$uid'");
     }
 
-    // 3b. Masukkan alamat baru
-    $sql_insert = "INSERT INTO alamat_customer 
-                   (uid_customer, label_alamat, nama_penerima, no_telepon, alamat_lengkap, kota, provinsi, kode_pos, is_utama) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt_insert = $conn->prepare($sql_insert);
-    $stmt_insert->bind_param(
-        "isssssssi", // i = integer, s = string
-        $customer_uid,
-        $label_alamat,
-        $nama_penerima,
-        $no_telepon,
-        $alamat_lengkap,
-        $kota,
-        $provinsi,
-        $kode_pos,
-        $is_utama
-    );
-
-    if ($stmt_insert->execute()) {
-        // Jika semua berhasil
-        $conn->commit(); // Simpan semua perubahan
-        $response['success'] = true;
-        $response['message'] = 'Alamat baru berhasil disimpan!';
+    if ($id_alamat > 0) {
+        // --- MODE UPDATE (UBAH) ---
+        $stmt = $conn->prepare("UPDATE alamat_customer SET label_alamat=?, nama_penerima=?, no_telepon=?, alamat_lengkap=?, kota=?, provinsi=?, kode_pos=?, is_utama=? WHERE id_alamat=? AND uid_customer=?");
+        $stmt->bind_param("sssssssiii", $label, $penerima, $telp, $detail, $kota, $provinsi, $kodepos, $is_utama, $id_alamat, $uid);
+        $msg = "Alamat berhasil diperbarui!";
     } else {
-        // Jika insert gagal
-        throw new Exception('Gagal mengeksekusi statement insert.');
+        // --- MODE INSERT (TAMBAH) ---
+        $stmt = $conn->prepare("INSERT INTO alamat_customer (uid_customer, label_alamat, nama_penerima, no_telepon, alamat_lengkap, kota, provinsi, kode_pos, is_utama) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssssssi", $uid, $label, $penerima, $telp, $detail, $kota, $provinsi, $kodepos, $is_utama);
+        $msg = "Alamat baru berhasil disimpan!";
     }
 
-    $stmt_insert->close();
+    if ($stmt->execute()) {
+        $conn->commit();
+        echo json_encode(['success' => true, 'message' => $msg]);
+    } else {
+        throw new Exception("Gagal menyimpan data.");
+    }
+    $stmt->close();
 } catch (Exception $e) {
-    // Jika terjadi error di salah satu langkah, batalkan semua
     $conn->rollback();
-    $response['message'] = 'Error: ' . $e->getMessage();
+    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
 }
-
 $conn->close();
-
-// 4. Kembalikan respons
-echo json_encode($response);

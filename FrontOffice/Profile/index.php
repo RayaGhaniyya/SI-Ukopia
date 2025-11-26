@@ -2,7 +2,7 @@
 session_start();
 include("../../Koneksi/koneksi.php");
 
-// Proteksi Halaman
+// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header('Location: ../auth/login.php');
     exit;
@@ -11,11 +11,12 @@ if (!isset($_SESSION['customer_uid'])) {
 $customer_uid = $_SESSION['customer_uid'];
 $customer = null;
 
-// Ambil Data Customer
+// 2. Ambil Data Customer
 $stmt = $conn->prepare("SELECT nama, username, email FROM akun_customer WHERE uid = ?");
 $stmt->bind_param("i", $customer_uid);
 $stmt->execute();
 $result = $stmt->get_result();
+
 if ($result->num_rows === 1) {
     $customer = $result->fetch_assoc();
 } else {
@@ -34,6 +35,7 @@ include("../Component/NavBar.php");
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../assets/css/profile.css?v=<?php echo filemtime('../assets/css/profile.css'); ?>">
 <link rel="stylesheet" href="../assets/css/loader.css">
+
 <script src="../assets/js/loader.js"></script>
 
 <div class="profile-body">
@@ -47,15 +49,13 @@ include("../Component/NavBar.php");
     </div>
 
     <div class="container profile-content-container">
+
         <div class="profile-card-modern">
             <div class="card-header-modern">
-                <div class="profile-avatar-modern">
-                    <i class="fas fa-user"></i>
-                </div>
+                <div class="profile-avatar-modern"><i class="fas fa-user"></i></div>
                 <h2 class="profile-name-modern"><?php echo htmlspecialchars($customer['nama']); ?></h2>
                 <p class="profile-username-modern">@<?php echo htmlspecialchars($customer['username']); ?></p>
             </div>
-
             <div class="card-section">
                 <form id="profileForm">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -116,40 +116,34 @@ include("../Component/NavBar.php");
 
                 <div class="collapse" id="collapseAlamat">
                     <div class="address-content-wrapper">
-                        <h5 class="section-title mt-4 mb-3">Alamat Tersimpan</h5>
-                        <div class="address-placeholder text-center text-muted" id="daftarAlamatContainer">
-                            <p>Memuat alamat...</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="section-title mb-0">Daftar Alamat</h5>
+                            <button class="btn btn-dark btn-sm" onclick="openAddAddressModal()">
+                                <i class="fas fa-plus"></i> Tambah Alamat
+                            </button>
                         </div>
-                        <hr class="my-4">
-                        <h5 class="section-title mb-3">Tambah Alamat Baru</h5>
-                        <form id="alamatChangeForm">
-                            <div class="row g-3">
-                                <div class="col-md-6"><label class="form-label">Label Alamat</label><input type="text" class="form-control" name="label_alamat" placeholder="Rumah, Kantor" required></div>
-                                <div class="col-md-6"><label class="form-label">Nama Penerima</label><input type="text" class="form-control" name="nama_penerima" required></div>
-                                <div class="col-md-6"><label class="form-label">No. Telepon</label><input type="text" class="form-control" name="no_telepon" required></div>
-                                <div class="col-md-6"><label class="form-label">Kode Pos</label><input type="text" class="form-control" name="kode_pos" required></div>
-                                <div class="col-md-6"><label class="form-label">Kota / Kabupaten</label><input type="text" class="form-control" name="kota" required></div>
-                                <div class="col-md-6"><label class="form-label">Provinsi</label><input type="text" class="form-control" name="provinsi" required></div>
-                                <div class="col-12"><label class="form-label">Alamat Lengkap</label><textarea class="form-control" name="alamat_lengkap" rows="3" required></textarea></div>
-                                <div class="col-12">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="is_utama" value="1"><label class="form-check-label">Jadikan alamat utama</label></div>
-                                </div>
-                                <button type="submit" class="btn btn-dark w-100 mt-4">Simpan Alamat</button>
-                            </div>
-                        </form>
+                        <div class="address-placeholder" id="daftarAlamatContainer">
+                            <p class="text-center text-muted">Memuat alamat...</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="profile-card-modern">
-            <div class="card-section">
-                <h5 class="section-title mb-3">Riwayat Pesanan</h5>
-                <div class="history-placeholder text-center text-muted">
-                    <p>Belum ada riwayat pesanan.</p>
+            <div class="card-section text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-shopping-bag fa-3x" style="color: #333;"></i>
                 </div>
+                <h4 class="mb-2">Pesanan Saya</h4>
+                <p class="text-muted mb-4">Lihat status pesanan, lacak pengiriman, dan riwayat belanja Anda.</p>
+
+                <a href="../Orders/index.php?source=profile" class="btn btn-dark px-4 py-2">
+                    Lihat Semua Pesanan <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -157,38 +151,19 @@ include("../Component/NavBar.php");
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ganti Email</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Ganti Email</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="emailStep1Form">
-                    <div class="mb-3">
-                        <label class="form-label">Email Baru</label>
-                        <input type="email" class="form-control" name="new_email" id="inputNewEmail" placeholder="nama@email.com" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password Saat Ini</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" name="password" required>
-                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
-                        </div>
-                        <div class="form-text text-end">
-                            <a href="../auth/forgot-password.php" class="text-decoration-none" style="font-size: 0.85rem;">Lupa Password?</a>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-dark w-100">Kirim Kode Verifikasi</button>
+                    <div class="mb-3"><label class="form-label">Email Baru</label><input type="email" class="form-control" name="new_email" id="inputNewEmail" required></div>
+                    <div class="mb-3"><label class="form-label">Password Saat Ini</label>
+                        <div class="password-wrapper"><input type="password" class="form-control" name="password" required><i class="fas fa-eye password-icon" onclick="togglePass(this)"></i></div>
+                        <div class="form-text text-end"><a href="../auth/forgot-password.php" class="text-decoration-none" style="font-size:0.85rem;">Lupa Password?</a></div>
+                    </div><button type="submit" class="btn btn-dark w-100">Kirim Kode Verifikasi</button>
                 </form>
-
                 <form id="emailStep2Form" style="display: none;">
-                    <div class="alert alert-success" style="font-size: 0.9rem;">
-                        Kode verifikasi telah dikirim ke <strong id="targetEmailDisplay"></strong>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Masukkan Kode 6 Digit</label>
-                        <input type="text" class="form-control text-center" name="verification_code" style="letter-spacing: 5px; font-size: 1.2rem;" maxlength="6" required>
-                    </div>
-                    <button type="submit" class="btn btn-dark w-100">Verifikasi & Simpan</button>
-                    <button type="button" class="btn btn-link w-100 mt-2" id="btnBatalEmail">Ganti Email Lain</button>
+                    <div class="alert alert-success" style="font-size:0.9rem;">Kode verifikasi telah dikirim ke <strong id="targetEmailDisplay"></strong></div>
+                    <div class="mb-3"><label class="form-label">Masukkan Kode 6 Digit</label><input type="text" class="form-control text-center" name="verification_code" style="letter-spacing:5px; font-size:1.2rem;" maxlength="6" required></div><button type="submit" class="btn btn-dark w-100">Verifikasi & Simpan</button><button type="button" class="btn btn-link w-100 mt-2" id="btnBatalEmail">Batal</button>
                 </form>
             </div>
         </div>
@@ -199,55 +174,51 @@ include("../Component/NavBar.php");
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ganti Password</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Ganti Password</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-
                 <form id="passStep1Form">
-                    <div class="mb-3">
-                        <label class="form-label">Password Lama</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" name="old_password" id="oldPassword" required>
-                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
-                        </div>
-                        <div class="form-text text-end">
-                            <a href="../auth/forgot-password.php" class="text-decoration-none" style="font-size: 0.85rem;">Lupa Password lama?</a>
-                        </div>
+                    <div class="mb-3"><label class="form-label">Password Lama</label>
+                        <div class="password-wrapper"><input type="password" class="form-control" name="old_password" id="oldPassword" required><i class="fas fa-eye password-icon" onclick="togglePass(this)"></i></div>
+                        <div class="form-text text-end"><a href="../auth/forgot-password.php" class="text-decoration-none" style="font-size:0.85rem;">Lupa Password lama?</a></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Password Baru</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" name="new_password" id="newPasswordInput" placeholder="Min. 8 Karakter, Huruf Besar & Kecil" required>
-                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
-                        </div>
+                    <div class="mb-3"><label class="form-label">Password Baru</label>
+                        <div class="password-wrapper"><input type="password" class="form-control" name="new_password" id="newPasswordInput" placeholder="Min. 8 Karakter" required><i class="fas fa-eye password-icon" onclick="togglePass(this)"></i></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Konfirmasi Password Baru</label>
-                        <div class="password-wrapper">
-                            <input type="password" class="form-control" name="confirm_new_password" id="confirmNewPasswordInput" required>
-                            <i class="fas fa-eye password-icon" onclick="togglePass(this)"></i>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark w-100">Kirim Kode Verifikasi</button>
+                    <div class="mb-3"><label class="form-label">Konfirmasi Password Baru</label>
+                        <div class="password-wrapper"><input type="password" class="form-control" name="confirm_new_password" id="confirmNewPasswordInput" required><i class="fas fa-eye password-icon" onclick="togglePass(this)"></i></div>
+                    </div><button type="submit" class="btn btn-dark w-100">Kirim Kode Verifikasi</button>
                 </form>
-
-                <form id="passStep2Form" style="display: none;">
-                    <div class="alert alert-success" style="font-size: 0.9rem;">
-                        Kode verifikasi keamanan dikirim ke email Anda (<strong><?php echo htmlspecialchars($customer['email']); ?></strong>).
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Masukkan Kode 6 Digit</label>
-                        <input type="text" class="form-control text-center" name="verification_code"
-                            style="letter-spacing: 5px; font-size: 1.2rem;" maxlength="6" required>
-                    </div>
-                    <button type="submit" class="btn btn-dark w-100">Verifikasi & Simpan Password</button>
-                    <button type="button" class="btn btn-link w-100 mt-2" id="btnBatalPass">Batal</button>
+                <form id="passStep2Form" style="display:none;">
+                    <div class="alert alert-success" style="font-size:0.9rem;">Kode verifikasi dikirim ke email Anda.</div>
+                    <div class="mb-3"><label class="form-label">Masukkan Kode 6 Digit</label><input type="text" class="form-control text-center" name="verification_code" style="letter-spacing:5px; font-size:1.2rem;" maxlength="6" required></div><button type="submit" class="btn btn-dark w-100">Verifikasi & Simpan Password</button><button type="button" class="btn btn-link w-100 mt-2" id="btnBatalPass">Batal</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="addressModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addressModalTitle">Tambah Alamat Baru</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="alamatChangeForm"><input type="hidden" name="id_alamat" id="inputIdAlamat" value="0">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Label Alamat</label><input type="text" class="form-control" name="label_alamat" id="inputLabel" placeholder="Rumah, Kantor" required></div>
+                        <div class="col-md-6"><label class="form-label">Nama Penerima</label><input type="text" class="form-control" name="nama_penerima" id="inputPenerima" required></div>
+                        <div class="col-md-6"><label class="form-label">No. Telepon</label><input type="text" class="form-control" name="no_telepon" id="inputTelepon" required></div>
+                        <div class="col-md-6"><label class="form-label">Kode Pos</label><input type="text" class="form-control" name="kode_pos" id="inputKodePos" required></div>
+                        <div class="col-md-6"><label class="form-label">Kota / Kabupaten</label><input type="text" class="form-control" name="kota" id="inputKota" required></div>
+                        <div class="col-md-6"><label class="form-label">Provinsi</label><input type="text" class="form-control" name="provinsi" id="inputProvinsi" required></div>
+                        <div class="col-12"><label class="form-label">Alamat Lengkap</label><textarea class="form-control" name="alamat_lengkap" id="inputAlamatLengkap" rows="3" required></textarea></div>
+                        <div class="col-12">
+                            <div class="form-check"><input class="form-check-input" type="checkbox" name="is_utama" id="inputIsUtama" value="1"><label class="form-check-label" for="inputIsUtama">Jadikan alamat utama</label></div>
+                        </div><button type="submit" class="btn btn-dark w-100 mt-4" id="btnSimpanAlamat">Simpan Alamat</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -256,7 +227,6 @@ include("../Component/NavBar.php");
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/js/toast.js"></script>
 <script src="../assets/js/profile.js?v=<?php echo filemtime('../assets/js/profile.js'); ?>"></script>
-
 <script>
     function togglePass(icon) {
         const input = icon.previousElementSibling;

@@ -5,34 +5,66 @@ document.addEventListener("DOMContentLoaded", () => {
         payBtn.addEventListener("click", async (e) => {
             e.preventDefault();
 
-            // 1. Cek apakah alamat sudah dipilih
+            // 1. Cek Alamat
             const selectedAddress = document.querySelector('input[name="id_alamat"]:checked');
-            
+            const totalBayar = document.querySelector('input[name="total_bayar"]').value;
+            const ongkir = document.querySelector('input[name="ongkir"]').value;
+
             if (!selectedAddress) {
-                if (typeof showToast === 'function') {
-                    showToast("Silakan pilih alamat pengiriman terlebih dahulu!", "error");
-                } else {
-                    alert("Pilih alamat dulu!");
-                }
+                showToast("Silakan pilih alamat pengiriman terlebih dahulu!", "error");
                 return;
             }
 
-            // 2. Proses Pembayaran (Placeholder untuk Midtrans nanti)
+            // 2. Tampilkan Loading
             const originalText = payBtn.innerText;
             payBtn.innerText = "Memproses...";
             payBtn.disabled = true;
 
-            // Simulasi Loading
-            setTimeout(() => {
-                if (typeof showToast === 'function') {
-                    showToast("Fitur pembayaran Midtrans belum diaktifkan.", "warning");
+            // 3. Request Token ke Backend
+            try {
+                const response = await fetch('place_order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_alamat: selectedAddress.value,
+                        ongkir: ongkir,
+                        total: totalBayar
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // 4. SUKSES: Munculkan Popup Midtrans (QRIS/VA akan ada di sini)
+                    window.snap.pay(result.token, {
+                        onSuccess: function(result){
+                            window.location.href = "success.php?order_id=" + result.order_id;
+                        },
+                        onPending: function(result){
+                            window.location.href = "success.php?order_id=" + result.order_id;
+                        },
+                        onError: function(result){
+                            showToast("Pembayaran Gagal!", "error");
+                            payBtn.innerText = originalText;
+                            payBtn.disabled = false;
+                        },
+                        onClose: function(){
+                            showToast("Kamu menutup popup pembayaran. Silakan bayar nanti di riwayat pesanan.", "warning");
+                            payBtn.innerText = originalText;
+                            payBtn.disabled = false;
+                        }
+                    });
                 } else {
-                    alert("Fitur pembayaran belum aktif.");
+                    showToast(result.message, "error");
+                    payBtn.innerText = originalText;
+                    payBtn.disabled = false;
                 }
-                
+            } catch (error) {
+                console.error(error);
+                showToast("Terjadi kesalahan sistem.", "error");
                 payBtn.innerText = originalText;
                 payBtn.disabled = false;
-            }, 2000);
+            }
         });
     }
 });
