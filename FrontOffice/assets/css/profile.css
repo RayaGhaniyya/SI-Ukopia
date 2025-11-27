@@ -1,14 +1,12 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
+/* =========================================
+   PROFILE PAGE STYLES (CLEAN)
+   ========================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
 
 .profile-body {
-    background-color: #f4f7f6; /* Latar abu-abu sangat muda */
+    background-color: #f4f7f6;
     min-height: 100vh;
-    padding-top: 55px; /* Jarak untuk navbar fixed (sesuaikan jika perlu) */
+    padding-top: 55px;
 }
 
 .profile-title-header {
@@ -19,312 +17,73 @@
 }
 
 .profile-title-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 900px; 
-    /* Menengahkan header container */
-    margin: 0 auto;
-    /* [FINAL FIX] Menghapus padding agar centering bekerja */
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 900px; margin: 0 auto; padding: 0 !important;
 }
 
-.profile-title {
-    font-weight: 700;
-    font-size: 2.2rem;
-    color: #222;
-    margin-bottom: 0;
-}
+.profile-title { font-weight: 700; font-size: 2.2rem; color: #222; margin: 0; }
+.btn-back-home { font-size: 0.9rem; color: #555; text-decoration: none; transition: 0.2s; }
+.btn-back-home:hover { color: #111; }
 
-/* Tombol "Kembali" */
-.btn-back-home {
-    font-size: 0.9rem;
-    color: #555;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-.btn-back-home i {
-    margin-right: 5px;
-}
-.btn-back-home:hover {
-    color: #111;
-}
-
-/* 2. Kontainer Konten */
 .profile-content-container {
-    max-width: 900px;
-    padding-bottom: 60px;
-    /* [FINAL FIX] Menengahkan container di layar */
-    margin: 0 auto !important;
-    /* [FINAL FIX] Memaksa padding horizontal menjadi nol */
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box; 
+    max-width: 900px; margin: 0 auto !important; padding: 0 0 60px 0 !important;
 }
 
-/* 3. Kartu Profil Utama */
+/* KARTU PROFIL */
 .profile-card-modern {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    overflow: hidden; /* Penting untuk rounded corner */
+    background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px;
+    margin-bottom: 25px; overflow: hidden;
 }
 
-/* Header di dalam kartu (Avatar, Nama, Username) */
 .card-header-modern {
-    padding: 30px;
-    text-align: center;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 30px; text-align: center; border-bottom: 1px solid #f0f0f0;
 }
 
-/* Avatar (Sekarang berupa div, bukan img) */
 .profile-avatar-modern {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto 15px auto; /* Tambah auto margin untuk centering sempurna */
-    
-    /* Menengahkan ikon dan memberi latar belakang */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f4f7f6; 
-    object-fit: unset; 
-}
-
-/* Style untuk Ikon di dalam lingkaran avatar */
-.profile-avatar-modern i {
-    font-size: 3rem; 
-    color: #666;
-    /* Micro-adjustment ikon */
-    line-height: 1; 
-    margin: 0; /* Pastikan tidak ada margin default yang menggeser */
-}
-
-.profile-name-modern {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin: 0;
-    color: #111;
-}
-
-.profile-username-modern {
-    font-size: 1rem;
-    color: #666;
-    margin: 0;
-}
-
-/* Bagian Konten di dalam Kartu */
-.card-section {
-    padding: 25px 30px;
-}
-
-.section-title {
-    font-weight: 600;
-    color: #333;
-}
-
-.section-divider {
-    border-top: 1px solid #f0f0f0;
-    margin: 0;
-}
-
-/* Style untuk input 'disabled' */
-.form-control:disabled {
-    background-color: #f0f0f0;
-    border: 1px solid #e0e0e0;
-    opacity: 0.8;
-}
-
-/* Mengganti warna tombol primer agar konsisten (Hitam) */
-.btn-primary, .btn-dark {
-    background-color: #111;
-    border-color: #111;
-    font-weight: 500;
-}
-.btn-primary:hover, .btn-dark:hover {
-    background-color: #333;
-    border-color: #333;
-}
-.btn-success {
-    background-color: #198754;
-    border-color: #198754;
-}
-
-/* 4. List Layout (Email, Pass, Alamat) */
-.list-group-item {
-    padding-left: 0; /* Reset padding-left bawaan Bootstrap */
-    padding-right: 0; /* Reset padding-right bawaan Bootstrap */
-    border: none; /* Hapus border bawaan untuk tampilan modern */
-}
-.profile-list-item {
-    display: flex;
-    align-items: center;
-    padding: 1.25rem 0; /* Padding vertikal, 0 horizontal */
-}
-
-.profile-list-item .item-icon {
-    font-size: 1rem;
-    color: #111;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 0 auto 15px auto;
+    display: flex; align-items: center; justify-content: center;
     background-color: #f4f7f6;
-    margin-right: 20px;
-    
-    /* Ratakan ikon di tengah lingkaran */
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
+.profile-avatar-modern i { font-size: 3rem; color: #666; }
 
-.profile-list-item .item-content {
-    flex-grow: 1; /* Dorong tombol ke kanan */
+.profile-name-modern { font-size: 1.75rem; font-weight: 600; margin: 0; color: #111; }
+.profile-username-modern { font-size: 1rem; color: #666; margin: 0; }
+
+.card-section { padding: 25px 30px; }
+.section-title { font-weight: 600; color: #333; }
+.section-divider { border-top: 1px solid #f0f0f0; margin: 0; }
+
+.form-control:disabled { background-color: #f0f0f0; border: 1px solid #e0e0e0; opacity: 0.8; }
+
+/* LIST ITEMS */
+.list-group-item { padding: 1.25rem 0; border: none; }
+.profile-list-item { display: flex; align-items: center; }
+.item-icon {
+    width: 40px; height: 40px; border-radius: 50%; background-color: #f4f7f6;
+    margin-right: 20px; display: flex; align-items: center; justify-content: center; color: #111;
 }
+.item-content { flex-grow: 1; }
+.item-content h6 { font-weight: 600; margin-bottom: 2px; }
+.item-content p { font-size: 0.9rem; color: #666; margin: 0; }
 
-.profile-list-item .item-content h6 {
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.profile-list-item .item-content p {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0;
-}
-
-/* 5. Style Halaman Alamat */
+/* ALAMAT */
+.address-content-wrapper { padding-top: 20px; border-top: 1px solid #f0f0f0; margin-top: 20px; }
 .address-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 10px;
 }
-.address-item h6 {
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-.address-item p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 2px;
-}
-.address-actions {
-    display: flex;
-    gap: 5px;
-}
+.address-item h6 { font-weight: 600; margin-bottom: 5px; }
+.address-item p { font-size: 0.9rem; color: #666; margin-bottom: 2px; }
+.address-actions { display: flex; gap: 5px; }
 
-/* 6. Style untuk Accordion Alamat */
-.address-content-wrapper {
-    padding-top: 20px;
-    border-top: 1px solid #f0f0f0;
-    margin-top: 20px;
-}
+/* PASSWORD EYE */
+.password-wrapper { position: relative; display: flex; align-items: center; }
+.password-icon { position: absolute; right: 14px; cursor: pointer; color: #999; }
+.password-icon:hover { color: #111; }
+.password-wrapper input { padding-right: 40px !important; }
 
-/* 7. Style untuk Tombol Mata (Password) */
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-.password-icon {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-.password-icon:hover {
-    color: #111;
-}
-.password-wrapper input {
-    padding-right: 40px !important; 
-}
-
-/* 8. Notifikasi */
-.notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    padding: 14px 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    z-index: 99999;
-    opacity: 0;
-    transform: translate(-50%, -150px);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    max-width: 400px;
-    min-width: 300px;
-    background: rgba(30, 30, 30, 0.85);
-    color: white;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.notification.show {
-    opacity: 1;
-    transform: translate(-50%, 0); 
-}
-.notification-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-.notification-icon {
-    font-size: 20px;
-    font-weight: bold;
-    flex-shrink: 0;
-}
-.notification-message {
-    flex: 1;
-    font-size: 14px;
-    line-height: 1.5;
-}
-.notification-close {
-    width: 24px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.1); 
-    border: none;
-    border-radius: 6px;
-    color: #eee; 
-    font-size: 18px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.notification-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.notification-success .notification-icon { color: #10b981; }
-.notification-danger .notification-icon { color: #ef4444; }
-.notification-alert .notification-icon { color: #f59e0b; }
-
-/* 9. Form & Input Specifics */
-
-/* Memberi warna pada label form */
-.profile-card-modern .form-label {
-    color: #333; 
-    font-weight: 500;
-}
-
-/* Mengecilkan ukuran tombol .btn-sm di dalam kartu */
-.profile-card-modern .btn-sm {
-    padding: 10px 25px;
-    font-size: 0.8rem;
-    
-    line-height: 1; /* Reset line-height */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
+/* TOMBOL */
+.btn-primary, .btn-dark { background-color: #111; border-color: #111; }
+.btn-primary:hover, .btn-dark:hover { background-color: #333; border-color: #333; }
+.btn-success { background-color: #198754; border-color: #198754; }

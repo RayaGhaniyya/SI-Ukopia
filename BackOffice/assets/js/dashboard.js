@@ -1,95 +1,60 @@
 // Variable global untuk menyimpan data dashboard
 let dashboardData = {};
 
-// Data dummy untuk testing
-function loadDummyData() {
-    dashboardData = {
-        totalProducts: 89,
-        totalSales: 1247,
-        topProduct: "Arabica Gayo",
-        
-        salesData: {
-            week: [
-                { label: 'Sen', value: 142 },
-                { label: 'Sel', value: 128 },
-                { label: 'Rab', value: 185 },
-                { label: 'Kam', value: 156 },
-                { label: 'Jum', value: 219 },
-                { label: 'Sab', value: 267 },
-                { label: 'Min', value: 234 }
-            ],
-            month: [
-                { label: 'Jan', value: 420 },
-                { label: 'Feb', value: 380 },
-                { label: 'Mar', value: 510 },
-                { label: 'Apr', value: 460 },
-                { label: 'Mei', value: 620 },
-                { label: 'Jun', value: 780 },
-                { label: 'Jul', value: 650 },
-                { label: 'Agu', value: 590 },
-                { label: 'Sep', value: 710 },
-                { label: 'Okt', value: 820 },
-                { label: 'Nov', value: 760 },
-                { label: 'Des', value: 890 }
-            ]
-        },
-        
-        topProducts: [
-            { name: 'Arabica Gayo', sales: 245 },
-            { name: 'Robusta Lampung', sales: 189 },
-            { name: 'Toraja Premium', sales: 167 },
-            { name: 'Kopi Luwak', sales: 134 },
-            { name: 'Aceh Gayo Blend', sales: 98 }
-        ],
-        
-        recentOrders: [
-            { id: '#ORD-1234', customer: 'Budi Santoso', product: 'Arabica Gayo 500g', status: 'success', statusText: 'Dikirim' },
-            { id: '#ORD-1235', customer: 'Siti Nurhaliza', product: 'Robusta Lampung 1kg', status: 'process', statusText: 'Diproses' },
-            { id: '#ORD-1236', customer: 'Ahmad Yani', product: 'Toraja Premium 250g', status: 'pending', statusText: 'Pending' },
-            { id: '#ORD-1237', customer: 'Dewi Lestari', product: 'Kopi Luwak 100g', status: 'success', statusText: 'Dikirim' },
-            { id: '#ORD-1238', customer: 'Andi Wijaya', product: 'Flores Bajawa 250g', status: 'process', statusText: 'Diproses' }
-        ],
-        
-        lowStock: [
-            { name: 'Kopi Luwak Premium', stock: 5, unit: 'kg' },
-            { name: 'Arabica Flores', stock: 8, unit: 'kg' },
-            { name: 'Robusta Bali', stock: 12, unit: 'kg' },
-            { name: 'Mandailing Arabica', stock: 6, unit: 'kg' }
-        ]
-    };
-    
-    console.log('Data loaded:', dashboardData);
-    initDashboard();
+// FUNGSI FETCH DATA DARI DATABASE (REAL-TIME)
+async function fetchDashboardData() {
+    try {
+        // Path ke file PHP action yang baru dibuat
+        const response = await fetch('action/get_dashboard_data.php');
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            dashboardData = result.data;
+            console.log('Data fetched:', dashboardData);
+            initDashboard(); // Render tampilan setelah data didapat
+        } else {
+            console.error('Gagal memuat data:', result.message);
+        }
+    } catch (error) {
+        console.error('Terjadi kesalahan:', error);
+    }
 }
 
-// Fungsi untuk animasi counter
-function animateCounter(id, target, duration = 1000) {
+// Fungsi untuk animasi counter (Angka naik pelan-pelan)
+function animateCounter(id, target, isCurrency = false) {
     const element = document.getElementById(id);
-    if (!element) {
-        console.error('Element not found:', id);
+    if (!element) return;
+    
+    const duration = 1500;
+    const start = 0;
+    // Jika target 0, langsung tampilkan 0
+    if(target === 0) {
+        element.textContent = isCurrency ? "Rp 0" : "0";
         return;
     }
-    
-    const start = 0;
+
     const increment = target / (duration / 16);
     let current = start;
 
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
-            element.textContent = typeof target === 'number' ? Math.floor(target) : target;
+            current = target;
             clearInterval(timer);
-        } else {
-            element.textContent = Math.floor(current);
         }
+        
+        // Format angka (Pemisah Ribuan)
+        let formatted = Math.floor(current).toLocaleString('id-ID');
+        if (isCurrency) formatted = "Rp " + formatted;
+        
+        element.textContent = formatted;
     }, 16);
 }
 
-// Render Stats Cards
+// Render Stats Cards (Total Produk & Omzet)
 function renderStats() {
-    console.log('Rendering stats...');
     animateCounter('totalProducts', dashboardData.totalProducts);
-    animateCounter('totalSales', dashboardData.totalSales);
+    animateCounter('totalSales', dashboardData.totalSales, true); // True = Format Rupiah
     
     const topProductElement = document.getElementById('topProduct');
     if (topProductElement) {
@@ -97,38 +62,48 @@ function renderStats() {
     }
 }
 
-// Render Sales Chart
+// Render Sales Chart (Grafik Batang)
 function updateSalesChart() {
-    console.log('Updating sales chart...');
     const period = document.getElementById('salesPeriod').value;
     const data = period === 'week' ? dashboardData.salesData.week : dashboardData.salesData.month;
     
-    if (!data || data.length === 0) return;
+    const chartElement = document.getElementById('salesChart');
+    if (!chartElement) return;
+
+    if (!data || data.length === 0) {
+        chartElement.innerHTML = '<p class="text-center text-muted">Belum ada data penjualan</p>';
+        return;
+    }
     
-    const maxValue = Math.max(...data.map(item => item.value));
+    const maxValue = Math.max(...data.map(item => item.value)) || 1; // Hindari bagi 0
     
     const chartHTML = data.map(item => {
         const height = (item.value / maxValue) * 100;
+        // Tinggi minimal 5% biar bar tetap kelihatan walau nilainya kecil
+        const displayHeight = height < 5 && item.value > 0 ? 5 : height; 
+        
         return `
-            <div class="bar" style="height: ${height}%">
+            <div class="bar" style="height: ${displayHeight}%" title="${item.value} Pesanan">
                 <span class="bar-value">${item.value}</span>
                 <span class="bar-label">${item.label}</span>
             </div>
         `;
     }).join('');
     
-    const chartElement = document.getElementById('salesChart');
-    if (chartElement) {
-        chartElement.innerHTML = chartHTML;
-    }
+    chartElement.innerHTML = chartHTML;
 }
 
-// Render Top Products Chart
+// Render Top Products (Bar Horizontal)
 function renderTopProducts() {
-    console.log('Rendering top products...');
-    if (!dashboardData.topProducts || dashboardData.topProducts.length === 0) return;
+    const chartElement = document.getElementById('topProductsChart');
+    if (!chartElement) return;
+
+    if (!dashboardData.topProducts || dashboardData.topProducts.length === 0) {
+        chartElement.innerHTML = '<p class="text-center text-muted py-4">Belum ada penjualan</p>';
+        return;
+    }
     
-    const maxValue = Math.max(...dashboardData.topProducts.map(item => item.sales));
+    const maxValue = Math.max(...dashboardData.topProducts.map(item => item.sales)) || 1;
     
     const chartHTML = dashboardData.topProducts.map(item => {
         const width = (item.sales / maxValue) * 100;
@@ -144,55 +119,66 @@ function renderTopProducts() {
         `;
     }).join('');
     
-    const chartElement = document.getElementById('topProductsChart');
-    if (chartElement) {
-        chartElement.innerHTML = chartHTML;
-    }
+    chartElement.innerHTML = chartHTML;
 }
 
-// Render Recent Orders
+// Render Recent Orders (Tabel)
 function renderRecentOrders() {
-    console.log('Rendering recent orders...');
+    const ordersElement = document.getElementById('recentOrders');
+    if (!ordersElement) return;
+
     if (!dashboardData.recentOrders || dashboardData.recentOrders.length === 0) {
-        const ordersElement = document.getElementById('recentOrders');
-        if (ordersElement) {
-            ordersElement.innerHTML = '<p style="color: #888; text-align: center;">Tidak ada pesanan terbaru</p>';
-        }
+        ordersElement.innerHTML = `
+            <div class="empty-state p-4">
+                <i class="fas fa-box-open" style="font-size:2rem; color:#ddd;"></i>
+                <p>Belum ada pesanan masuk</p>
+            </div>`;
         return;
     }
     
-    const ordersHTML = dashboardData.recentOrders.map(order => `
+    const ordersHTML = dashboardData.recentOrders.map(order => {
+        // Mapping status ke warna badge (Sesuai CSS Global)
+        let icon = 'clock';
+        let colorClass = 'status-pending';
+        
+        if(order.status === 'Selesai') { icon = 'check-circle'; colorClass = 'status-success'; }
+        else if(order.status === 'Dikirim') { icon = 'truck'; colorClass = 'status-process'; }
+        else if(order.status === 'Diproses') { icon = 'box'; colorClass = 'status-process'; }
+        else if(order.status === 'Batal' || order.status === 'Kadaluarsa') { icon = 'times-circle'; colorClass = 'status-danger'; }
+
+        return `
         <div class="order-item">
             <div class="order-info">
                 <div class="order-icon">
-                    <i class="fas fa-coffee"></i>
+                    <i class="fas fa-shopping-bag"></i>
                 </div>
                 <div class="order-details">
                     <h4>${order.id} - ${order.customer}</h4>
                     <p>${order.product}</p>
                 </div>
             </div>
-            <span class="order-status status-${order.status}">
-                <i class="fas fa-${order.status === 'success' ? 'check-circle' : order.status === 'process' ? 'spinner fa-spin' : 'clock'}"></i>
-                ${order.statusText}
+            <span class="order-status ${colorClass}">
+                <i class="fas fa-${icon}"></i>
+                ${order.status}
             </span>
         </div>
-    `).join('');
+    `;
+    }).join('');
     
-    const ordersElement = document.getElementById('recentOrders');
-    if (ordersElement) {
-        ordersElement.innerHTML = ordersHTML;
-    }
+    ordersElement.innerHTML = ordersHTML;
 }
 
-// Render Stock Alerts
+// Render Stock Alerts (Stok Menipis)
 function renderStockAlerts() {
-    console.log('Rendering stock alerts...');
+    const alertsElement = document.getElementById('stockAlerts');
+    if (!alertsElement) return;
+
     if (!dashboardData.lowStock || dashboardData.lowStock.length === 0) {
-        const alertsElement = document.getElementById('stockAlerts');
-        if (alertsElement) {
-            alertsElement.innerHTML = '<p style="color: #888; text-align: center;">Stok aman</p>';
-        }
+        alertsElement.innerHTML = `
+            <div class="text-center p-4" style="color:#28a745;">
+                <i class="fas fa-check-circle mb-2" style="font-size:2rem;"></i>
+                <p class="m-0">Semua stok aman</p>
+            </div>`;
         return;
     }
     
@@ -203,15 +189,11 @@ function renderStockAlerts() {
         </div>
     `).join('');
     
-    const alertsElement = document.getElementById('stockAlerts');
-    if (alertsElement) {
-        alertsElement.innerHTML = alertsHTML;
-    }
+    alertsElement.innerHTML = alertsHTML;
 }
 
 // Initialize Dashboard
 function initDashboard() {
-    console.log('Initializing dashboard...');
     renderStats();
     updateSalesChart();
     renderTopProducts();
@@ -219,12 +201,9 @@ function initDashboard() {
     renderStockAlerts();
 }
 
-// CRITICAL: Load dashboard saat halaman ready
+// LOAD DATA SAAT HALAMAN READY
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadDummyData);
+    document.addEventListener('DOMContentLoaded', fetchDashboardData);
 } else {
-    // DOM sudah ready, load langsung
-    loadDummyData();
+    fetchDashboardData();
 }
-
-console.log('Dashboard script loaded');

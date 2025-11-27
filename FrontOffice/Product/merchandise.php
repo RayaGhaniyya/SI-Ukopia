@@ -2,25 +2,59 @@
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
+include("../Component/pagination.php");
+
 $current_host = $_SERVER['HTTP_HOST'];
 
+// --- 1. SETUP ---
+$id_kategori = 3; // MERCHANDISE
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
-$id_kategori = 3;
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 50;
+$offset = ($page - 1) * $limit;
+
+// --- 2. BASE URL ---
+$baseUrl = "?";
+if (!empty($keyword)) $baseUrl .= "keyword=" . urlencode($keyword) . "&";
+if ($sort != 'default') $baseUrl .= "sort=" . urlencode($sort) . "&";
+
+// --- 3. FILTER ---
+$whereClause = "WHERE p.id_kategori = ?";
 $params = [$id_kategori];
 $types = "i";
 
-$sql = "SELECT p.id_produk, p.nama_produk, p.gambar_url, 
-        (SELECT MIN(dp.harga) FROM detail_produk dp WHERE dp.id_produk = p.id_produk) as harga_terendah
-        FROM produk p WHERE p.id_kategori = ?";
-
 if (!empty($keyword)) {
-    $sql .= " AND (p.nama_produk LIKE ? OR p.deskripsi LIKE ?)";
+    $whereClause .= " AND (p.nama_produk LIKE ? OR p.deskripsi LIKE ?)";
     $search_param = "%" . $keyword . "%";
     $params[] = $search_param;
     $params[] = $search_param;
     $types .= "ss";
 }
-$sql .= " ORDER BY p.nama_produk ASC";
+
+// --- 4. COUNT TOTAL ---
+$countSql = "SELECT COUNT(*) as total FROM produk p $whereClause";
+$stmtCount = $conn->prepare($countSql);
+$stmtCount->bind_param($types, ...$params);
+$stmtCount->execute();
+$totalRows = $stmtCount->get_result()->fetch_assoc()['total'];
+$totalPages = ceil($totalRows / $limit);
+$stmtCount->close();
+
+// --- 5. SORTING ---
+$orderBy = "ORDER BY p.nama_produk ASC";
+if ($sort == 'price_asc') $orderBy = "ORDER BY harga_terendah ASC";
+elseif ($sort == 'price_desc') $orderBy = "ORDER BY harga_terendah DESC";
+elseif ($sort == 'newest') $orderBy = "ORDER BY p.id_produk DESC";
+
+// --- 6. QUERY DATA ---
+$sql = "SELECT p.id_produk, p.nama_produk, p.gambar_url, 
+            (SELECT MIN(dp.harga) FROM detail_produk dp WHERE dp.id_produk = p.id_produk) as harga_terendah
+        FROM produk p $whereClause $orderBy LIMIT ? OFFSET ?";
+
+$params[] = $limit;
+$params[] = $offset;
+$types .= "ii";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$params);
 $stmt->execute();
@@ -33,7 +67,6 @@ $result_produk = $stmt->get_result();
 
 <nav class="secondary-navbar">
     <div class="nav-left">
-        <a href="../Product-Cart/index.php" class="cart-icon"><i class="fa-solid fa-basket-shopping"></i></a>
         <div class="dropdown">
             <button class="dropdown-toggle" id="product-btn">Product</button>
             <div class="dropdown-content" id="product-dropdown">
@@ -52,6 +85,19 @@ $result_produk = $stmt->get_result();
 </nav>
 
 <main class="product-section">
+
+    <?php if ($totalRows > 0): ?>
+        <div class="product-header-control">
+            <div class="result-count">Menampilkan <strong><?= $result_produk->num_rows ?></strong> dari <strong><?= $totalRows ?></strong> produk</div>
+            <select class="sort-dropdown" onchange="location = this.value;">
+                <option value="?keyword=<?= $keyword ?>&sort=default" <?= $sort == 'default' ? 'selected' : '' ?>>Urutkan: A - Z</option>
+                <option value="?keyword=<?= $keyword ?>&sort=price_asc" <?= $sort == 'price_asc' ? 'selected' : '' ?>>Harga: Terendah - Tertinggi</option>
+                <option value="?keyword=<?= $keyword ?>&sort=price_desc" <?= $sort == 'price_desc' ? 'selected' : '' ?>>Harga: Tertinggi - Terendah</option>
+                <option value="?keyword=<?= $keyword ?>&sort=newest" <?= $sort == 'newest' ? 'selected' : '' ?>>Terbaru</option>
+            </select>
+        </div>
+    <?php endif; ?>
+
     <div class="product-grid">
         <?php if ($result_produk->num_rows > 0): ?>
             <?php while ($produk = $result_produk->fetch_assoc()):
@@ -81,6 +127,8 @@ $result_produk = $stmt->get_result();
         <?php endif;
         $stmt->close(); ?>
     </div>
+
+    <?php renderPaginator($totalPages, $page, $baseUrl); ?>
 
     <?php if (!empty($keyword) && $result_produk->num_rows > 0): ?>
         <div class="search-state-container">

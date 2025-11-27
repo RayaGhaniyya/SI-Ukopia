@@ -18,18 +18,141 @@ body {
     z-index: 1050;
 }
 
+.navbar-custom .container-fluid {
+    position: relative;
+}
+
+/* Menu tengah absolute positioning */
+.navbar-center {
+    position: static !important;
+}
+
+@media (min-width: 992px) {
+    .navbar-center {
+        position: absolute !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
+
 .navbar-nav .nav-link {
     color: #fff !important;
+    padding: 8px 20px !important;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Animasi hover untuk nav items */
+.nav-link-animate {
+    overflow: hidden;
+}
+
+.nav-link-animate::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    transition: all 0.4s ease;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.nav-link-animate:hover::before {
+    width: 100%;
+    animation: shimmer 0.8s ease;
+}
+
+.nav-link-animate:hover {
+    transform: translateY(-3px);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.nav-link-animate:active {
+    transform: translateY(0px) scale(0.95);
+}
+
+@keyframes shimmer {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Styling untuk icon navbar */
+.navbar-icons {
+    gap: 5px;
+}
+
+.navbar-icons .nav-icon {
+    font-size: 1.2rem;
+    padding: 8px 12px !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-icons .nav-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+.navbar-icons .nav-icon:hover::after {
+    width: 40px;
+    height: 40px;
+}
+
+.navbar-icons .nav-icon:hover {
+    transform: scale(1.15);
+    color: #ddd !important;
+}
+
+.navbar-icons .nav-icon:active {
+    transform: scale(0.95);
+}
+
+.navbar-icons .nav-icon i {
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .navbar-brand {
     color: #fff !important;
     font-weight: bold;
     font-size: 1.5rem;
+    transition: none;
 }
 
 .ukopia-logo {
     height: 30px;
+    transition: none;
+}
+
+.navbar-brand:hover .ukopia-logo {
+    transform: none;
+}
+
+/* Responsive navbar */
+@media (max-width: 991px) {
+    .navbar-icons {
+        margin-top: 15px;
+        justify-content: center;
+    }
+    
+    .navbar-center {
+        text-align: center;
+        position: static !important;
+        transform: none !important;
+    }
 }
 
 
@@ -154,4 +277,3 @@ body {
         gap: 25px;
     }
 }
-

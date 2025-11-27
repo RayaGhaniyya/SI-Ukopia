@@ -7,9 +7,6 @@ include("../Component/head.php");
     <?php include("../Component/sidebar.php"); ?>
 
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>Dashboard</h1>
-        </div>
 
         <!-- Stats Cards (3 CARD AJA, HAPUS PESANAN AKTIF) -->
         <div class="stats-grid">

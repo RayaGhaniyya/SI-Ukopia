@@ -90,3 +90,71 @@ a.product-card-link { text-decoration: none; color: inherit; display: block; }
     .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
     .product-image { width: 140px; height: 140px; }
 }
+
+/* =========================
+   SORTING & HEADER SECTION
+   ========================= */
+.product-header-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.result-count {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.sort-dropdown {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+/* =========================
+   PAGINATION STYLE
+   ========================= */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 50px;
+    padding-bottom: 20px;
+}
+
+.page-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.page-btn:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+.page-btn.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.page-btn.disabled {
+    color: #ccc;
+    border-color: #eee;
+    cursor: not-allowed;
+}

@@ -115,7 +115,7 @@ $total_bayar = $subtotal + $ongkir + $biaya_layanan;
 
     <script type="text/javascript"
         src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="GANTI_DENGAN_CLIENT_KEY_KAMU"></script>
+        data-client-key="SB-Mid-server-XXHpirkXbiie0mBkOPTOJBp9"></script>
 </head>
 
 <body>
@@ -186,14 +186,6 @@ $total_bayar = $subtotal + $ongkir + $biaya_layanan;
                         <input type="hidden" name="id_alamat" value="" required>
                     <?php endif; ?>
 
-
-                    <h3 style="margin-top: 30px;">Metode Pembayaran</h3>
-                    <div class="payment-method">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span>Transfer Bank / E-Wallet (Midtrans)</span>
-                        </div>
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
 
                     <input type="hidden" name="total_bayar" value="<?= $total_bayar ?>">
                     <input type="hidden" name="ongkir" value="<?= $ongkir ?>">

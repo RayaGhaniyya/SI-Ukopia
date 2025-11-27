@@ -4,23 +4,20 @@ if (session_status() === PHP_SESSION_NONE) {
     // --- BLOK INI HANYA JALAN JIKA SESSION BELUM DIMULAI ---
 
     // [PERUBAHAN] Atur masa berlaku session (30 hari)
-    // 30 hari * 24 jam * 60 menit * 60 detik = 2,592,000 detik
     $session_lifetime = 2592000;
 
     // Atur parameter cookie SEBELUM session_start()
     session_set_cookie_params([
         'lifetime' => $session_lifetime,
-        'path' => '/', // Berlaku untuk seluruh website
-        'domain' => '', // (Kosongkan agar default ke domain saat ini)
-        'secure' => isset($_SERVER['HTTPS']), // Hanya kirim via HTTPS jika ada
-        'httponly' => true // Cookie tidak bisa diakses oleh JavaScript
+        'path' => '/', 
+        'domain' => '', 
+        'secure' => isset($_SERVER['HTTPS']), 
+        'httponly' => true 
     ]);
-
 
     // [PERUBAHAN] Mulai session
     session_start();
 }
-// --- Jika session sudah aktif, blok kode di atas akan di-skip ---
 ?>
 <!doctype html>
 <html lang="en">
@@ -32,8 +29,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
     <link rel="stylesheet" href="../assets/css/style.css">
 
 </head>
@@ -41,45 +36,64 @@ if (session_status() === PHP_SESSION_NONE) {
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-        <div class="container">
-            <img src="../assets/img/Logo Ukopia/Logo-Ukopia.png" alt="" class="ukopia-logo">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="../HomePage/index.php">
+                <img src="../assets/img/Logo Ukopia/Logo-Ukopia.png" alt="Ukopia" class="ukopia-logo">
+            </a>
 
             <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav position-absolute start-50 translate-middle-x navbar-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="../HomePage/index.php">Home</a>
+                        <a class="nav-link nav-link-animate" href="../HomePage/index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../Product/filter.php">Product</a>
+                        <a class="nav-link nav-link-animate" href="../Product/filter.php">Product</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../Gallery/index.php">Gallery</a>
+                        <a class="nav-link nav-link-animate" href="../Gallery/index.php">Gallery</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../Reservation/index.php">Reservations</a>
+                        <a class="nav-link nav-link-animate" href="../Reservation/index.php">Resservations</a>
                     </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto align-items-center navbar-icons">
                     <?php
-                    // Cek session login dari file auth/login.php
+                    // LOGIKA BUTTON KHUSUS MEMBER (LOGIN)
                     if (isset($_SESSION['customer_uid'])) {
-                        // Jika SUDAH LOGIN: Tampilkan link "Profile"
-                        // (Saya asumsikan file profile.php Anda ada di folder 'Akun' berdasarkan file auth/login.php)
+                        // Jika SUDAH LOGIN: Tampilkan 3 Icon (Cart, Orders, Profile)
                         echo '
-                    <li class="nav-item">
-                        <a class="nav-link" href="../Profile/index.php">Profile</a>
-                    </li>';
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon" href="../Cart/index.php" title="Cart">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon" href="../Orders/index.php" title="My Orders">
+                                <i class="fas fa-box"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon" href="../Profile/index.php" title="Profile">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </li>';
                     } else {
-                        // Jika BELUM LOGIN: Tampilkan link "Sign In"
+                        // Jika BELUM LOGIN: Hanya Tampilkan Icon Login
                         echo '
-                    <li class="nav-item">
-                        <a class="nav-link" href="../auth/login.php">Sign In</a>
-                    </li>';
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon" href="../auth/login.php" title="Sign In">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        </li>';
                     }
                     ?>
                 </ul>
             </div>
         </div>
     </nav>
+
