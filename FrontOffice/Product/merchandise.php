@@ -67,7 +67,6 @@ $result_produk = $stmt->get_result();
 
 <nav class="secondary-navbar">
     <div class="nav-left">
-        <a href="../Product-Cart/index.php" class="cart-icon"><i class="fa-solid fa-basket-shopping"></i></a>
         <div class="dropdown">
             <button class="dropdown-toggle" id="product-btn">Product</button>
             <div class="dropdown-content" id="product-dropdown">
