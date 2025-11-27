@@ -24,7 +24,7 @@ include("../../Component/head.php");
                 <div class="form-group">
                     <label>Cari Customer</label>
                     <input type="text" name="keyword" class="form-control" 
-                        placeholder="Masukkan No. Telpon / Username" required 
+                        placeholder="Masukkan Email / Username" required 
                         style="font-size: 20px; text-align: center; letter-spacing: 1px;">
                     <small style="display:block; text-align:center; color:#666; margin-top:5px;">
                         *Sistem akan mencari berdasarkan No HP atau Username

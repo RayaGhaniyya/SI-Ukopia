@@ -17,11 +17,15 @@ if (empty($keyword)) {
 
 // LOGIKA PENCARIAN (OR)
 // Mencari berdasarkan no_telpon ATAU username
-$stmt = $conn->prepare("SELECT uid, nama FROM akun_customer WHERE no_telpon = ? OR username = ?");
+$stmt = $conn->prepare("SELECT uid, nama FROM akun_customer WHERE email = ? OR username = ?");
 $stmt->bind_param("ss", $keyword, $keyword);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
+
+// Tutup statement dan koneksi segera setelah mengambil hasil
+$stmt->close();
+$conn->close();
 
 if ($user) {
     // KASUS: User Ditemukan
@@ -34,7 +38,4 @@ if ($user) {
     header("Location: ../index.php");
     exit;
 }
-
-$stmt->close();
-$conn->close();
 ?>

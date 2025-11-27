@@ -80,6 +80,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/si-ukopia/BackOffice/List_Data/Metode/index.php">
+                        <i class="fas fa-flask"></i>
+                        <span>Metode</span>
+                    </a>
+                </li>
+                <li>
                     <a href="/SI-Ukopia/BackOffice/List_Data/Kategori/index.php">
                         <i class="fas fa-tags"></i>
                         <span>Kategori</span>
@@ -95,12 +101,6 @@
                     <a href="/si-ukopia/BackOffice/List_Data/Kategori_Alat/index.php">
                         <i class="fas fa-tools"></i>
                         <span>Kategori Alat</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Status/index.php">
-                        <i class="fas fa-signal"></i>
-                        <span>Status</span>
                     </a>
                 </li>
             </ul>
@@ -120,7 +120,7 @@
                 </li>
                 <li>
                     <a href="/SI-Ukopia/BackOffice/Mobile/Resep/index.php">
-                        <i class="fas fa-book-open"></i>sual
+                        <i class="fas fa-book-open"></i>
                         <span>Resep</span>
                     </a>
                 </li>

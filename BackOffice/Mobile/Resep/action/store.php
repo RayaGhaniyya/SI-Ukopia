@@ -2,65 +2,89 @@
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
+// Pastikan method POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    exit(json_encode(['success' => false, 'message' => 'Method tidak valid']));
+    exit(json_encode(['success' => false, 'message' => 'Method not allowed']));
 }
 
-// Ambil Data
+// Ambil Data & Validasi
 $uid_akun = intval($_POST['uid_akun'] ?? 0);
+$id_metode = intval($_POST['id_metode'] ?? 0);
 $nama_resep = trim($_POST['nama_resep'] ?? '');
-$jumlah_kopi = trim($_POST['jumlah_kopi'] ?? '');
-$jumlah_air = trim($_POST['jumlah_air'] ?? '');
-$suhu = trim($_POST['suhu'] ?? '');
+
+// Ambil Angka (Default 0 jika kosong)
+$jumlah_kopi = intval($_POST['jumlah_kopi'] ?? 0);
+$jumlah_air = intval($_POST['jumlah_air'] ?? 0);
+$suhu = intval($_POST['suhu'] ?? 0);
 $gilingan = trim($_POST['ukuran_gilingan'] ?? '');
 $waktu = intval($_POST['waktu_ekstraksi'] ?? 0);
 $berat = intval($_POST['berat_minuman'] ?? 0);
-$tds = floatval($_POST['tds'] ?? 0);
+$tds = intval($_POST['tds'] ?? 0);
 $deskripsi = trim($_POST['deskripsi'] ?? '');
 $tanggal = date('Y-m-d');
 
-$alat_selected = isset($_POST['alat']) ? $_POST['alat'] : []; // Array ID Alat
+$alat_selected = isset($_POST['alat']) ? $_POST['alat'] : [];
 
-if ($uid_akun <= 0 || empty($nama_resep)) {
-    exit(json_encode(['success' => false, 'message' => 'Data wajib (Nama/User) tidak boleh kosong!']));
+// Validasi Wajib
+if ($uid_akun <= 0) {
+    exit(json_encode(['success' => false, 'message' => 'Pemilik Resep wajib dipilih!']));
+}
+if ($id_metode <= 0) {
+    exit(json_encode(['success' => false, 'message' => 'Metode Seduh wajib dipilih!']));
+}
+if (empty($nama_resep)) {
+    exit(json_encode(['success' => false, 'message' => 'Nama Resep wajib diisi!']));
 }
 
-// MULAI TRANSAKSI
+// Mulai Transaksi
 $conn->begin_transaction();
 
 try {
-    // 1. Insert Table Resep
-    $stmt = $conn->prepare("INSERT INTO resep (uid_akun, nama_resep, ukuran_gilingan, jumlah_air, suhu, jumlah_kopi, deskripsi, waktu_ekstraksi, berat_minuman, tds, tanggal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssssiids", $uid_akun, $nama_resep, $gilingan, $jumlah_air, $suhu, $jumlah_kopi, $deskripsi, $waktu, $berat, $tds, $tanggal);
+    // Insert Resep
+    $stmt = $conn->prepare("INSERT INTO resep (uid_akun, nama_resep, ukuran_gilingan, jumlah_air, suhu, jumlah_kopi, deskripsi, waktu_ekstraksi, berat_minuman, tds, tanggal, id_metode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    // issssssiidsi -> urutan tipe data
+    // uid(i), nama(s), giling(s), air(i), suhu(i), kopi(i), desk(s), waktu(i), berat(i), tds(i), tgl(s), metode(i)
+    $stmt->bind_param("issiiisiidsi", 
+        $uid_akun, 
+        $nama_resep, 
+        $gilingan, 
+        $jumlah_air, 
+        $suhu, 
+        $jumlah_kopi, 
+        $deskripsi, 
+        $waktu, 
+        $berat, 
+        $tds, 
+        $tanggal, 
+        $id_metode
+    );
     
     if (!$stmt->execute()) {
-        throw new Exception("Gagal menyimpan data utama Resep.");
+        throw new Exception("Gagal menyimpan data resep: " . $stmt->error);
     }
     $id_resep = $conn->insert_id;
     $stmt->close();
 
-    // 2. Insert Detail Alat (Looping)
+    // Insert Alat
     if (!empty($alat_selected)) {
         $stmt_detail = $conn->prepare("INSERT INTO resep_detail_alat (id_resep, id_alat) VALUES (?, ?)");
-        foreach ($alat_selected as $id_alat) {
-            $id_alat = intval($id_alat);
-            $stmt_detail->bind_param("ii", $id_resep, $id_alat);
+        foreach ($alat_selected as $ida) {
+            $ida = intval($ida);
+            $stmt_detail->bind_param("ii", $id_resep, $ida);
             if (!$stmt_detail->execute()) {
-                throw new Exception("Gagal menyimpan detail alat.");
+                throw new Exception("Gagal menyimpan alat.");
             }
         }
         $stmt_detail->close();
     }
 
-    // COMMIT jika semua lancar
     $conn->commit();
     echo json_encode(['success' => true, 'message' => 'Resep berhasil dibuat!']);
 
 } catch (Exception $e) {
-    // ROLLBACK jika ada error
     $conn->rollback();
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
-
 $conn->close();
 ?>

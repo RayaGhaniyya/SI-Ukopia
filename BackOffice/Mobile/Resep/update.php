@@ -17,16 +17,18 @@ if (!$data) {
     exit;
 }
 
-// 2. Ambil Alat yang SUDAH DIPILIH di resep ini (Simpan ke Array)
+// 2. Ambil Alat yang SUDAH DIPILIH
 $selected_alat = [];
 $res_detail = $conn->query("SELECT id_alat FROM resep_detail_alat WHERE id_resep = $id");
 while($row = $res_detail->fetch_assoc()){
     $selected_alat[] = $row['id_alat'];
 }
 
-// 3. Data Master (User & Alat)
+// 3. Data Master
 $customers = mysqli_query($conn, "SELECT uid, nama FROM akun_customer ORDER BY nama ASC");
 $alats = mysqli_query($conn, "SELECT id_alat, nama_alat FROM alat ORDER BY nama_alat ASC");
+// [BARU] Ambil Data Metode
+$metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER BY nama_metode ASC");
 ?>
 
 <div class="container">
@@ -54,6 +56,18 @@ $alats = mysqli_query($conn, "SELECT id_alat, nama_alat FROM alat ORDER BY nama_
                             <?php endwhile; ?>
                         </select>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Metode Seduh <span style="color:red">*</span></label>
+                    <select name="id_metode" required>
+                        <option value="">-- Pilih Metode --</option>
+                        <?php while($m = mysqli_fetch_assoc($metodes)): ?>
+                            <option value="<?= $m['id_metode'] ?>" <?= ($m['id_metode'] == $data['id_metode']) ? 'selected' : '' ?>>
+                                <?= $m['nama_metode'] ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </div>
 
                 <div class="form-row">

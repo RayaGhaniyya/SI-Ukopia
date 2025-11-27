@@ -46,7 +46,7 @@ $stmt_count->close();
 
 // 4. QUERY AMBIL DATA
 $order_by_sql = " ORDER BY id_kategori_menu DESC LIMIT ? OFFSET ?"; // Order by asli
-$data_query = "SELECT id_kategori_menu, nama_kategori FROM kategori_menu" . $where_sql . $order_by_sql;
+$data_query = "SELECT id_kategori_menu, nama_kategori, biji FROM kategori_menu" . $where_sql . $order_by_sql;
 
 $data_params = $params;
 $data_params[] = $limit;
@@ -86,51 +86,36 @@ $result = $stmt_data->get_result();
                 </form>
             </div>
 
-            <div class="table-responsive">
-                <table class="data-table kategori_menu-table">
+         <div class="table-responsive">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Nama Kategori</th>
-                            <th>Aksi</th>
+                            <th>Pakai Biji Kopi?</th> <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         if ($result && mysqli_num_rows($result) > 0) {
-                            // 6. UPDATE NOMOR URUT
                             $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)) {
+                                // Logika Label
+                                $statusBiji = ($row['biji'] == 1) 
+                                    ? '<span class="badge badge-success" style="background:#28a745; color:white; padding:3px 8px; border-radius:4px;">Ya</span>' 
+                                    : '<span class="badge badge-secondary" style="background:#6c757d; color:white; padding:3px 8px; border-radius:4px;">Tidak</span>';
                         ?>
                                 <tr>
                                     <td><?= $no ?></td>
                                     <td><strong><?= htmlspecialchars($row['nama_kategori']) ?></strong></td>
-                                    <td>
-                                        <a href="update.php?id=<?= $row['id_kategori_menu'] ?>" class="btn btn-warning btn-sm" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $row['id_kategori_menu'] ?>)" title="Hapus">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td><?= $statusBiji ?></td> <td>
+                                        <a href="update.php?id=<?= $row['id_kategori_menu'] ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $row['id_kategori_menu'] ?>)"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
-                            <?php
-                                $no++;
-                            }
-                        } else {
-                            ?>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="empty-state">
-                                        <i class="fas fa-search"></i>
-                                        <p>Data kategori menu tidak ditemukan<?php if ($search_term != '') echo " untuk pencarian '<b>" . htmlspecialchars($search_term) . "</b>'"; ?>.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        }
-                        $stmt_data->close(); // 8. TUTUP STATEMENT
-                        ?>
+                            <?php $no++; }
+                        } else { ?>
+                            <?php } ?>
                     </tbody>
                 </table>
             </div>
