@@ -33,20 +33,39 @@ body {
 }
 
 /* Tabs Navigation */
+/* ... (Kode CSS Lain Tetap Sama) ... */
+
+/* Tabs Navigation (Scrollable Mobile) */
 .nav-tabs {
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 25px;
+    
+    /* Agar bisa scroll horizontal di HP */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    
+    /* Hilangkan scrollbar jelek */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
 }
+
+.nav-tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
 .nav-tabs .nav-link {
-    color: #666; font-weight: 500; border: none;
-    border-bottom: 3px solid transparent; padding: 15px 20px;
+    color: #666;
+    font-weight: 500;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 15px 20px;
     transition: color 0.3s ease;
+    white-space: nowrap; /* Teks gak turun */
 }
-.nav-tabs .nav-link:hover { color: #333; }
-.nav-tabs .nav-link.active {
-    color: #000; font-weight: 700;
-    border-bottom: 3px solid #000; background: none;
-}
+
 .nav-link .badge { margin-left: 5px; font-size: 0.75rem; vertical-align: top; }
 
 /* Empty State */

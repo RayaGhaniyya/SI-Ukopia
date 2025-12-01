@@ -68,7 +68,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         // Jika SUDAH LOGIN: Tampilkan 3 Icon (Cart, Orders, Profile)
                         echo '
                         <li class="nav-item">
-                            <a class="nav-link nav-icon" href="../Cart/index.php" title="Cart">
+                            <a class="nav-link nav-icon" href="../Product-Cart/index.php" title="Cart">
                                 <i class="fas fa-shopping-cart"></i>
                             </a>
                         </li>

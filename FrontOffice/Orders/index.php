@@ -10,7 +10,35 @@ if (!isset($_SESSION['customer_uid'])) {
 
 $customer_uid = $_SESSION['customer_uid'];
 
-// 2. Ambil Semua Transaksi
+// ============================================================
+// LOGIKA 0: AUTO-CANCEL (LAZY UPDATE) - 10 MENIT
+// ============================================================
+$timeout_minutes = 10; // Batas waktu 10 menit
+
+// Cari transaksi yang 'Menunggu Pembayaran' dan sudah lewat 10 menit
+$cekExpired = mysqli_query($conn, "
+    SELECT id_transaksi FROM transaksi 
+    WHERE status_pesanan = 'Menunggu Pembayaran' 
+    AND tanggal_pesan < (NOW() - INTERVAL $timeout_minutes MINUTE)
+    AND uid_customer = '$customer_uid'
+");
+
+while ($rowExp = mysqli_fetch_assoc($cekExpired)) {
+    $id_trx_exp = $rowExp['id_transaksi'];
+
+    // A. Kembalikan Stok Barang
+    $qDetail = mysqli_query($conn, "SELECT id_detail_produk, jumlah FROM detail_transaksi WHERE id_transaksi = '$id_trx_exp'");
+    while ($item = mysqli_fetch_assoc($qDetail)) {
+        $conn->query("UPDATE detail_produk SET stok = stok + {$item['jumlah']} WHERE id_detail_produk = {$item['id_detail_produk']}");
+    }
+
+    // B. Ubah Status jadi 'Kadaluarsa'
+    $conn->query("UPDATE transaksi SET status_pesanan = 'Kadaluarsa' WHERE id_transaksi = '$id_trx_exp'");
+}
+// ============================================================
+
+
+// 2. Ambil Semua Transaksi (Setelah di-update)
 $queryTrx = mysqli_query($conn, "
     SELECT t.*, 
            (SELECT p.gambar_url FROM detail_transaksi dt 
@@ -30,19 +58,27 @@ $queryTrx = mysqli_query($conn, "
     ORDER BY t.tanggal_pesan DESC
 ");
 
-// 3. Pisahkan ke 3 Tab (Array Filtering)
+// 3. Pisahkan ke 5 Kategori
+$orders_unpaid = [];
 $orders_process = [];
 $orders_shipping = [];
-$orders_history = [];
+$orders_completed = [];
+$orders_failed = [];
 
 while ($trx = mysqli_fetch_assoc($queryTrx)) {
     $s = $trx['status_pesanan'];
-    if ($s == 'Menunggu Pembayaran' || $s == 'Sudah Dibayar' || $s == 'Diproses') {
+
+    if ($s == 'Menunggu Pembayaran') {
+        $orders_unpaid[] = $trx;
+    } elseif ($s == 'Sudah Dibayar' || $s == 'Diproses') {
         $orders_process[] = $trx;
     } elseif ($s == 'Dikirim') {
         $orders_shipping[] = $trx;
+    } elseif ($s == 'Selesai') {
+        $orders_completed[] = $trx;
     } else {
-        $orders_history[] = $trx; // Selesai, Batal, Kadaluarsa, Pengajuan Batal
+        // Batal, Kadaluarsa, Pengajuan Batal
+        $orders_failed[] = $trx;
     }
 }
 
@@ -52,6 +88,8 @@ include("../Component/NavBar.php");
 // Fungsi Helper Render Item HTML
 function renderTransactionItem($trx)
 {
+    global $timeout_minutes; // Ambil variabel durasi
+
     $statusClass = 'badge-secondary';
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') $statusClass = 'badge-warning text-dark';
     elseif ($trx['status_pesanan'] == 'Sudah Dibayar' || $trx['status_pesanan'] == 'Diproses') $statusClass = 'badge-info text-dark';
@@ -64,12 +102,16 @@ function renderTransactionItem($trx)
     if (empty($img)) $img = "../assets/img/default-product.png";
 
     $date = date('d M Y, H:i', strtotime($trx['tanggal_pesan']));
-    $deadline = date('Y-m-d H:i:s', strtotime($trx['tanggal_pesan'] . ' +15 minutes'));
+
+    // Hitung Deadline (Waktu Pesan + 10 Menit)
+    $deadline = date('Y-m-d H:i:s', strtotime($trx['tanggal_pesan'] . " +$timeout_minutes minutes"));
 
     echo '<div class="transaction-item">';
     echo '<div class="trx-header">';
     echo '<div>';
     echo '<span class="trx-date"><i class="far fa-calendar-alt"></i> ' . $date . '</span>';
+
+    // Tampilkan Countdown hanya jika status Menunggu Pembayaran
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') {
         echo '<span class="badge bg-danger ms-2 countdown-timer" data-deadline="' . $deadline . '">Menghitung...</span>';
     }
@@ -121,16 +163,12 @@ function renderTransactionItem($trx)
                 <h1 class="profile-title" style="font-size: 1.8rem;">Pesanan Saya</h1>
 
                 <?php
-                // LOGIKA TOMBOL BACK DINAMIS
                 $source = isset($_GET['source']) ? $_GET['source'] : '';
-
                 if ($source == 'profile') {
-                    // Jika datang dari Profile
                     $back_link = '../Profile/index.php';
                     $back_text = 'Kembali ke Profil';
                     $back_icon = 'fa-user';
                 } else {
-                    // Jika dari Navbar / Checkout / Lainnya (Default)
                     $back_link = '../HomePage/index.php';
                     $back_text = 'Kembali';
                     $back_icon = 'fa-arrow-left';
@@ -148,32 +186,50 @@ function renderTransactionItem($trx)
 
         <ul class="nav nav-tabs" id="orderTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="process-tab" data-bs-toggle="tab" data-bs-target="#process" type="button">
-                    Diproses <span class="badge bg-secondary rounded-pill ms-1"><?= count($orders_process) ?></span>
+                <button class="nav-link active" id="unpaid-tab" data-bs-toggle="tab" data-bs-target="#unpaid" type="button">
+                    Belum Bayar <span class="badge bg-danger rounded-pill ms-1"><?= count($orders_unpaid) ?></span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="process-tab" data-bs-toggle="tab" data-bs-target="#process" type="button">
+                    Diproses <span class="badge bg-warning text-dark rounded-pill ms-1"><?= count($orders_process) ?></span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button">
-                    Dikirim <span class="badge bg-secondary rounded-pill ms-1"><?= count($orders_shipping) ?></span>
+                    Dikirim <span class="badge bg-primary rounded-pill ms-1"><?= count($orders_shipping) ?></span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button">
-                    Riwayat
+                <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button">
+                    Selesai
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="failed-tab" data-bs-toggle="tab" data-bs-target="#failed" type="button">
+                    Batal
                 </button>
             </li>
         </ul>
 
         <div class="tab-content" id="orderTabsContent">
 
-            <div class="tab-pane fade show active" id="process" role="tabpanel">
+            <div class="tab-pane fade show active" id="unpaid" role="tabpanel">
+                <div class="transaction-list">
+                    <?php if (count($orders_unpaid) > 0): ?>
+                        <?php foreach ($orders_unpaid as $item) renderTransactionItem($item); ?>
+                    <?php else: ?>
+                        <div class="empty-tab"><i class="fas fa-file-invoice-dollar"></i> Tidak ada tagihan belum dibayar.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="process" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_process) > 0): ?>
                         <?php foreach ($orders_process as $item) renderTransactionItem($item); ?>
                     <?php else: ?>
-                        <div class="empty-tab">
-                            <i class="fas fa-box-open"></i> Tidak ada pesanan yang sedang diproses.
-                        </div>
+                        <div class="empty-tab"><i class="fas fa-box-open"></i> Tidak ada pesanan yang sedang diproses.</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -183,21 +239,27 @@ function renderTransactionItem($trx)
                     <?php if (count($orders_shipping) > 0): ?>
                         <?php foreach ($orders_shipping as $item) renderTransactionItem($item); ?>
                     <?php else: ?>
-                        <div class="empty-tab">
-                            <i class="fas fa-truck"></i> Tidak ada pesanan dalam pengiriman.
-                        </div>
+                        <div class="empty-tab"><i class="fas fa-truck"></i> Tidak ada pesanan dalam pengiriman.</div>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="history" role="tabpanel">
+            <div class="tab-pane fade" id="completed" role="tabpanel">
                 <div class="transaction-list">
-                    <?php if (count($orders_history) > 0): ?>
-                        <?php foreach ($orders_history as $item) renderTransactionItem($item); ?>
+                    <?php if (count($orders_completed) > 0): ?>
+                        <?php foreach ($orders_completed as $item) renderTransactionItem($item); ?>
                     <?php else: ?>
-                        <div class="empty-tab">
-                            <i class="fas fa-history"></i> Belum ada riwayat pesanan selesai.
-                        </div>
+                        <div class="empty-tab"><i class="fas fa-check-circle"></i> Belum ada pesanan selesai.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="failed" role="tabpanel">
+                <div class="transaction-list">
+                    <?php if (count($orders_failed) > 0): ?>
+                        <?php foreach ($orders_failed as $item) renderTransactionItem($item); ?>
+                    <?php else: ?>
+                        <div class="empty-tab"><i class="fas fa-times-circle"></i> Tidak ada riwayat pembatalan.</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -225,6 +287,7 @@ function renderTransactionItem($trx)
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/js/toast.js"></script>
 <script src="../assets/js/orders.js"></script>
+
 </body>
 
 </html>
