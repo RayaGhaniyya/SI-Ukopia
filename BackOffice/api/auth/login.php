@@ -1,66 +1,66 @@
 <?php
-// file: api/login.php
-
-// Headers
-header("Access-Control-Allow-Origin: *");
+include("../../../Koneksi/koneksi.php");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Include file database
-include_once '../../config/database.php';
+// 1. Ambil JSON dari Android
+$json = file_get_contents("php://input");
+$data = json_decode($json, true);
 
-// Inisialisasi koneksi
-$database = new Database();
-$db = $database->getConnection();
+$identifier = trim($data['identifier'] ?? ''); // Email atau Username
+$password   = trim($data['password'] ?? '');
 
-// Ambil data JSON
-$data = json_decode(file_get_contents("php://input"));
+// 2. Validasi Input
+if (empty($identifier) || empty($password)) {
+    echo json_encode(['success' => false, 'message' => 'Email/Username dan Password wajib diisi']);
+    exit;
+}
 
-// Pastikan email dan password tidak kosong
-if (!empty($data->email) && !empty($data->password)) {
-    $email = $data->email;
-    $password = $data->password;
-
-    // Query untuk mengambil data user berdasarkan email
-    $query = "SELECT uid, nama, email, password FROM akun_customer WHERE email = ? LIMIT 1";
-
-    $stmt = $db->prepare($query);
-    $stmt->bind_param("s", $email);
+try {
+    // 3. Cek User
+    $stmt = $conn->prepare("SELECT uid, nama, email, username, password, is_verified FROM akun_customer WHERE email = ? OR username = ?");
+    $stmt->bind_param("ss", $identifier, $identifier);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows == 1) {
-        $row = $result->fetch_assoc();
-        $uid_db = $row['uid'];
-        $nama_db = $row['nama'];
-        $email_db = $row['email'];
-        $password_db = $row['password'];
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
 
-        if (password_verify($password, $password_db)) {
-            http_response_code(200);
-            $user_data = array(
-                "uid" => $uid_db,
-                "nama" => $nama_db,
-                "email" => $email_db
-            );
-            echo json_encode(array(
-                "message" => "Login berhasil.",
-                "data" => $user_data
-            ));
+        // 4. Verifikasi Password
+        if (password_verify($password, $user['password'])) {
+            
+            // 5. Cek Status Verifikasi Email
+            if ($user['is_verified'] == 0) {
+                // Beri tahu Android bahwa akun belum aktif
+                echo json_encode([
+                    'success' => false, 
+                    'message' => 'Akun belum aktif. Silakan cek email Anda.',
+                    'is_verified' => false
+                ]);
+                exit;
+            }
+
+            // 6. Login Sukses -> Kirim Data User
+            echo json_encode([
+                'success' => true,
+                'message' => 'Login berhasil',
+                'data' => [
+                    'uid' => intval($user['uid']),
+                    'nama' => $user['nama'],
+                    'email' => $user['email'],
+                    'username' => $user['username']
+                ]
+            ]);
+
         } else {
-            http_response_code(401);
-            echo json_encode(array("message" => "Login gagal. Password salah."));
+            echo json_encode(['success' => false, 'message' => 'Password salah']);
         }
     } else {
-        http_response_code(404);
-        echo json_encode(array("message" => "Login gagal. Email tidak ditemukan."));
+        echo json_encode(['success' => false, 'message' => 'Akun tidak ditemukan']);
     }
-} else {
-    // Jika data tidak lengkap
-    http_response_code(400);
-    echo json_encode(array("message" => "Login gagal. Data tidak lengkap."));
-}
+    $stmt->close();
 
-$db->close();
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
+?>
