@@ -1,69 +1,95 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+include("../../../Koneksi/koneksi.php");
+
+// Import PHPMailer
+require '../../../vendor/PHPMailer/src/Exception.php';
+require '../../../vendor/PHPMailer/src/PHPMailer.php';
+require '../../../vendor/PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Include file database
-include_once '../../config/database.php';
+// Ambil Data JSON
+$json = file_get_contents("php://input");
+$data = json_decode($json, true);
 
-// Inisialisasi koneksi
-$database = new Database();
-$db = $database->getConnection();
+// Debugging: Cek apakah data terbaca? (Hapus baris ini nanti)
+// file_put_contents('debug_log.txt', print_r($data, true));
 
-// Ambil data JSON yang dikirim ke API
-$data = json_decode(file_get_contents("php://input"));
+$nama     = trim($data['nama'] ?? '');
+$username = trim($data['username'] ?? '');
+$email    = trim($data['email'] ?? '');
+$password = trim($data['password'] ?? '');
 
-// Pastikan data tidak kosong
-if (
-    !empty($data->nama) &&
-    !empty($data->email) &&
-    !empty($data->password)
-) {
-    // Cek apakah email sudah terdaftar
-    $check_email_query = "SELECT uid FROM akun_customer WHERE email = ?";
-    $stmt_check = $db->prepare($check_email_query);
-    $stmt_check->bind_param("s", $data->email);
-    $stmt_check->execute();
-    $stmt_check->store_result();
-
-    if ($stmt_check->num_rows > 0) {
-        // Jika email sudah ada, kirim response 409 Conflict
-        http_response_code(409);
-        echo json_encode(array("message" => "Registrasi gagal. Email sudah terdaftar."));
-    } else {
-        // Buat query untuk insert data
-        $query = "INSERT INTO akun_customer (nama, email, password) VALUES (?, ?, ?)";
-        
-        $stmt = $db->prepare($query);
-
-        // Membersihkan data (Sanitize)
-        $nama = htmlspecialchars(strip_tags($data->nama));
-        $email = htmlspecialchars(strip_tags($data->email));
-        // HASH PASSWORD! Ini bagian paling penting.
-        $password = password_hash($data->password, PASSWORD_BCRYPT);
-
-        // Binding parameter
-        $stmt->bind_param("sss", $nama, $email, $password);
-
-        // Eksekusi query
-        if ($stmt->execute()) {
-            // Set response code - 201 created
-            http_response_code(201);
-            echo json_encode(array("message" => "Registrasi berhasil."));
-        } else {
-            // Set response code - 503 service unavailable
-            http_response_code(503);
-            echo json_encode(array("message" => "Gagal melakukan registrasi."));
-        }
-    }
-    $stmt_check->close();
-} else {
-    // Jika data tidak lengkap, kirim response 400 bad request
-    http_response_code(400);
-    echo json_encode(array("message" => "Registrasi gagal. Data tidak lengkap."));
+// VALIDASI REGISTER
+if (empty($nama) || empty($username) || empty($email) || empty($password)) {
+    // Pesan ini beda dengan login.php
+    echo json_encode(['success' => false, 'message' => 'Semua kolom wajib diisi (Nama, Username, Email, Password)']);
+    exit;
 }
 
-$db->close();
+try {
+    // 1. Cek Email
+    $stmt = $conn->prepare("SELECT uid FROM akun_customer WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    if ($stmt->get_result()->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => 'Email sudah terdaftar']);
+        exit;
+    }
+    $stmt->close();
+
+    // 2. Cek Username
+    $stmt = $conn->prepare("SELECT uid FROM akun_customer WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    if ($stmt->get_result()->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => 'Username sudah terpakai']);
+        exit;
+    }
+    $stmt->close();
+
+    // 3. Insert
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $verification_code = bin2hex(random_bytes(16));
+
+    $stmt_insert = $conn->prepare("INSERT INTO akun_customer (nama, username, email, password, verification_code, is_verified) VALUES (?, ?, ?, ?, ?, 0)");
+    $stmt_insert->bind_param("sssss", $nama, $username, $email, $hashed_password, $verification_code);
+
+    if ($stmt_insert->execute()) {
+        
+        // 4. Kirim Email
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        // GANTI DENGAN EMAIL ASLI
+        $mail->Username   = 'rayaghaniyya1@gmail.com'; 
+        $mail->Password   = 'iehd xtvq hvzc mhox'; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+        $mail->setFrom('rayaghaniyya1@gmail.com', 'Ukopia Coffee');
+        $mail->addAddress($email, $nama);
+        $mail->isHTML(true);
+        $mail->Subject = 'Verifikasi Akun Ukopia Anda';
+
+        $verification_link = "http://" . $_SERVER['HTTP_HOST'] . "/SI-Ukopia/FrontOffice/auth/verify.php?code=" . $verification_code;
+        $mail->Body    = "Halo $nama,<br>Silakan klik link ini: <a href='$verification_link'>Verifikasi Akun</a>";
+
+        $mail->send();
+
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Registrasi berhasil. Cek email.'
+        ]);
+    } else {
+        throw new Exception("Gagal insert database");
+    }
+
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+}
 ?>
