@@ -1,4 +1,4 @@
-/* === SIDEBAR UKOPIA - ENHANCED VERSION (FIXED) === */
+/* === SIDEBAR UKOPIA - FIXED VERSION (NO HORIZONTAL SCROLL) === */
 .sidebar {
   width: 240px;
   height: 100vh;
@@ -84,7 +84,7 @@
   transform: rotate(180deg);
 }
 
-/* Sembunyikan text span saat collapsed - PERBAIKAN */
+/* Sembunyikan text span saat collapsed */
 .sidebar.collapsed .nav-list > li > a > span,
 .sidebar.collapsed .profile-section a span {
   opacity: 0;
@@ -104,7 +104,7 @@
   margin: 0;
   flex-grow: 1;
   overflow-y: auto;
-  overflow-x: visible;
+  overflow-x: hidden; /* FIXED: Prevent horizontal scroll */
 }
 
 .nav-list::-webkit-scrollbar {
@@ -150,6 +150,8 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   flex: 1;
+  overflow: hidden; /* FIXED: Prevent text overflow */
+  text-overflow: ellipsis; /* FIXED: Add ellipsis for long text */
 }
 
 /* Active & Hover State */
@@ -206,6 +208,7 @@
   margin: 0;
   display: none;
   background: #1e1e1e;
+  overflow: hidden; /* FIXED: Prevent overflow */
 }
 
 .dropdown-menu.show {
@@ -213,14 +216,17 @@
 }
 
 .dropdown-menu li a {
-font-size: 13px;
-color: #bbb;
-padding: 10px 20px 10px 52px;
-border-left: 3px solid transparent;
-display: flex;
-align-items: center;
-gap: 10px;
-text-decoration: none; /* <-- TAMBAHKAN BARIS INI */
+  font-size: 13px;
+  color: #bbb;
+  padding: 10px 20px 10px 52px;
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  white-space: nowrap; /* FIXED: Prevent text wrapping */
+  overflow: hidden; /* FIXED: Hide overflow */
+  text-overflow: ellipsis; /* FIXED: Add ellipsis */
 }
 
 .dropdown-menu li a:hover {
@@ -235,32 +241,37 @@ text-decoration: none; /* <-- TAMBAHKAN BARIS INI */
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Dropdown floating saat sidebar collapsed - PERBAIKAN */
-/* Dropdown floating saat sidebar collapsed - PERBAIKAN */
+/* Dropdown floating saat sidebar collapsed - FIXED VERSION */
 .sidebar.collapsed .dropdown-menu {
-position: fixed;
-left: 70px;
-background: #1e1e1e;
-min-width: 200px;
-border-radius: 0 12px 12px 0;
-box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
-/* border-left: 3px solid rgba(255, 255, 255, 0.1); */ /* <-- GARIS SUDAH DIHAPUS */
-z-index: 9999;
-padding: 8px 0;
-display: none;
+  position: fixed;
+  left: 70px;
+  background: #1e1e1e;
+  width: auto; /* FIXED: Auto width */
+  min-width: 240px; /* FIXED: Increased from 200px */
+  max-width: 300px; /* FIXED: Added max-width */
+  border-radius: 0 12px 12px 0;
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  padding: 8px 0;
+  display: none;
+  overflow-x: hidden; /* FIXED: Hide horizontal scroll */
+  overflow-y: auto; /* FIXED: Allow vertical scroll if needed */
 }
 
 .sidebar.collapsed .dropdown-menu.show {
   display: block;
 }
 
-/* .sidebar.collapsed .dropdown-menu li a {
-  padding: 10px 20px;
+.sidebar.collapsed .dropdown-menu li a {
+  padding: 10px 20px; /* FIXED: Reduced padding from 52px */
   border-left: none;
-} */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .sidebar.collapsed .dropdown-menu li a:hover {
-
+  padding-left: 20px; /* FIXED: Keep consistent padding on hover */
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -268,6 +279,8 @@ display: none;
   opacity: 1;
   width: auto;
   display: inline;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* === PROFILE SECTION === */
@@ -342,12 +355,16 @@ display: none;
     position: fixed;
     left: 70px;
     background: #1e1e1e;
-    min-width: 200px;
+    width: auto;
+    min-width: 240px;
+    max-width: 300px;
     border-radius: 0 12px 12px 0;
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
     z-index: 9999;
     padding: 8px 0;
     display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .sidebar .dropdown-menu.show {
@@ -357,6 +374,9 @@ display: none;
   .sidebar .dropdown-menu li a {
     padding: 10px 20px;
     border-left: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .sidebar .dropdown-menu li a span {

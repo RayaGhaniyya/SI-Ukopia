@@ -122,29 +122,29 @@ function renderTopProducts() {
     chartElement.innerHTML = chartHTML;
 }
 
-// Render Recent Orders (Tabel)
+// Render Recent Orders (DATA ASLI DARI DB)
 function renderRecentOrders() {
     const ordersElement = document.getElementById('recentOrders');
     if (!ordersElement) return;
 
+    // Cek jika data kosong
     if (!dashboardData.recentOrders || dashboardData.recentOrders.length === 0) {
         ordersElement.innerHTML = `
-            <div class="empty-state p-4">
-                <i class="fas fa-box-open" style="font-size:2rem; color:#ddd;"></i>
-                <p>Belum ada pesanan masuk</p>
+            <div class="empty-state p-4 text-center text-muted">
+                <i class="fas fa-box-open" style="font-size:2rem; color:#ddd; margin-bottom:10px;"></i>
+                <p class="m-0">Belum ada pesanan masuk</p>
             </div>`;
         return;
     }
     
+    // Render Loop Data
     const ordersHTML = dashboardData.recentOrders.map(order => {
-        // Mapping status ke warna badge (Sesuai CSS Global)
+        // Tentukan icon berdasarkan teks status
         let icon = 'clock';
-        let colorClass = 'status-pending';
-        
-        if(order.status === 'Selesai') { icon = 'check-circle'; colorClass = 'status-success'; }
-        else if(order.status === 'Dikirim') { icon = 'truck'; colorClass = 'status-process'; }
-        else if(order.status === 'Diproses') { icon = 'box'; colorClass = 'status-process'; }
-        else if(order.status === 'Batal' || order.status === 'Kadaluarsa') { icon = 'times-circle'; colorClass = 'status-danger'; }
+        if(order.statusText === 'Selesai') icon = 'check-circle';
+        else if(order.statusText === 'Dikirim') icon = 'truck';
+        else if(order.statusText === 'Diproses' || order.statusText === 'Sudah Dibayar') icon = 'box';
+        else if(order.statusText === 'Batal' || order.statusText === 'Kadaluarsa') icon = 'times-circle';
 
         return `
         <div class="order-item">
@@ -157,9 +157,9 @@ function renderRecentOrders() {
                     <p>${order.product}</p>
                 </div>
             </div>
-            <span class="order-status ${colorClass}">
+            <span class="badge bg-danger ${order.statusClass}" style="display:flex; align-items:center; gap:5px; padding:8px 12px;">
                 <i class="fas fa-${icon}"></i>
-                ${order.status}
+                ${order.statusText}
             </span>
         </div>
     `;

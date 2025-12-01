@@ -1,5 +1,5 @@
 // ============================================
-// SIDEBAR.JS - UKOPIA BACKOFFICE (FIXED)
+// SIDEBAR.JS - UKOPIA BACKOFFICE (FIXED & OPTIMIZED)
 // ============================================
 
 const sidebar = document.getElementById("sidebar");
@@ -26,8 +26,10 @@ toggleBtn.addEventListener("click", () => {
   document.body.classList.toggle("sidebar-collapsed");
   saveSidebarState(isCollapsed);
   
-  // PERBAIKAN: Jangan close dropdown saat toggle
-  // Biarkan dropdown tetap terbuka, hanya ubah positioningnya
+  // Update dropdown positions after toggle
+  setTimeout(() => {
+    updateDropdownPositions();
+  }, 400); // Match transition duration
 });
 
 // === DROPDOWN FUNCTIONALITY ===
@@ -63,16 +65,41 @@ dropdownToggles.forEach(toggle => {
       
       // Adjust position for collapsed sidebar
       if (isCollapsed) {
-        const parentRect = toggle.parentElement.getBoundingClientRect();
-        dropdown.style.top = `${parentRect.top}px`;
-      } else {
-        dropdown.style.top = '';
+        updateDropdownPosition(dropdown, toggle);
       }
     }
-    
-    console.log('Dropdown toggled:', dropdown.classList.contains('show'));
   });
 });
+
+// === UPDATE DROPDOWN POSITION (FIXED) ===
+function updateDropdownPosition(dropdown, toggle) {
+  if (!dropdown || !toggle) return;
+  
+  const parentRect = toggle.parentElement.getBoundingClientRect();
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // FIXED: Calculate position considering window scroll
+  dropdown.style.top = `${parentRect.top + scrollTop}px`;
+}
+
+// === UPDATE ALL DROPDOWN POSITIONS ===
+function updateDropdownPositions() {
+  const isCollapsed = sidebar.classList.contains('collapsed');
+  if (!isCollapsed) {
+    // Reset top style when not collapsed
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      menu.style.top = '';
+    });
+    return;
+  }
+  
+  document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+    const toggle = menu.previousElementSibling;
+    if (toggle) {
+      updateDropdownPosition(menu, toggle);
+    }
+  });
+}
 
 // === CLOSE DROPDOWN WHEN CLICKING OUTSIDE ===
 document.addEventListener('click', (e) => {
@@ -86,23 +113,31 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// === UPDATE DROPDOWN POSITION ON SCROLL (untuk collapsed mode) ===
+// === UPDATE DROPDOWN POSITION ON SCROLL (OPTIMIZED) ===
 let scrollTimeout;
+let lastScrollTop = 0;
+
 window.addEventListener('scroll', () => {
   const isCollapsed = sidebar.classList.contains('collapsed');
   if (!isCollapsed) return;
   
+  const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // Only update if scroll delta is significant (performance optimization)
+  if (Math.abs(currentScrollTop - lastScrollTop) < 5) return;
+  
+  lastScrollTop = currentScrollTop;
+  
   clearTimeout(scrollTimeout);
+  
+  // Update immediately for smooth tracking
+  updateDropdownPositions();
+  
+  // Also update after scroll stops (cleanup)
   scrollTimeout = setTimeout(() => {
-    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-      const toggle = menu.previousElementSibling;
-      if (toggle) {
-        const parentRect = toggle.parentElement.getBoundingClientRect();
-        menu.style.top = `${parentRect.top}px`;
-      }
-    });
-  }, 10);
-});
+    updateDropdownPositions();
+  }, 50);
+}, { passive: true }); // FIXED: Add passive flag for better performance
 
 // === SET ACTIVE MENU BERDASARKAN URL ===
 function setActiveMenu() {
@@ -135,58 +170,46 @@ function setActiveMenu() {
         
         // Adjust position jika sidebar collapsed
         if (sidebar.classList.contains('collapsed')) {
-          const parentRect = toggle.parentElement.getBoundingClientRect();
-          parentDropdown.style.top = `${parentRect.top}px`;
+          updateDropdownPosition(parentDropdown, toggle);
         }
       }
     }
   });
 }
 
-// === SMOOTH SCROLL UNTUK DROPDOWN (OPTIONAL) ===
+// === SMOOTH SCROLL UNTUK DROPDOWN (WITH NULL CHECK) ===
 function smoothScrollToActiveItem() {
   const activeItem = document.querySelector('.nav-list a.active');
-  if (activeItem && !sidebar.classList.contains('collapsed')) {
+  
+  // FIXED: Add null check and collapsed check
+  if (!activeItem || sidebar.classList.contains('collapsed')) {
+    return;
+  }
+  
+  try {
     activeItem.scrollIntoView({
       behavior: 'smooth',
       block: 'center'
     });
+  } catch (error) {
+    console.warn('Smooth scroll not supported:', error);
   }
 }
 
-// === HANDLE WINDOW RESIZE ===
+// === HANDLE WINDOW RESIZE (OPTIMIZED) ===
 let resizeTimeout;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    const isCollapsed = sidebar.classList.contains('collapsed');
-    
-    // Update dropdown positions if collapsed
-    if (isCollapsed) {
-      document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-        const toggle = menu.previousElementSibling;
-        if (toggle) {
-          const parentRect = toggle.parentElement.getBoundingClientRect();
-          menu.style.top = `${parentRect.top}px`;
-        }
-      });
-    }
-  }, 100);
-});
+    updateDropdownPositions();
+  }, 150);
+}, { passive: true });
 
-// === INIT ON PAGE LOAD ===
-document.addEventListener('DOMContentLoaded', () => {
-  loadSidebarState();
-  setActiveMenu();
-  
-  // Optional: smooth scroll ke active item setelah 500ms
-  setTimeout(smoothScrollToActiveItem, 500);
-});
-
-// === UPDATE BODY PADDING SAAT SIDEBAR TOGGLE ===
+// === UPDATE BODY PADDING SAAT SIDEBAR TOGGLE (FIXED) ===
 const bodyPaddingObserver = new MutationObserver(() => {
   const isCollapsed = sidebar.classList.contains('collapsed');
-  document.body.style.paddingLeft = isCollapsed ? '90px' : '260px';
+  // FIXED: Match actual sidebar width
+  document.body.style.paddingLeft = isCollapsed ? '70px' : '240px';
 });
 
 bodyPaddingObserver.observe(sidebar, {
@@ -194,7 +217,7 @@ bodyPaddingObserver.observe(sidebar, {
   attributeFilter: ['class']
 });
 
-// === TOOLTIP UNTUK COLLAPSED SIDEBAR (OPTIONAL) ===
+// === TOOLTIP UNTUK COLLAPSED SIDEBAR ===
 function addTooltips() {
   const menuItems = document.querySelectorAll('.nav-list > li > a');
   
@@ -202,10 +225,36 @@ function addTooltips() {
     const span = item.querySelector('span');
     if (span) {
       item.setAttribute('title', span.textContent);
+      item.setAttribute('data-title', span.textContent);
     }
   });
 }
 
-addTooltips();
+// === PREVENT DROPDOWN CLOSE ON INTERNAL CLICK ===
+document.querySelectorAll('.dropdown-menu').forEach(menu => {
+  menu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+});
 
-console.log('%c✓ Sidebar Enhanced Loaded (Fixed)', 'color: #10b981; font-weight: bold;');
+// === INIT ON PAGE LOAD ===
+document.addEventListener('DOMContentLoaded', () => {
+  loadSidebarState();
+  setActiveMenu();
+  addTooltips();
+  
+  // Set initial body padding
+  const isCollapsed = sidebar.classList.contains('collapsed');
+  document.body.style.paddingLeft = isCollapsed ? '70px' : '240px';
+  
+  // Optional: smooth scroll ke active item setelah 500ms
+  setTimeout(smoothScrollToActiveItem, 500);
+});
+
+// === CLEANUP ON PAGE UNLOAD (PREVENT MEMORY LEAK) ===
+window.addEventListener('beforeunload', () => {
+  bodyPaddingObserver.disconnect();
+});
+
+// === DEBUG MODE (REMOVE IN PRODUCTION) ===
+// console.log('%c✓ Sidebar Enhanced Loaded (Fixed & Optimized)', 'color: #10b981; font-weight: bold;');

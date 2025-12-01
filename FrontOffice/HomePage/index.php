@@ -13,7 +13,7 @@ include("../Component/NavBar.php");
     <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="../assets/img/Hero-Homepage/heroimg1.png" class="d-block w-100" alt="img 1">
+                <img src="../assets/img/Hero-Homepage/heroimg1.jpg" class="d-block w-100" alt="img 1">
             </div>
             <div class="carousel-item">
                 <img src="../assets/img/Hero-Homepage/heroimg2.JPG" class="d-block w-100" alt="Img 2">
