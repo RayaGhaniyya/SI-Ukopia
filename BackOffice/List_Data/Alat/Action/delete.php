@@ -1,5 +1,5 @@
 <?php
-// [UBAH] Path koneksi sesuai lokasi
+// action/delete.php - Hapus Alat dengan Smart Image Deletion
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -8,19 +8,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// [UBAH] Nama parameter sesuai primary key
-$id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+$id = intval($_POST['id'] ?? 0);
 
 if ($id <= 0) {
     echo json_encode(['success' => false, 'message' => 'ID Alat tidak valid!']);
     exit;
 }
 
-// [UBAH] Konfigurasi folder upload untuk penghapusan gambar
 $UPLOAD_DIR = '../../Uploads/Alat/';
 
 try {
-    // [UBAH] Cek apakah data exists DAN ambil nama gambar
+    // Ambil data yang akan dihapus
     $stmt_check = $conn->prepare("SELECT id_alat, gambar FROM alat WHERE id_alat = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
@@ -31,35 +29,54 @@ try {
     }
     
     $row = $result_check->fetch_assoc();
+    $gambarName = $row['gambar'];
     $stmt_check->close();
 
-    // [UBAH] Hapus data - nama tabel dan kolom
+    // Cek apakah gambar masih digunakan oleh alat lain
+    $canDeleteImage = false;
+    if (!empty($gambarName)) {
+        $stmt_count = $conn->prepare("SELECT COUNT(*) as count FROM alat WHERE gambar = ? AND id_alat != ?");
+        $stmt_count->bind_param("si", $gambarName, $id);
+        $stmt_count->execute();
+        $count_result = $stmt_count->get_result()->fetch_assoc();
+        $stmt_count->close();
+        
+        // Jika hanya 1 (data ini sendiri) atau 0, berarti bisa dihapus
+        $canDeleteImage = ($count_result['count'] == 0);
+    }
+
+    // Hapus data dari database
     $stmt_delete = $conn->prepare("DELETE FROM alat WHERE id_alat = ?");
     $stmt_delete->bind_param("i", $id);
 
     if (!$stmt_delete->execute()) {
         throw new Exception("Gagal menghapus data Alat");
     }
+    
     $stmt_delete->close();
     $conn->close();
 
-    // [TAMBAHAN] Hapus File Fisik Gambar
-    if (!empty($row['gambar'])) {
-        $filePath = $UPLOAD_DIR . $row['gambar'];
-        // Cek apakah file ada, lalu hapus
+    // Hapus file gambar HANYA jika tidak digunakan lagi
+    $imageDeleted = false;
+    if ($canDeleteImage && !empty($gambarName)) {
+        $filePath = $UPLOAD_DIR . $gambarName;
         if (file_exists($filePath)) {
-            @unlink($filePath);
+            if (@unlink($filePath)) {
+                $imageDeleted = true;
+            }
         }
     }
 
-    // [UBAH] Success message
     echo json_encode([
         'success' => true,
-        'message' => 'Alat berhasil dihapus!'
+        'message' => 'Alat berhasil dihapus!',
+        'image_deleted' => $imageDeleted,
+        'image_shared' => !$canDeleteImage
     ]);
 
 } catch (Exception $e) {
-    $conn->close();
+    if (isset($conn)) $conn->close();
+    
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()

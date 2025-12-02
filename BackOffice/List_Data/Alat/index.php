@@ -8,21 +8,34 @@ include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Alat/";
 
+// --- 1. AMBIL DATA KATEGORI UNTUK DROPDOWN FILTER ---
+$sql_kategori = mysqli_query($conn, "SELECT * FROM kategori_alat ORDER BY nama_kategori_alat ASC");
+
 // --- LOGIKA DATA ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
 
+// Ambil Parameter Input
 $search_term = $_GET['search'] ?? '';
+$kategori_filter = $_GET['kategori_filter'] ?? ''; // Filter Kategori
+
 $base_url_pagin = '?';
 $where_conditions = [];
 $params = [];
 $types = "";
 
-// [FIX] Gunakan id_kategori_alat (sesuai database) bukan id_kategori
+// --- 2. SETTING DEFAULT URUTAN (TETAP URUT KATEGORI AGAR RAPI) ---
+// Kita hapus pilihan sortir user, tapi backend tetap mengurutkan by Kategori agar grouping jalan
+$order_sql = "k.nama_kategori_alat ASC, a.nama_alat ASC";
+
+// Base Query
 $base_query = " FROM alat a JOIN kategori_alat k ON a.id_kategori_alat = k.id_kategori_alat ";
 
+// --- 3. LOGIKA FILTERING (WHERE) ---
+
+// Filter Pencarian Teks
 if ($search_term != '') {
     $where_conditions[] = "(a.nama_alat LIKE ? OR k.nama_kategori_alat LIKE ?)";
     $params[] = "%$search_term%";
@@ -31,6 +44,15 @@ if ($search_term != '') {
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
 
+// Filter Kategori (Dropdown)
+if ($kategori_filter != '') {
+    $where_conditions[] = "a.id_kategori_alat = ?";
+    $params[] = $kategori_filter;
+    $types .= "i";
+    $base_url_pagin .= 'kategori_filter=' . urlencode($kategori_filter) . '&';
+}
+
+// Gabungkan semua kondisi WHERE
 $where_sql = !empty($where_conditions) ? " WHERE " . implode(" AND ", $where_conditions) : "";
 
 // Count Total
@@ -42,10 +64,14 @@ $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
 // Get Data
-$stmt_data = $conn->prepare("SELECT a.id_alat, a.nama_alat, a.gambar, k.nama_kategori_alat " . $base_query . $where_sql . " ORDER BY a.nama_alat ASC LIMIT ? OFFSET ?");
+$query_final = "SELECT a.id_alat, a.nama_alat, a.gambar, k.nama_kategori_alat " . $base_query . $where_sql . " ORDER BY " . $order_sql . " LIMIT ? OFFSET ?";
+$stmt_data = $conn->prepare($query_final);
+
+// Bind params (tambah limit & offset)
 $params[] = $limit; 
 $params[] = $offset; 
 $types .= "ii";
+
 $stmt_data->bind_param($types, ...$params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
@@ -61,11 +87,32 @@ $result = $stmt_data->get_result();
         </div>
 
         <div class="table-card">
-            <div class="table-header">
+            <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <h2>Total: <?= $total_rows ?> Alat</h2>
-                <form method="GET" class="search-group">
-                    <input type="text" name="search" placeholder="Cari..." value="<?= htmlspecialchars($search_term) ?>">
-                    <button type="submit" class="btn"><i class="fas fa-search"></i></button>
+                
+                <form method="GET" class="search-group" style="display: flex; gap: 8px; align-items: center;">
+                    
+                    <select name="kategori_filter" class="form-control" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; min-width: 180px;" onchange="this.form.submit()">
+                        <option value="">-- Semua Kategori --</option>
+                        <?php 
+                        // Reset pointer data kategori agar bisa di-loop
+                        if(mysqli_num_rows($sql_kategori) > 0) {
+                            mysqli_data_seek($sql_kategori, 0);
+                            while($kat = mysqli_fetch_assoc($sql_kategori)): 
+                        ?>
+                            <option value="<?= $kat['id_kategori_alat'] ?>" <?= ($kategori_filter == $kat['id_kategori_alat']) ? 'selected' : '' ?>>
+                                <?= $kat['nama_kategori_alat'] ?>
+                            </option>
+                        <?php 
+                            endwhile; 
+                        }
+                        ?>
+                    </select>
+
+                    <div style="display: flex;">
+                        <input type="text" name="search" placeholder="Cari nama alat..." value="<?= htmlspecialchars($search_term) ?>" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; border-right: none;">
+                        <button type="submit" class="btn" style="border-radius: 0 4px 4px 0;"><i class="fas fa-search"></i></button>
+                    </div>
                 </form>
             </div>
 
@@ -83,21 +130,42 @@ $result = $stmt_data->get_result();
                     <tbody>
                         <?php if ($result->num_rows > 0): 
                             $no = $offset + 1;
+                            $current_kategori = null;
+
                             while ($row = $result->fetch_assoc()):
                                 $img_url = $BASE_IMAGE_URL . htmlspecialchars($row['gambar']);
+
+                                // Grouping Visual: Tampilkan Header Kategori jika berubah
+                                if ($row['nama_kategori_alat'] != $current_kategori) {
+                                    $current_kategori = $row['nama_kategori_alat'];
+                                    ?>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <td colspan="5" style="padding: 10px 15px; font-weight: bold; color: #495057; border-bottom: 2px solid #dee2e6;">
+                                            <i class="fas fa-tag" style="margin-right: 5px; color: #adb5bd;"></i>
+                                            <?= htmlspecialchars($current_kategori) ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
                         ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><img src="<?= $img_url ?>" style="width:70px;height:70px;object-fit:cover;border-radius:6px;"></td>
+                                <td>
+                                    <?php if(!empty($row['gambar'])): ?>
+                                        <img src="<?= $img_url ?>" style="width:70px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #dee2e6;">
+                                    <?php else: ?>
+                                        <span style="color:#adb5bd; font-size: 0.8rem;">No Image</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><strong><?= htmlspecialchars($row['nama_alat']) ?></strong></td>
-                                <td><?= htmlspecialchars($row['nama_kategori_alat']) ?></td>
+                                <td><span class="badge" style="background:#e9ecef; color:#495057; padding:4px 8px; border-radius:4px; font-size:0.85em;"><?= htmlspecialchars($row['nama_kategori_alat']) ?></span></td>
                                 <td>
                                     <a href="update.php?id=<?= $row['id_alat'] ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                                     <button onclick="confirmDeleteAlat(<?= $row['id_alat'] ?>)" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         <?php endwhile; else: ?>
-                            <tr><td colspan="5" class="text-center">Data tidak ditemukan.</td></tr>
+                            <tr><td colspan="5" class="text-center" style="padding:20px;">Data tidak ditemukan.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

@@ -136,6 +136,12 @@
                         <span>Loyalty</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Mobile/Promo/index.php">
+                        <i class="fas fa-percent"></i>
+                        <span>Promo</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>
