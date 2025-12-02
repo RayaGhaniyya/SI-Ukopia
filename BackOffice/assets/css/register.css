@@ -1,4 +1,4 @@
-/* ====== RESET DAN DASAR ====== */
+﻿
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +15,7 @@ body {
     color: #fff;
 }
 
-/* ====== KONTENER UTAMA ====== */
+
 .container {
     width: 100%;
     max-width: 400px;
@@ -37,7 +37,7 @@ body {
     padding-bottom: 0.5rem;
 }
 
-/* ====== INPUT BOX ====== */
+
 .input-box {
     position: relative;
     margin-bottom: 1.8rem;
@@ -88,7 +88,7 @@ body {
     color: #aaa;
 }
 
-/* ====== TOGGLE PASSWORD ====== */
+
 .toggle-password {
     position: absolute;
     right: 12px;
@@ -104,7 +104,7 @@ body {
     color: #fff;
 }
 
-/* ====== TOMBOL ====== */
+
 .btn {
     width: 100%;
     padding: 12px;
@@ -121,7 +121,7 @@ body {
     background: #575e68;
 }
 
-/* ====== LINK REGISTER ====== */
+
 .register-link {
     margin-top: 1rem;
     color: #fff;
@@ -136,7 +136,7 @@ body {
     text-decoration: underline;
 }
 
-/* ====== NOTIFIKASI (DARI login.js) ====== */
+
 .notification {
     position: fixed;
     bottom: 20px;
@@ -167,3 +167,4 @@ body {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
+

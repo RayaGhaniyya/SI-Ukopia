@@ -1,4 +1,4 @@
-/* === SIDEBAR UKOPIA - FIXED VERSION (NO HORIZONTAL SCROLL) === */
+﻿
 .sidebar {
   width: 240px;
   height: 100vh;
@@ -15,7 +15,7 @@
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
 }
 
-/* === LOGO SECTION === */
+
 .logo-section {
   width: 100%;
   text-align: center;
@@ -34,7 +34,7 @@
   filter: brightness(1);
 }
 
-/* === TOGGLE BUTTON === */
+
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -60,7 +60,7 @@
   transform: translateY(-50%) scale(1.05);
 }
 
-/* === COLLAPSED STATE === */
+
 .sidebar.collapsed {
   width: 70px;
 }
@@ -97,7 +97,7 @@
   display: none;
 }
 
-/* === NAV LIST === */
+
 .nav-list {
   list-style: none;
   padding: 15px 0;
@@ -182,7 +182,7 @@
   padding: 12px 0;
 }
 
-/* === DROPDOWN === */
+
 .dropdown {
   position: relative;
 }
@@ -283,7 +283,7 @@
   text-overflow: ellipsis;
 }
 
-/* === PROFILE SECTION === */
+
 .profile-section {
   width: 100%;
   text-align: center;
@@ -324,7 +324,7 @@
   padding: 8px 0;
 }
 
-/* === RESPONSIVE === */
+
 @media (max-width: 768px) {
   .sidebar {
     width: 70px;
@@ -390,7 +390,7 @@
   }
 }
 
-/* === ANIMATIONS === */
+
 @keyframes slideIn {
   from {
     opacity: 0;

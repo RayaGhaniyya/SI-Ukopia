@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
 AUTH.CSS V13 (Sliding Overlay Form) + Notifikasi Pop-up
 ============================================ */
 * {
@@ -422,7 +422,7 @@ background: rgba(255, 255, 255, 0.2);
 .auth-right-panel .auth-form-reset {
     /* Reset style dari login.php */
     width: 100%;    /* Penuh 100% dari panel kanan */
-    opacity: 1;     /* === INI KUNCINYA: PAKSA TERLIHAT === */
+    opacity: 1;     
     left: 0;        /* Reset posisi horizontal */
     right: auto;    /* Reset posisi horizontal */
     

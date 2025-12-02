@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -17,7 +17,7 @@
 }
 
 
-/* === STATS CARDS - WHITE THEME === */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -115,7 +115,7 @@
     color: #ef4444;
 }
 
-/* === CHARTS SECTION === */
+
 .charts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -155,7 +155,7 @@
     color: #667eea;
 }
 
-/* === MODERN DROPDOWN (GRAFIK PENJUALAN) === */
+
 .chart-header select {
     /* 1. Hapus style bawaan browser yang jelek */
     appearance: none;
@@ -198,7 +198,7 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* Glow biru halus */
 }
 
-/* === BAR CHART === */
+
 .bar-chart {
     display: flex;
     align-items: flex-end;
@@ -255,7 +255,7 @@
     opacity: 1;
 }
 
-/* === HORIZONTAL BAR CHART === */
+
 .h-bar-chart {
     display: flex;
     flex-direction: column;
@@ -318,7 +318,7 @@
     color: #fff;
 }
 
-/* === BOTTOM SECTION === */
+
 .bottom-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -346,7 +346,7 @@
     color: #667eea;
 }
 
-/* === ORDERS TABLE === */
+
 .orders-table {
     width: 100%;
 }
@@ -426,7 +426,7 @@
     border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
-/* === ALERT CARDS === */
+
 .alert-list {
     display: flex;
     flex-direction: column;
@@ -472,7 +472,7 @@
     color: #ef4444;
 }
 
-/* === RESPONSIVE === */
+
 @media (max-width: 1024px) {
     .charts-grid {
         grid-template-columns: 1fr;
@@ -501,7 +501,7 @@
     }
 }
 
-/* === LOADING ANIMATION === */
+
 @keyframes fadeIn {
     from {
         opacity: 0;

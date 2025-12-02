@@ -1,9 +1,9 @@
-/* ============================================
+﻿/* ============================================
    GLOBAL.CSS - UKOPIA BACKOFFICE
    Update untuk kompatibilitas dengan sidebar baru
    ============================================ */
 
-/* === GLOBAL STYLING === */
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -875,7 +875,7 @@ body.sidebar-collapsed {
   }
 }
 
-/* === PAGINATION STYLE (GLOBAL) === */
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -928,7 +928,7 @@ body.sidebar-collapsed {
     padding: 8px 0;
 }
 
-/* === GLOBAL SEARCH GROUP (NEW) === */
+
 /* Wrapper untuk search bar dan tombol */
 .search-group {
     display: flex;
