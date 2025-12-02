@@ -1,16 +1,25 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // 1. LOGIKA COUNTDOWN TIMER (Untuk yang Menunggu Pembayaran)
     function startCountdowns() {
         const timers = document.querySelectorAll('.countdown-timer');
+        
         setInterval(() => {
             const now = new Date().getTime();
+            
             timers.forEach(timer => {
                 const deadlineAttr = timer.getAttribute('data-deadline');
+                // Ubah format '-' jadi '/' agar kompatibel
                 const deadline = new Date(deadlineAttr.replace(/-/g, '/')).getTime();
+                
                 const distance = deadline - now;
+
                 if (distance < 0) {
                     timer.innerHTML = "Kadaluarsa";
                     timer.classList.remove('bg-danger');
                     timer.classList.add('bg-secondary');
+                    // Opsional: Reload halaman agar status update
+                    // location.reload(); 
                 } else {
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -19,10 +28,17 @@
             });
         }, 1000);
     }
+
     if (document.querySelectorAll('.countdown-timer').length > 0) {
         startCountdowns();
     }
 });
+
+/* =================================
+   FUNGSI-FUNGSI AKSI (GLOBAL)
+   ================================= */
+
+// A. BAYAR SEKARANG
 function payNow(token) {
     if (!token) {
         showToast('Token pembayaran tidak valid.', 'error');
@@ -35,10 +51,17 @@ function payNow(token) {
         onClose: function(){ showToast("Pembayaran belum selesai.", "warning"); }
     });
 }
+
+// B. KONFIRMASI TERIMA BARANG
 function completeOrder(id) {
+    // Pastikan path action benar (relatif dari halaman index.php)
+    // Karena index.php ada di FrontOffice/Orders/, dan action ada di FrontOffice/Orders/action/
+    // Maka path fetch cukup: "action/complete_order.php"
+    
     showConfirm("Apakah barang sudah diterima dengan baik?", async () => {
         const formData = new FormData();
         formData.append('id_transaksi', id);
+
         try {
             const response = await fetch('action/complete_order.php', { method: 'POST', body: formData });
             const result = await response.json();
@@ -51,14 +74,19 @@ function completeOrder(id) {
         } catch (error) { showToast("Terjadi kesalahan jaringan.", 'error'); }
     }, "Konfirmasi Penerimaan", "Ya, Sudah Diterima");
 }
+
+// C. BATALKAN PESANAN
 function cancelOrder(id) {
+    // Tutup modal detail jika terbuka
     const modalEl = document.getElementById('trxDetailModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if(modal) modal.hide();
+
     showConfirm("Yakin ingin membatalkan pesanan ini?", async () => {
         const formData = new FormData();
         formData.append('id_transaksi', id);
         formData.append('alasan', 'Dibatalkan oleh customer via web');
+
         try {
             const response = await fetch('action/cancel_order.php', { method: 'POST', body: formData });
             const result = await response.json();
@@ -71,26 +99,34 @@ function cancelOrder(id) {
         } catch (error) { showToast("Terjadi kesalahan jaringan.", 'error'); }
     }, "Konfirmasi Pembatalan", "Ya, Batalkan");
 }
+
+// D. LIHAT DETAIL PESANAN (MODAL)
 async function showDetail(id) {
     const modalEl = document.getElementById('trxDetailModal');
     const modal = new bootstrap.Modal(modalEl);
     const content = document.getElementById('detailContent');
+    
     content.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2">Memuat detail...</p></div>';
     modal.show();
+
     try {
         const response = await fetch(`action/get_transaction_detail.php?id=${id}`);
         const result = await response.json();
+
         if (result.status === 'success') {
             const trx = result.transaksi;
             const items = result.items;
             const fmt = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
             const date = new Date(trx.tanggal_pesan).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' });
+
+            // Badge Warna
             let badgeClass = 'bg-secondary';
             if (trx.status_pesanan === 'Menunggu Pembayaran') badgeClass = 'bg-warning text-dark';
             else if (trx.status_pesanan === 'Sudah Dibayar' || trx.status_pesanan === 'Diproses') badgeClass = 'bg-info text-dark';
             else if (trx.status_pesanan === 'Dikirim') badgeClass = 'bg-primary';
             else if (trx.status_pesanan === 'Selesai') badgeClass = 'bg-success';
             else if (trx.status_pesanan === 'Batal' || trx.status_pesanan === 'Kadaluarsa') badgeClass = 'bg-danger';
+
             let itemsHtml = '';
             items.forEach(item => {
                 itemsHtml += `
@@ -107,7 +143,10 @@ async function showDetail(id) {
                     </div>
                 `;
             });
+
             const biayaLayanan = parseInt(trx.total_pembayaran) - (parseInt(trx.total_harga_barang) + parseInt(trx.ongkir));
+
+            // Tombol Aksi di Modal
             let actionButton = '';
             if (trx.status_pesanan === 'Menunggu Pembayaran') {
                 actionButton = `
@@ -134,6 +173,7 @@ async function showDetail(id) {
                     </div>
                 `;
             }
+
             content.innerHTML = `
                 <div class="row mb-3">
                     <div class="col-6">
@@ -169,4 +209,3 @@ async function showDetail(id) {
         } else { content.innerHTML = `<div class="alert alert-danger">${result.message}</div>`; }
     } catch (error) { content.innerHTML = `<div class="alert alert-danger">Gagal memuat data.</div>`; }
 }
-

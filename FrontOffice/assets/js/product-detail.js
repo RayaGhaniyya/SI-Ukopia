@@ -1,6 +1,9 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- CEK FLASH MESSAGE (Notifikasi dari halaman lain) ---
     const savedMsg = localStorage.getItem('toast_msg');
     const savedType = localStorage.getItem('toast_type');
+
     if (savedMsg) {
         if (typeof showToast === 'function') {
             showToast(savedMsg, savedType || 'success');
@@ -10,6 +13,8 @@
         localStorage.removeItem('toast_msg');
         localStorage.removeItem('toast_type');
     }
+
+    // --- SETUP VARIABEL UI ---
     const plusBtn = document.querySelector('.plus');
     const minusBtn = document.querySelector('.minus');
     const countSpan = document.querySelector('.count');
@@ -17,10 +22,13 @@
     const priceDisplay = document.getElementById('display-price');
     const addToCartBtn = document.querySelector('.add');
     const buyNowBtn = document.querySelector('.buy');
+    
     let qty = 1;
     let currentStock = 0;
     let currentPrice = 0;
     let selectedDetailID = null;
+
+    // --- FORMAT RUPIAH ---
     const formatRupiah = (number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -28,12 +36,17 @@
             minimumFractionDigits: 0
         }).format(number);
     };
+
+    // --- UPDATE TAMPILAN ---
     const updateInfo = () => {
         const activeGrind = document.querySelector('.grind-btn.active');
         const activeSize = document.querySelector('.size-btn.active');
+
         if (document.querySelector('.size-btn') && !activeSize) return;
+
         const selectedSize = activeSize ? activeSize.getAttribute('data-value').trim() : null;
         const selectedGrind = activeGrind ? activeGrind.getAttribute('data-value').trim() : null;
+
         const variant = productData.find(item => {
             const dbSize = item.ukuran ? item.ukuran.trim() : null;
             const dbGrind = item.nama_grind ? item.nama_grind.trim() : null;
@@ -41,15 +54,19 @@
             const grindMatch = selectedGrind ? dbGrind === selectedGrind : true;
             return sizeMatch && grindMatch;
         });
+
         if (variant) {
             currentStock = parseInt(variant.stok);
             currentPrice = parseInt(variant.harga);
             selectedDetailID = variant.id_detail_produk; 
+
             stockDisplay.textContent = currentStock;
             priceDisplay.textContent = formatRupiah(currentPrice);
+
             if (qty > currentStock) qty = currentStock > 0 ? 1 : 0;
             if (qty === 0 && currentStock > 0) qty = 1;
             countSpan.textContent = qty;
+            
             if (currentStock === 0) {
                  stockDisplay.textContent = "Habis";
                  stockDisplay.style.color = "#ff1744";
@@ -70,6 +87,8 @@
             if(addToCartBtn) addToCartBtn.disabled = true;
         }
     };
+
+    // --- EVENT LISTENERS ---
     const optionButtons = document.querySelectorAll('.option-btn');
     optionButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -79,6 +98,7 @@
             updateInfo();
         });
     });
+
     if(plusBtn) {
         plusBtn.addEventListener('click', () => {
             if (qty < currentStock) {
@@ -88,6 +108,7 @@
             }
         });
     }
+
     if(minusBtn) {
         minusBtn.addEventListener('click', () => {
             if (qty > 1) {
@@ -95,13 +116,17 @@
             }
         });
     }
+
+    // --- LOGIKA ADD TO CART (Masuk Database) ---
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', () => {
             if (!selectedDetailID) { showToast("Silakan pilih varian produk terlebih dahulu!", "error"); return; }
             if (qty <= 0) { showToast("Stok habis!", "error"); return; }
+
             const originalText = addToCartBtn.textContent;
             addToCartBtn.textContent = "Memproses...";
             addToCartBtn.disabled = true;
+
             fetch('../Product-Cart/add_to_cart.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -123,13 +148,18 @@
             });
         });
     }
+
+    // --- LOGIKA BUY IT NOW (Langsung Checkout via Session) ---
     if (buyNowBtn) {
         buyNowBtn.addEventListener('click', () => {
              if (!selectedDetailID) { showToast("Silakan pilih varian produk terlebih dahulu!", "error"); return; }
              if (qty <= 0) { showToast("Stok habis!", "error"); return; }
+
              const originalText = buyNowBtn.textContent;
              buyNowBtn.textContent = "Memproses...";
              buyNowBtn.disabled = true;
+
+             // Kirim ke action_buy_now.php
              fetch('../Product-Cart/action_buy_now.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -138,6 +168,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
+                    // Redirect Langsung ke Checkout
                     window.location.href = '../Product-Checkout/index.php';
                 } else {
                     showToast(data.message, "error");
@@ -153,6 +184,6 @@
             });
         });
     }
+
     setTimeout(updateInfo, 100);
 });
-

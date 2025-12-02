@@ -1,9 +1,12 @@
-﻿document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // 1. Handle ADD Resep
     const addForm = document.getElementById('resepAddForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
             e.preventDefault(); // <--- INI KUNCINYA (Mencegah Reload)
             const formData = new FormData(this);
+
             fetch('action/store.php', {
                 method: 'POST',
                 body: formData
@@ -20,12 +23,19 @@
             .catch(error => console.error('Error:', error));
         });
     }
+
       const updateForm = document.getElementById('resepUpdateForm');
+    
     if (updateForm) {
         updateForm.addEventListener('submit', function(e) {
+            // 1. CEGAH RELOAD (Wajib!)
             e.preventDefault(); 
             console.log("Tombol Update ditekan, mencegah reload...");
+
+            // 2. Siapkan Data
             const formData = new FormData(this);
+
+            // 3. Kirim ke Server via Fetch
             fetch('action/update.php', {
                 method: 'POST',
                 body: formData
@@ -54,10 +64,15 @@
         console.error("Form dengan ID 'resepUpdateForm' tidak ditemukan!");
     }
 });
+
+// 3. Handle DELETE
 function confirmDeleteResep(id) {
     if (confirm('Apakah Anda yakin ingin menghapus resep ini?')) {
         const formData = new FormData();
+        
+        // KUNCI: Key harus 'id_resep' agar terbaca oleh $_POST['id_resep'] di PHP
         formData.append('id_resep', id); 
+
         fetch('action/delete.php', {
             method: 'POST',
             body: formData
@@ -74,4 +89,3 @@ function confirmDeleteResep(id) {
         .catch(error => console.error('Error:', error));
     }
 }
-

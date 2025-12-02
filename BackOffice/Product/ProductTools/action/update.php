@@ -1,6 +1,8 @@
-﻿<?php
+<?php
 include("../../../../Koneksi/koneksi.php");
 include("../../../Component/session.php");
+
+// --- (Fungsi uploadGambar SAMA) ---
 function uploadGambar($file, $current_host)
 {
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -26,7 +28,11 @@ function uploadGambar($file, $current_host)
         return ['success' => false, 'message' => 'Error: Hanya format JPG, JPEG, PNG, & WEBP yang diizinkan.'];
     }
 }
+// --- (AKHIR FUNGSI UPLOAD) ---
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
     try {
         $id_produk = $_POST['id_produk'];
         $nama_produk = $_POST['nama_produk'];
@@ -38,10 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $variety = $_POST['variety'] ?? null;
         $process = $_POST['process'] ?? null;
         $notes = $_POST['notes'] ?? null;
+
         $sql_gambar = "";
         $gambar_url_new = "";
         $old_file_path = "";
+
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
+
             $stmt_get = $conn->prepare("SELECT gambar_url FROM produk WHERE id_produk = ?");
             $stmt_get->bind_param("i", $id_produk);
             $stmt_get->execute();
@@ -52,8 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $old_file_path = dirname(__DIR__, 3) . '/assets/img/produk/' . $file_name;
             }
             $stmt_get->close();
+
             $current_host = $_SERVER['HTTP_HOST'];
             $uploadResult = uploadGambar($_FILES['gambar_url'], $current_host);
+
             if ($uploadResult['success']) {
                 $gambar_url_new = $uploadResult['url'];
                 $sql_gambar = ", gambar_url = ?";
@@ -61,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception($uploadResult['message']);
             }
         }
+
+        // Update tabel 'produk' (Induk)
         $query_produk = "
             UPDATE produk SET 
                 id_kategori = ?, nama_produk = ?, deskripsi = ?, origin = ?, 
@@ -68,7 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $sql_gambar 
             WHERE id_produk = ?
         ";
+
         $stmt_produk = $conn->prepare($query_produk);
+
         if (!empty($sql_gambar)) {
             $stmt_produk->bind_param(
                 "isssssssssi",
@@ -99,10 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $id_produk
             );
         }
+
         if ($stmt_produk->execute()) {
+            // HAPUS FILE GAMBAR LAMA (JIKA ADA)
             if (!empty($old_file_path) && file_exists($old_file_path)) {
                 unlink($old_file_path);
             }
+
             $_SESSION['message'] = "Produk (Alat/Rekomendasi) berhasil diperbarui.";
             $_SESSION['message_type'] = "success";
             header('Location: ../index.php?cache=' . time());
@@ -123,4 +141,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Location: ../index.php?cache=' . time());
     exit;
 }
-

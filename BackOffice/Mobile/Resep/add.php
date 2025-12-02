@@ -1,16 +1,21 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
+
 $customers = mysqli_query($conn, "SELECT uid, nama FROM akun_customer ORDER BY nama ASC");
 $alats = mysqli_query($conn, "SELECT id_alat, nama_alat FROM alat ORDER BY nama_alat ASC");
+// [BARU] Ambil Data Metode
 $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER BY nama_metode ASC");
 ?>
+
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="form-container" style="max-width: 800px;">
             <h1><i class="fas fa-plus-circle"></i> Buat Resep Baru</h1>
+            
             <form id="resepAddForm">
                 <div class="form-row">
                     <div style="flex:1; margin-right:10px;">
@@ -27,6 +32,7 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Metode Seduh <span style="color:red">*</span></label>
                     <select name="id_metode" required>
@@ -36,6 +42,7 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         <?php endwhile; ?>
                     </select>
                 </div>
+
                 <div class="form-row">
                     <div style="flex:1; margin-right:10px;">
                         <label>Jumlah Kopi (gram)</label>
@@ -50,6 +57,7 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         <input type="number" name="suhu" required placeholder="90">
                     </div>
                 </div>
+                
                 <div class="form-row">
                     <div style="flex:1; margin-right:10px;">
                         <label>Grind Size</label>
@@ -60,6 +68,7 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         <input type="number" name="waktu_ekstraksi" required placeholder="120">
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div style="flex:1; margin-right:10px;">
                         <label>Berat Minuman (gr)</label>
@@ -70,10 +79,12 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         <input type="number" name="tds" placeholder="1">
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Deskripsi</label>
                     <textarea name="deskripsi" rows="4" required></textarea>
                 </div>
+
                 <div class="form-group" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
                     <label style="display:block; margin-bottom:10px; font-weight:bold;">Pilih Alat:</label>
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
@@ -85,6 +96,7 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
                         <?php endwhile; ?>
                     </div>
                 </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
                     <a href="index.php" class="btn btn-cancel">Batal</a>
@@ -95,4 +107,3 @@ $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER 
 </div>
 <script src="../../assets/js/Mobile/resep.js"></script>
 <?php include("../../Component/bottom.php"); ?>
-

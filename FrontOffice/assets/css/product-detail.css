@@ -1,9 +1,13 @@
-﻿* {
+/* =========================================
+   1. RESET & GLOBAL
+   ========================================= */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
 html, body {
     background: #fff;
     color: #000;
@@ -11,15 +15,24 @@ html, body {
     height: 100%;
     overflow: hidden; 
 }
+
 main.product-detail-section {
     width: 100%;
     height: 100vh;
 }
+
+/* =========================================
+   2. LAYOUT SPLIT SCREEN
+   ========================================= */
 .product-layout {
     display: flex;
     width: 100%;
     height: 100vh;
 }
+
+/* =========================================
+   3. PANEL KIRI (GAMBAR & SLIDER) - [TETAP DIPERBAIKI]
+   ========================================= */
 .left-panel {
     width: 40%;
     height: 100vh;
@@ -31,6 +44,7 @@ main.product-detail-section {
     position: relative;
     overflow: hidden;
 }
+
 .gallery-wrapper {
     width: 100%;
     display: flex;
@@ -39,6 +53,8 @@ main.product-detail-section {
     justify-content: center;
     position: relative;
 }
+
+/* Container Gambar Utama */
 .main-image-box {
     width: 100%;
     height: 450px; 
@@ -49,6 +65,7 @@ main.product-detail-section {
     margin-bottom: 20px;
     padding: 0 40px; 
 }
+
 .main-image-box img {
     max-width: 100%;
     max-height: 100%;
@@ -56,6 +73,8 @@ main.product-detail-section {
     filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
     transition: opacity 0.3s ease;
 }
+
+/* Tombol Slider */
 .slider-nav {
     position: absolute;
     top: 50%;
@@ -75,13 +94,17 @@ main.product-detail-section {
     transition: all 0.2s;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
+
 .slider-nav:hover {
     background: #000;
     color: #fff;
     border-color: #000;
 }
+
 .slider-nav.prev { left: 20px; }
 .slider-nav.next { right: 20px; }
+
+/* Thumbnail */
 .thumbnail-container {
     display: flex;
     gap: 10px;
@@ -89,6 +112,7 @@ main.product-detail-section {
     overflow-x: auto;
     max-width: 90%;
 }
+
 .thumb-item {
     width: 60px;
     height: 60px;
@@ -99,17 +123,20 @@ main.product-detail-section {
     opacity: 0.6;
     transition: 0.2s;
 }
+
 .thumb-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 .thumb-item:hover, 
 .thumb-item.active {
     opacity: 1;
     border-color: #000;
     transform: scale(1.05);
 }
+
 .back-button {
     position: absolute;
     top: 25px;
@@ -127,6 +154,10 @@ main.product-detail-section {
     transition: 0.2s;
 }
 .back-button:hover { opacity: 0.85; }
+
+/* =========================================
+   4. PANEL KANAN (INFO)
+   ========================================= */
 .right-panel {
     width: 60%;
     height: 100vh;
@@ -137,6 +168,7 @@ main.product-detail-section {
     flex-direction: column;
     justify-content: flex-start;
 }
+
 .content-wrapper {
     padding: 40px 60px 60px 60px;
     max-width: 800px;
@@ -144,9 +176,11 @@ main.product-detail-section {
     width: 100%;
     min-height: 100%;
 }
+
 .right-panel::-webkit-scrollbar { width: 8px; }
 .right-panel::-webkit-scrollbar-track { background: #fff; }
 .right-panel::-webkit-scrollbar-thumb { background-color: #333; border-radius: 6px; }
+
 .product-title {
     font-size: 2rem;
     font-weight: 700;
@@ -154,18 +188,21 @@ main.product-detail-section {
     line-height: 1.2;
     margin-top: 0;
 }
+
 .product-price {
     font-size: 1.2rem;
     font-weight: 600;
     color: #333;
     margin-bottom: 20px;
 }
+
 .product-options { margin-top: 20px; }
 .product-options h4, .product-quantity h4 {
     margin: 15px 0 8px;
     font-size: 1rem;
     font-weight: 600;
 }
+
 .option-btn {
     padding: 8px 15px;
     border: 1px solid #333;
@@ -176,16 +213,19 @@ main.product-detail-section {
     cursor: pointer;
     transition: 0.2s;
 }
+
 .option-btn:hover, .option-btn.active {
     background: #333;
     color: #fff;
 }
+
 .product-quantity {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 20px;
 }
+
 .product-quantity button {
     width: 35px;
     height: 35px;
@@ -196,7 +236,9 @@ main.product-detail-section {
 }
 .product-quantity button:hover { background: #333; color: #fff; }
 .product-quantity .count { min-width: 25px; text-align: center; font-weight: 600; }
+
 .stock { margin-top: 10px; font-size: 0.9rem; color: #666; }
+
 .product-buttons {
     margin-top: 25px;
     display: flex;
@@ -214,6 +256,10 @@ main.product-detail-section {
 .product-buttons .add:hover { background: #333; color: #fff; }
 .product-buttons .buy { background: #333; color: #fff; }
 .product-buttons .buy:hover { opacity: 0.85; }
+
+/* =========================================
+   5. REVIEW SECTION (DIKEMBALIKAN KE KUNING)
+   ========================================= */
 .review-section-wrapper {
     width: 100%;
     background: #fff;
@@ -221,23 +267,31 @@ main.product-detail-section {
     padding-top: 20px;
     border-top: 1px dashed #eee;
 }
+
+/* HEADER BINTANG UTAMA */
 .review-header {
     text-align: center;
     margin-bottom: 50px;
 }
+
 .big-rating {
     font-size: 4rem;
     font-weight: 800;
     line-height: 1;
     color: #000;
 }
+
 .stars {
     font-size: 1.2rem;
     margin: 10px 0;
-    color: #FFC107; 
+    color: #FFC107; /* KEMBALI KUNING SECARA DEFAULT */
 }
+
+/* Jika ada logika PHP yang memakai class .gold / .grey */
 .stars .gold { color: #FFC107; }
 .stars .grey { color: #e0e0e0; }
+
+/* FORM INPUT BINTANG */
 .review-form {
     background: #f8f9fa;
     padding: 40px;
@@ -245,6 +299,7 @@ main.product-detail-section {
     box-shadow: 0 5px 20px rgba(0,0,0,0.03);
     margin-bottom: 40px;
 }
+
 .star-input {
     display: flex;
     flex-direction: row-reverse;
@@ -252,21 +307,27 @@ main.product-detail-section {
     gap: 10px;
     margin-bottom: 20px;
 }
+
 .star-input input { display: none; }
+
 .star-input label {
     font-size: 2rem;
-    color: #ddd; 
+    color: #ddd; /* Abu-abu kalau belum dipilih */
     cursor: pointer;
     transition: color 0.2s, transform 0.2s;
 }
+
+/* Saat dipilih atau di-hover -> KUNING */
 .star-input input:checked ~ label,
 .star-input label:hover,
 .star-input label:hover ~ label {
     color: #FFC107; 
 }
+
 .star-input label:hover {
     transform: scale(1.1);
 }
+
 .review-form textarea {
     width: 100%;
     height: 120px;
@@ -279,6 +340,7 @@ main.product-detail-section {
     margin-bottom: 20px;
 }
 .review-form textarea:focus { border-color: #000; }
+
 .submit-review {
     background: #000;
     color: #fff;
@@ -289,17 +351,21 @@ main.product-detail-section {
     cursor: pointer;
 }
 .submit-review:hover { opacity: 0.8; }
+
+/* LIST REVIEW ITEM */
 .review-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+
 .review-item {
     padding: 25px;
     border: 1px solid #f0f0f0;
     border-radius: 16px;
     background: #fff;
 }
+
 .reviewer-info {
     display: flex;
     justify-content: space-between;
@@ -308,18 +374,23 @@ main.product-detail-section {
 }
 .reviewer-info strong { font-size: 1.05rem; color: #000; }
 .review-date { font-size: 0.85rem; color: #999; }
+
+/* BINTANG PADA LIST REVIEW USER */
 .user-rating {
     font-size: 0.8rem;
     margin-bottom: 12px;
-    color: #FFC107; 
+    color: #FFC107; /* KEMBALI KUNING DEFAULT */
 }
+/* Tetap support class gold/grey kalau PHP generate */
 .user-rating .gold { color: #FFC107; }
 .user-rating .grey { color: #e0e0e0; }
+
 .review-text {
     color: #444;
     line-height: 1.6;
     font-size: 1rem;
 }
+
 .login-alert {
     text-align: center;
     padding: 40px;
@@ -328,6 +399,10 @@ main.product-detail-section {
     color: #666;
 }
 .login-alert a { color: #000; font-weight: 600; text-decoration: underline; }
+
+/* =========================================
+   6. RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
     html, body { overflow: auto; height: auto; }
     main.product-detail-section { height: auto; }

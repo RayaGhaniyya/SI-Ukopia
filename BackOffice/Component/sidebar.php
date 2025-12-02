@@ -1,9 +1,11 @@
-﻿<link rel="stylesheet" href="/SI-Ukopia/BackOffice/assets/css/sidebar.css">
+<link rel="stylesheet" href="/SI-Ukopia/BackOffice/assets/css/sidebar.css">
+
 <div class="sidebar" id="sidebar">
     <div class="logo-section">
         <img src="/SI-Ukopia/BackOffice/assets/img/Logo/Logo-Ukopia.png" alt="Ukopia Logo" class="logo">
         <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
     </div>
+
     <ul class="nav-list">
         <li>
             <a href="/SI-Ukopia/BackOffice/Dashboard/index.php">
@@ -11,12 +13,14 @@
                 <span>Dashboard</span>
             </a>
         </li>
+
         <li>
             <a href="/SI-Ukopia/BackOffice/Transaksi/index.php">
                 <i class="fas fa-receipt"></i>
                 <span>Transaksi</span>
             </a>
         </li>
+
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn"> <i class="fas fa-box-open"></i> <span>Manajemen Produk</span>
             </a>
@@ -44,12 +48,14 @@
                 <span>Reservation</span>
             </a>
         </li>
+
         <li>
             <a href="/SI-Ukopia/BackOffice/Gallery/index.php">
                 <i class="fas fa-image"></i>
                 <span>Gallery</span>
             </a>
         </li>
+
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="mobileBtn"> <i class="fas fa-list-alt"></i>
                 <span>List Data</span>
@@ -99,6 +105,8 @@
                 </li>
             </ul>
         </li>
+
+
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="mobileBtn"> <i class="fas fa-mobile-screen"></i>
                 <span>Mobile</span>
@@ -137,6 +145,7 @@
             </ul>
         </li>
     </ul>
+
     <div class="profile-section">
         <a href="#">
             <i class="fas fa-user-circle"></i>

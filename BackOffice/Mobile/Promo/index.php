@@ -1,11 +1,14 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
+
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/SI-Ukopia/BackOffice/Mobile/Uploads/Promo/";
+
 $result = $conn->query("SELECT * FROM promo ORDER BY created_at DESC");
 ?>
+
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
     <div class="dashboard-container">
@@ -13,6 +16,7 @@ $result = $conn->query("SELECT * FROM promo ORDER BY created_at DESC");
             <h1><i class="fas fa-percent"></i> Manajemen Promo</h1>
             <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Upload Promo</a>
         </div>
+
         <div class="table-card">
             <table class="data-table">
                 <thead>
@@ -44,6 +48,7 @@ $result = $conn->query("SELECT * FROM promo ORDER BY created_at DESC");
         </div>
     </div>
 </div>
+
 <script>
 function deletePromo(id) {
     if(confirm('Yakin ingin menghapus promo ini?')) {

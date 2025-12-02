@@ -1,9 +1,17 @@
-﻿.modal-content {
+/* ============================================
+   STYLE TRANSAKSI (CLEAN & WIDE)
+   File: BackOffice/assets/css/transaksi.css
+   ============================================ */
+
+/* Modal Styling */
+.modal-content {
     background-color: #fff;
     border: none;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
+
+/* Grid Layout (2 Kolom) */
 .detail-header-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -14,6 +22,7 @@
     padding: 25px;
     margin-bottom: 25px;
 }
+
 .info-group h6 {
     font-weight: 700;
     color: #212529;
@@ -23,24 +32,29 @@
     border-bottom: 2px solid #dee2e6;
     padding-bottom: 8px;
 }
+
 .info-item {
     margin-bottom: 8px;
     font-size: 0.95rem;
     color: #495057;
     display: flex;
 }
+
 .info-label {
     width: 110px;
     font-weight: 600;
     color: #6c757d;
     flex-shrink: 0;
 }
+
+/* Tabel Produk */
 .trx-product-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 10px;
 }
+
 .trx-product-table th {
     background-color: #e9ecef;
     padding: 12px 15px;
@@ -50,12 +64,14 @@
     color: #495057;
     text-align: left;
 }
+
 .trx-product-table td {
     padding: 15px;
     border-bottom: 1px solid #f1f3f5;
     vertical-align: middle;
     color: #333;
 }
+
 .trx-product-img {
     width: 50px;
     height: 50px;
@@ -65,6 +81,8 @@
     margin-right: 15px;
     vertical-align: middle;
 }
+
+/* Footer Total */
 .detail-footer {
     display: flex;
     justify-content: flex-end;
@@ -72,10 +90,12 @@
     padding-top: 20px;
     border-top: 2px solid #f1f3f5;
 }
+
 .summary-box {
     min-width: 300px;
     text-align: right;
 }
+
 .summary-row {
     display: flex;
     justify-content: space-between;
@@ -83,6 +103,7 @@
     font-size: 0.95rem;
     color: #6c757d;
 }
+
 .summary-row.total {
     gap: 10px;
     margin-top: 12px;
@@ -92,7 +113,10 @@
     font-weight: 700;
     color: #212529;
 }
+
 .text-highlight { color: #198754; }
+
+/* Form Actions */
 .form-actions {
     margin-top: 25px;
     display: flex;
@@ -101,6 +125,8 @@
     border-top: 1px solid #eee;
     padding-top: 20px;
 }
+
+/* Responsive */
 @media (max-width: 768px) {
     .detail-header-grid { grid-template-columns: 1fr; }
 }

@@ -1,18 +1,24 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
+
+// --- LOGIKA PAGINATION & SEARCH ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
+
 $search_term = $_GET['search'] ?? '';
 $base_url_pagin = '?';
 $params = [];
 $types = "";
+
+// Filter Kategori Beans (ID 1 & 2)
 $where_conditions = ["p.id_kategori IN (1, 2)"];
+
 if ($search_term != '') {
     $search_like = "%" . $search_term . "%";
     $where_conditions[] = "(p.nama_produk LIKE ? OR p.origin LIKE ? OR p.notes LIKE ?)";
@@ -22,7 +28,10 @@ if ($search_term != '') {
     $types .= "sss";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
+
 $where_sql = " WHERE " . implode(" AND ", $where_conditions);
+
+// Hitung Total
 $count_query = "SELECT COUNT(DISTINCT p.id_produk) as total FROM produk p $where_sql";
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
@@ -33,6 +42,8 @@ $count_result = $stmt_count->get_result();
 $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
+
+// Ambil Data + Galeri
 $order_by_sql = " ORDER BY p.id_produk DESC LIMIT ? OFFSET ?";
 $data_query = "
     SELECT 
@@ -46,22 +57,27 @@ $data_query = "
     GROUP BY p.id_produk
     $order_by_sql
 ";
+
 $data_params = $params;
 $data_params[] = $limit;
 $data_params[] = $offset;
 $data_types = $types . "ii";
+
 $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
+
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-coffee"></i> Manajemen Beans</h1>
             <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
         </div>
+
         <?php if (isset($_SESSION['message'])): ?>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -70,6 +86,7 @@ $result = $stmt_data->get_result();
             </script>
             <?php unset($_SESSION['message']); unset($_SESSION['message_type']); ?>
         <?php endif; ?>
+
         <div class="table-card">
             <div class="table-header">
                 <h2>Data Beans (Total: <?= $total_rows ?>)</h2>
@@ -78,6 +95,7 @@ $result = $stmt_data->get_result();
                     <button type="submit" class="btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
+
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -96,6 +114,8 @@ $result = $stmt_data->get_result();
                             $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)):
                                 $gambar_utama = str_replace("localhost", $current_host, $row['gambar_url']);
+                                
+                                // Siapkan data JSON Galeri
                                 $gallery_array = [];
                                 if (!empty($row['list_galeri'])) {
                                     $raw_urls = explode(',', $row['list_galeri']);
@@ -143,45 +163,55 @@ $result = $stmt_data->get_result();
         </div>
     </div>
 </div>
+
 <div id="galleryModal" class="popup-overlay">
     <div class="popup-card">
         <div class="popup-header">
             <h3 id="galleryTitle">Galeri Produk</h3>
             <button class="popup-close" onclick="closeGalleryModal()">&times;</button>
         </div>
+        
         <div class="popup-body">
             <div id="galleryGrid" class="gallery-grid">
                 </div>
         </div>
+        
         <div class="popup-footer">
             <button onclick="closeGalleryModal()" class="btn btn-secondary btn-sm">Tutup</button>
         </div>
     </div>
 </div>
+
 <script>
     function openGalleryModal(title, images) {
         document.getElementById('galleryTitle').textContent = "Galeri: " + title;
         const container = document.getElementById('galleryGrid');
         container.innerHTML = ''; // Bersihkan isi lama
+        
         if (images.length > 0) {
             images.forEach(src => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'gallery-item-wrapper';
+                
                 const img = document.createElement('img');
                 img.className = 'gallery-image';
                 img.src = src;
+                
                 wrapper.onclick = () => window.open(src, '_blank');
+
                 wrapper.appendChild(img);
                 container.appendChild(wrapper);
             });
         } else {
             container.innerHTML = '<p class="text-muted text-center w-100 py-4">Tidak ada foto tambahan.</p>';
         }
+        
         document.getElementById('galleryModal').classList.add('show');
     }
+
     function closeGalleryModal() {
         document.getElementById('galleryModal').classList.remove('show');
     }
 </script>
-<?php include("../../Component/bottom.php"); ?>
 
+<?php include("../../Component/bottom.php"); ?>

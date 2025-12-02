@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   try {
     const captionEl = document.querySelector(".hero-caption h3");
     if (captionEl) {
@@ -25,6 +25,7 @@
   } catch (err) {
     console.error("Hero typing error:", err);
   }
+
   try {
     const galleryContainer = document.querySelector(".gallery");
     if (galleryContainer) {
@@ -49,6 +50,7 @@
   } catch (err) {
     console.error("Gallery reveal error:", err);
   }
+
   try {
     const productsContainer = document.querySelector(".products");
     if (productsContainer) {
@@ -69,6 +71,7 @@
   } catch (err) {
     console.error("Products reveal error:", err);
   }
+
   try {
     const reserveBtn = document.querySelector(".btn-reserve");
     if (reserveBtn) {

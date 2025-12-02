@@ -1,10 +1,14 @@
-﻿<?php
+<?php
 session_start();
 include("../../Koneksi/koneksi.php"); // Path 2x ../
+
+// Tentukan slide mana yang aktif berdasarkan URL
 $view = $_GET['view'] ?? 'email';
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,20 +16,27 @@ $view = $_GET['view'] ?? 'email';
     <link rel="stylesheet" href="../assets/css/auth.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../assets/css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
+
 <body>
+
     <div class="auth-wrapper <?php
                                 if ($view == 'code') echo 'is-code-view';
                                 if ($view == 'reset') echo 'is-reset-view';
                                 ?>">
+
         <div class="auth-left-panel">
             <div class="auth-slideshow">
                 <div class="slide" style="background-image: url('../assets/img/Gallery-Homepage/foto 1.JPG');"></div>
                 <div class="slide" style="background-image: url('../assets/img/Gallery-Homepage/foto 2.JPG');"></div>
             </div>
         </div>
+
         <div class="auth-right-panel">
+
             <div class="auth-form-container">
+
                 <div class="auth-form-login">
                     <h2>Lupa Password</h2>
                     <p>Masukkan email Anda untuk menerima kode verifikasi.</p>
@@ -41,6 +52,7 @@ $view = $_GET['view'] ?? 'email';
                         </div>
                     </form>
                 </div>
+
                 <div class="auth-form-register">
                     <h2>Masukkan Kode</h2>
                     <p>Kode 6 digit telah dikirim ke email Anda.</p>
@@ -57,6 +69,7 @@ $view = $_GET['view'] ?? 'email';
                         </div>
                     </form>
                 </div>
+
                 <div class="auth-form-reset">
                     <h2>Atur Password Baru</h2>
                     <p>Masukkan password baru Anda.</p>
@@ -79,11 +92,12 @@ $view = $_GET['view'] ?? 'email';
                         <button type="submit" class="auth-btn">Simpan Password</button>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
     <script src="../assets/js/toast.js"></script>
     <script src="../assets/js/auth.js?v=<?php echo time(); ?>"></script>
 </body>
-</html>
 
+</html>

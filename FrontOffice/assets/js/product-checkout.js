@@ -1,18 +1,26 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const payBtn = document.getElementById("pay-button");
+
     if (payBtn) {
         payBtn.addEventListener("click", async (e) => {
             e.preventDefault();
+
+            // 1. Cek Alamat
             const selectedAddress = document.querySelector('input[name="id_alamat"]:checked');
             const totalBayar = document.querySelector('input[name="total_bayar"]').value;
             const ongkir = document.querySelector('input[name="ongkir"]').value;
+
             if (!selectedAddress) {
                 showToast("Silakan pilih alamat pengiriman terlebih dahulu!", "error");
                 return;
             }
+
+            // 2. Tampilkan Loading
             const originalText = payBtn.innerText;
             payBtn.innerText = "Memproses...";
             payBtn.disabled = true;
+
+            // 3. Request Token ke Backend
             try {
                 const response = await fetch('place_order.php', {
                     method: 'POST',
@@ -23,8 +31,11 @@
                         total: totalBayar
                     })
                 });
+
                 const result = await response.json();
+
                 if (result.status === 'success') {
+                    // 4. SUKSES: Munculkan Popup Midtrans (QRIS/VA akan ada di sini)
                     window.snap.pay(result.token, {
                         onSuccess: function(result){
                             window.location.href = "success.php?order_id=" + result.order_id;
@@ -57,4 +68,3 @@
         });
     }
 });
-

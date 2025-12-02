@@ -1,17 +1,24 @@
-﻿<?php
+<?php
+// Path Koneksi (Naik 2 Level)
 include("../../Koneksi/koneksi.php");
+// Path Session (Naik 1 Level)
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php");
+
+// --- KONFIGURASI PAGINATION & SEARCH ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
+
 $search_term = $_GET['search'] ?? '';
 $base_url_pagin = '?';
 $where_conditions = [];
 $params = [];
 $types = "";
+
+// Filter Pencarian
 if (!empty($search_term)) {
     $search_like = "%" . $search_term . "%";
     $where_conditions[] = "(t.midtrans_order_id LIKE ? OR c.nama LIKE ?)";
@@ -20,10 +27,13 @@ if (!empty($search_term)) {
     $types .= "ss";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
+
 $where_sql = "";
 if (!empty($where_conditions)) {
     $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 }
+
+// 1. Hitung Total Data
 $count_query = "SELECT COUNT(*) as total 
                 FROM transaksi t 
                 JOIN akun_customer c ON t.uid_customer = c.uid 
@@ -37,30 +47,38 @@ $count_result = $stmt_count->get_result();
 $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
+
+// 2. Ambil Data Transaksi
 $data_query = "SELECT t.*, c.nama as nama_customer 
                FROM transaksi t 
                JOIN akun_customer c ON t.uid_customer = c.uid 
                $where_sql 
                ORDER BY t.tanggal_pesan DESC 
                LIMIT ? OFFSET ?";
+
 $data_params = $params;
 $data_params[] = $limit;
 $data_params[] = $offset;
 $data_types = $types . "ii";
+
 $stmt = $conn->prepare($data_query);
 $stmt->bind_param($data_types, ...$data_params);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-receipt"></i> Riwayat Transaksi</h1>
         </div>
+
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Pesanan Masuk (Total: <?= $total_rows ?> data)</h2>
+
                 <form action="index.php" method="GET" class="search-group">
                     <input
                         type="text"
@@ -68,11 +86,13 @@ $result = $stmt->get_result();
                         id="searchTransaction"
                         placeholder="Cari ID Order / Nama..."
                         value="<?= htmlspecialchars($search_term) ?>">
+
                     <button type="submit" class="btn" title="Cari">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
+
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -91,6 +111,7 @@ $result = $stmt->get_result();
                         if ($result && $result->num_rows > 0) {
                             $no = $offset + 1;
                             while ($row = $result->fetch_assoc()) {
+                                // Badge Status Logic
                                 $st = $row['status_pesanan'];
                                 $badge = 'badge bg-secondary';
                                 if ($st == 'Menunggu Pembayaran') $badge = 'badge bg-warning';
@@ -137,6 +158,7 @@ $result = $stmt->get_result();
                     </tbody>
                 </table>
             </div>
+
             <div class="table-footer" style="padding-top: 10px;">
                 <?php
                 renderPaginator($total_pages, $current_page, $base_url_pagin);
@@ -145,6 +167,7 @@ $result = $stmt->get_result();
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -157,6 +180,7 @@ $result = $stmt->get_result();
         </div>
     </div>
 </div>
-<script src="/SI-Ukopia/BackOffice/assets/js/transaksi.js"></script>
-<?php include("../Component/bottom.php"); ?>
 
+<script src="/SI-Ukopia/BackOffice/assets/js/transaksi.js"></script>
+
+<?php include("../Component/bottom.php"); ?>

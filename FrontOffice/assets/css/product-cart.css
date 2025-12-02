@@ -1,16 +1,25 @@
-﻿* {
+/* =========================================
+   1. RESET & GLOBAL
+   ========================================= */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
 .cart-section {
     width: 100%;
     min-height: 100vh;
     background: #f8f8f8;
     color: #000;
+    /* Memberi ruang di bawah agar konten tidak tertutup footer summary */
     padding-bottom: 100px;
 }
+
+/* =========================================
+   2. HEADER
+   ========================================= */
 .cart-header {
     background: #000;
     color: #fff;
@@ -19,29 +28,39 @@
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
+    
+    /* Sticky Header */
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .back-btn {
     color: #fff;
     font-size: 1.2rem;
     transition: 0.3s;
 }
+
 .back-btn:hover {
     color: #aaa;
     transform: translateX(-5px);
 }
+
+/* =========================================
+   3. TABEL KERANJANG (FULL WIDTH & ALIGNMENT)
+   ========================================= */
 .cart-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 15px; 
-    padding: 0; 
+    border-spacing: 0 15px; /* Jarak antar item */
+    padding: 0; /* Full Width tanpa padding samping */
 }
+
 .cart-table thead th {
     padding: 20px 40px;
     color: #888;
@@ -51,18 +70,27 @@
     letter-spacing: 1px;
     border: none;
 }
+
+/* ALIGNMENT HEADER KHUSUS */
 .cart-table thead th:nth-child(1) {
     text-align: left;
     padding-left: 105px; 
 }
+
 .cart-table thead th:nth-child(2) {
     text-align: center;
     padding-right: 85px;
 }
+
 .cart-table thead th:nth-child(3) {
     text-align: right;
     padding-right: 65px;
 }
+
+/* =========================================
+   4. ITEM KERANJANG (CARD STYLE)
+   ========================================= */
+/* Animasi Fade In saat item muncul */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -73,32 +101,45 @@
         transform: translateY(0);
     }
 }
+
 .cart-item {
     background: #fff;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
     transition: all 0.3s ease;
+    
+    /* Menjalankan animasi */
     animation: fadeInUp 0.5s ease forwards;
+    
     width: 100%;
     margin-bottom: 5px;
 }
+
 .cart-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
+
 .cart-item td {
     padding: 40px;
     vertical-align: middle;
     border: none;
 }
+
+/* ALIGNMENT CONTENT KHUSUS (Agar lurus dengan header) */
 .cart-item td:nth-child(3) {
     text-align: right;
     padding-right: 50px;
 }
+
+/* =========================================
+   5. DETAIL PRODUK
+   ========================================= */
 .product-info {
     display: flex;
     align-items: center;
     gap: 20px;
 }
+
 .product-img {
     width: 100px;
     height: 100px;
@@ -109,25 +150,31 @@
     align-items: center;
     flex-shrink: 0;
 }
+
 .product-img img {
     width: 80%;
     height: 80%;
     object-fit: contain;
     mix-blend-mode: multiply;
 }
+
 .product-details h3 {
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 5px;
 }
+
 .price-tag {
     color: #000;
 }
+
 .variant-info {
     font-size: 0.85rem;
     color: #777;
     margin-top: 5px;
 }
+
+/* Checkbox Custom */
 .custom-checkbox {
     width: 20px;
     height: 20px;
@@ -135,12 +182,20 @@
     cursor: pointer;
     margin-right: 15px;
 }
+
+/* =========================================
+   6. QUANTITY & ACTION
+   ========================================= */
 .quantity {
     display: flex;
     align-items: center;
+    
+    /* Agar tombol +/- berada di tengah kolom */
     justify-content: center; 
+    
     gap: 10px;
 }
+
 .qty-btn {
     width: 35px;
     height: 35px;
@@ -151,16 +206,19 @@
     font-size: 1.1rem;
     transition: 0.2s;
 }
+
 .qty-btn:hover {
     background: #000;
     color: #fff;
     border-color: #000;
 }
+
 .qty-count {
     width: 30px;
     text-align: center;
     font-weight: 600;
 }
+
 .delete-btn {
     margin-left: 15px;
     background: none;
@@ -170,13 +228,19 @@
     font-size: 1.1rem;
     transition: 0.3s;
 }
+
 .delete-btn:hover {
     color: #d11a2a;
     transform: scale(1.1);
 }
+
 .product-total {
     font-size: 1.1rem;
 }
+
+/* =========================================
+   7. FOOTER SUMMARY (STICKY BOTTOM)
+   ========================================= */
 .cart-summary {
     position: fixed;
     bottom: 0;
@@ -185,22 +249,28 @@
     background: #fff;
     padding: 15px 60px;
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 99;
 }
+
 .summary-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
+
 .summary-center p {
     font-size: 1.1rem;
 }
+
+#cart-total {
     font-size: 1.3rem;
     margin-left: 10px;
 }
+
 .checkout-btn {
     background: #000;
     color: #fff;
@@ -212,26 +282,35 @@
     cursor: pointer;
     transition: 0.3s;
 }
+
 .checkout-btn:hover {
     background: #333;
     transform: translateY(-2px);
 }
+
+/* =========================================
+   8. EMPTY STATE (JIKA KOSONG)
+   ========================================= */
 .empty-cart {
     text-align: center;
     padding: 80px 20px;
 }
+
 .empty-cart i {
     font-size: 4rem;
     color: #ddd;
     margin-bottom: 20px;
 }
+
 .empty-cart h2 {
     margin-bottom: 10px;
 }
+
 .empty-cart p {
     color: #777;
     margin-bottom: 30px;
 }
+
 .shop-btn {
     background: #000;
     color: #fff;
@@ -241,14 +320,22 @@
     font-weight: 500;
     transition: 0.3s;
 }
+
 .shop-btn:hover {
     background: #333;
 }
+
+/* =========================================
+   9. RESPONSIVE (MOBILE)
+   ========================================= */
 @media (max-width: 768px) {
+    /* Sembunyikan Header Tabel di HP */
     .cart-table, 
     .cart-table thead {
         display: none;
     }
+
+    /* Ubah Baris jadi Blok */
     .cart-table, 
     .cart-table tbody, 
     .cart-item, 
@@ -257,9 +344,11 @@
         width: 100%;
         padding: 0;
     }
+
     .cart-table {
         padding: 20px;
     }
+
     .cart-item {
         margin-bottom: 20px;
         padding: 20px;
@@ -267,15 +356,20 @@
         flex-wrap: wrap;
         align-items: center;
     }
+
     .cart-item td {
         border: none;
         padding: 10px 0;
-        text-align: center; 
+        text-align: center; /* Di HP balik ke tengah */
     }
+    
+    /* Reset alignment khusus HP */
     .cart-item td:nth-child(3) {
         text-align: right;
         padding-right: 0;
     }
+
+    /* Total harga rata kanan di HP */
     .product-total {
         width: 100%;
         text-align: right;
@@ -283,16 +377,20 @@
         border-top: 1px solid #eee;
         padding-top: 10px !important;
     }
+
+    /* Footer Summary Stack ke bawah */
     .cart-summary {
         padding: 20px;
         flex-direction: column;
         gap: 15px;
     }
+
     .summary-center {
         width: 100%;
         display: flex;
         justify-content: space-between;
     }
+
     .checkout-btn {
         width: 100%;
     }

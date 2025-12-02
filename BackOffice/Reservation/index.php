@@ -1,8 +1,10 @@
-﻿<?php
+<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php"); // File fungsi renderPaginator()
+
+// 1. SET VARIABEL UNTUK DIKIRIM KE HELPER
 $table_name = "reservasi";
 $base_order_by = " ORDER BY 
     CASE status
@@ -13,10 +15,14 @@ $base_order_by = " ORDER BY
     END, 
     tanggal DESC, 
     jam ASC";
+
+// 2. INCLUDE HELPERNYA
 include("../Component/handle_search_pagination.php");
 ?>
+
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-calendar-check"></i> Manajemen Reservasi</h1>
@@ -24,14 +30,19 @@ include("../Component/handle_search_pagination.php");
                 <i class="fas fa-archive"></i> Riwayat Arsip
             </a>
         </div>
+
         <?php
         if (isset($_SESSION['message'])) {
             $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
+
+            // Panggil fungsi showNotification() dari global.js
             echo '<script>';
             echo "document.addEventListener('DOMContentLoaded', function() {";
             echo "  showNotification('" . addslashes($_SESSION['message']) . "', '" . $message_type . "');";
             echo "});";
             echo '</script>';
+
+            // Hapus pesan setelah disiapkan
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
         }
@@ -39,6 +50,7 @@ include("../Component/handle_search_pagination.php");
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Reservasi (Total: <?= $total_rows ?> data)</h2>
+
                 <form action="index.php" method="GET" class="search-group">
                     <input
                         type="text"
@@ -46,11 +58,13 @@ include("../Component/handle_search_pagination.php");
                         id="searchTable"
                         placeholder="Search..."
                         value="<?= htmlspecialchars($search_term) ?>">
+
                     <button type="submit" class="btn" title="Cari">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
+
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -71,13 +85,16 @@ include("../Component/handle_search_pagination.php");
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $tanggalFormat = date('d/m/Y', strtotime($row['tanggal']));
                                 $jamFormat = date('H:i', strtotime($row['jam']));
+
                                 $statusClass = match ($row['status']) {
                                     'Confirmed' => 'badge bg-success',
                                     'Cancelled' => 'badge bg-danger',
                                     default => 'badge bg-warning'
                                 };
+
                                 $nomor_display = htmlspecialchars($row['no_telepon']);
                                 $nomor_link = preg_replace('/[^0-9]/', '', $row['no_telepon']);
+
                                 if (substr($nomor_link, 0, 1) === '0') {
                                     $nomor_link = '62' . substr($nomor_link, 1);
                                 } elseif (substr($nomor_link, 0, 1) === '8') {
@@ -127,14 +144,16 @@ include("../Component/handle_search_pagination.php");
                     </tbody>
                 </table>
             </div>
+
             <div class="table-footer" style="padding-top: 10px;">
                 <?php
                 renderPaginator($total_pages, $current_page, $base_url_pagin);
                 ?>
             </div>
+
         </div>
     </div>
 </div>
+
 <script src="../assets/js/reservation.js"></script>
 <?php include("../Component/bottom.php"); ?>
-

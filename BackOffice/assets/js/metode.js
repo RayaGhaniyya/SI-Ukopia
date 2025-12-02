@@ -1,6 +1,7 @@
-﻿function handleImagePreview(input, previewId, buttonId) {
+function handleImagePreview(input, previewId, buttonId) {
     const previewContainer = document.getElementById(previewId);
     const uploadButton = document.getElementById(buttonId);
+
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -13,7 +14,9 @@
         reader.readAsDataURL(input.files[0]);
     }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle Add
     const addForm = document.getElementById('metodeAddForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
@@ -28,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => console.error(err));
         });
     }
+
+    // Handle Update
     const updateForm = document.getElementById('metodeUpdateForm');
     if (updateForm) {
         updateForm.addEventListener('submit', function(e) {
@@ -43,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
 function confirmDeleteMetode(id) {
     if (confirm('Yakin hapus metode ini?')) {
         const formData = new FormData();
@@ -56,4 +62,3 @@ function confirmDeleteMetode(id) {
         .catch(err => console.error(err));
     }
 }
-

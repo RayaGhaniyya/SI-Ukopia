@@ -1,17 +1,24 @@
-﻿<?php
+<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php"); // File fungsi renderPaginator()
+
+// 1. SET VARIABEL UNTUK DIKIRIM KE HELPER
 $table_name = "reservasi_arsip";
 $base_order_by = " ORDER BY tanggal DESC, jam ASC";
+
+// 2. INCLUDE HELPERNYA
 include("../Component/handle_search_pagination.php");
 ?>
+
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-archive"></i> Riwayat Arsip</h1>
+
             <div class="header-buttons" style="display: flex; gap: 10px;">
                 <a href="index.php" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Kembali
@@ -22,14 +29,19 @@ include("../Component/handle_search_pagination.php");
                 </a>
             </div>
         </div>
+
         <?php
         if (isset($_SESSION['message'])) {
             $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
+
+            // Panggil fungsi showNotification() dari global.js
             echo '<script>';
             echo "document.addEventListener('DOMContentLoaded', function() {";
             echo "  showNotification('" . addslashes($_SESSION['message']) . "', '" . $message_type . "');";
             echo "});";
             echo '</script>';
+
+            // Hapus pesan setelah disiapkan
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
         }
@@ -37,6 +49,7 @@ include("../Component/handle_search_pagination.php");
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Arsip (Total: <?= $total_rows ?> data)</h2>
+
                 <form action="riwayat.php" method="GET" class="search-group">
                     <input
                         type="text"
@@ -44,11 +57,13 @@ include("../Component/handle_search_pagination.php");
                         id="searchArsip"
                         placeholder="Search..."
                         value="<?= htmlspecialchars($search_term) ?>">
+
                     <button type="submit" class="btn" title="Cari">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
+
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -107,14 +122,16 @@ include("../Component/handle_search_pagination.php");
                     </tbody>
                 </table>
             </div>
+
             <div class="table-footer" style="padding-top: 10px;">
                 <?php
                 renderPaginator($total_pages, $current_page, $base_url_pagin);
                 ?>
             </div>
+
         </div>
     </div>
 </div>
+
 <script src="../assets/js/reservation.js"></script>
 <?php include("../Component/bottom.php"); ?>
-

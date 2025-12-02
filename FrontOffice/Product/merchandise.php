@@ -1,21 +1,29 @@
-﻿<?php
+<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 include("../Component/pagination.php");
+
 $current_host = $_SERVER['HTTP_HOST'];
+
+// --- 1. SETUP ---
 $id_kategori = 3; // MERCHANDISE
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 50;
 $offset = ($page - 1) * $limit;
+
+// --- 2. BASE URL ---
 $baseUrl = "?";
 if (!empty($keyword)) $baseUrl .= "keyword=" . urlencode($keyword) . "&";
 if ($sort != 'default') $baseUrl .= "sort=" . urlencode($sort) . "&";
+
+// --- 3. FILTER ---
 $whereClause = "WHERE p.id_kategori = ?";
 $params = [$id_kategori];
 $types = "i";
+
 if (!empty($keyword)) {
     $whereClause .= " AND (p.nama_produk LIKE ? OR p.deskripsi LIKE ?)";
     $search_param = "%" . $keyword . "%";
@@ -23,6 +31,8 @@ if (!empty($keyword)) {
     $params[] = $search_param;
     $types .= "ss";
 }
+
+// --- 4. COUNT TOTAL ---
 $countSql = "SELECT COUNT(*) as total FROM produk p $whereClause";
 $stmtCount = $conn->prepare($countSql);
 $stmtCount->bind_param($types, ...$params);
@@ -30,13 +40,18 @@ $stmtCount->execute();
 $totalRows = $stmtCount->get_result()->fetch_assoc()['total'];
 $totalPages = ceil($totalRows / $limit);
 $stmtCount->close();
+
+// --- 5. SORTING ---
 $orderBy = "ORDER BY p.nama_produk ASC";
 if ($sort == 'price_asc') $orderBy = "ORDER BY harga_terendah ASC";
 elseif ($sort == 'price_desc') $orderBy = "ORDER BY harga_terendah DESC";
 elseif ($sort == 'newest') $orderBy = "ORDER BY p.id_produk DESC";
+
+// --- 6. QUERY DATA ---
 $sql = "SELECT p.id_produk, p.nama_produk, p.gambar_url, 
             (SELECT MIN(dp.harga) FROM detail_produk dp WHERE dp.id_produk = p.id_produk) as harga_terendah
         FROM produk p $whereClause $orderBy LIMIT ? OFFSET ?";
+
 $params[] = $limit;
 $params[] = $offset;
 $types .= "ii";
@@ -45,9 +60,11 @@ $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result_produk = $stmt->get_result();
 ?>
+
 <link rel="stylesheet" href="../assets/css/loader.css">
 <script src="../assets/js/loader.js"></script>
 <link rel="stylesheet" href="../assets/css/product.css">
+
 <nav class="secondary-navbar">
     <div class="nav-left">
         <div class="dropdown">
@@ -66,7 +83,9 @@ $result_produk = $stmt->get_result();
     </div>
     <div class="nav-right"><?php include("../Component/SearchBar.php"); ?></div>
 </nav>
+
 <main class="product-section">
+
     <?php if ($totalRows > 0): ?>
         <div class="product-header-control">
             <div class="result-count">Menampilkan <strong><?= $result_produk->num_rows ?></strong> dari <strong><?= $totalRows ?></strong> produk</div>
@@ -78,6 +97,7 @@ $result_produk = $stmt->get_result();
             </select>
         </div>
     <?php endif; ?>
+
     <div class="product-grid">
         <?php if ($result_produk->num_rows > 0): ?>
             <?php while ($produk = $result_produk->fetch_assoc()):
@@ -107,7 +127,9 @@ $result_produk = $stmt->get_result();
         <?php endif;
         $stmt->close(); ?>
     </div>
+
     <?php renderPaginator($totalPages, $page, $baseUrl); ?>
+
     <?php if (!empty($keyword) && $result_produk->num_rows > 0): ?>
         <div class="search-state-container">
             <div class="search-state-icon"><i class="fa-solid fa-check-circle"></i></div>
@@ -119,6 +141,6 @@ $result_produk = $stmt->get_result();
         </div>
     <?php endif; ?>
 </main>
+
 <script src="../assets/js/product.js"></script>
 <?php include("../Component/Footer.php"); ?>
-

@@ -1,4 +1,4 @@
-﻿* { 
+* { 
   margin: 0; 
   padding: 0; 
   box-sizing: border-box; 
@@ -8,6 +8,8 @@ body {
   background: #111; 
   color: #fff; 
 }
+
+/* Navbar */
 .navbar-custom {
     background-color: #000;
     background-position: bottom;
@@ -15,12 +17,16 @@ body {
     background-size: cover;
     z-index: 1050;
 }
+
 .navbar-custom .container-fluid {
     position: relative;
 }
+
+/* Menu tengah absolute positioning */
 .navbar-center {
     position: static !important;
 }
+
 @media (min-width: 992px) {
     .navbar-center {
         position: absolute !important;
@@ -28,15 +34,19 @@ body {
         transform: translateX(-50%) !important;
     }
 }
+
 .navbar-nav .nav-link {
     color: #fff !important;
     padding: 8px 20px !important;
     position: relative;
     transition: all 0.3s ease;
 }
+
+/* Animasi hover untuk nav items */
 .nav-link-animate {
     overflow: hidden;
 }
+
 .nav-link-animate::before {
     content: '';
     position: absolute;
@@ -49,31 +59,39 @@ body {
     transform: translateX(-50%);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
 .nav-link-animate:hover::before {
     width: 100%;
     animation: shimmer 0.8s ease;
 }
+
 .nav-link-animate:hover {
     transform: translateY(-3px);
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
+
 .nav-link-animate:active {
     transform: translateY(0px) scale(0.95);
 }
+
 @keyframes shimmer {
     0% { opacity: 0.5; }
     50% { opacity: 1; }
     100% { opacity: 0.5; }
 }
+
+/* Styling untuk icon navbar */
 .navbar-icons {
     gap: 5px;
 }
+
 .navbar-icons .nav-icon {
     font-size: 1.2rem;
     padding: 8px 12px !important;
     transition: all 0.3s ease;
     position: relative;
 }
+
 .navbar-icons .nav-icon::after {
     content: '';
     position: absolute;
@@ -86,76 +104,95 @@ body {
     transform: translate(-50%, -50%);
     transition: all 0.3s ease;
 }
+
 .navbar-icons .nav-icon:hover::after {
     width: 40px;
     height: 40px;
 }
+
 .navbar-icons .nav-icon:hover {
     transform: scale(1.15);
     color: #ddd !important;
 }
+
 .navbar-icons .nav-icon:active {
     transform: scale(0.95);
 }
+
 .navbar-icons .nav-icon i {
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
+
 .navbar-brand {
     color: #fff !important;
     font-weight: bold;
     font-size: 1.5rem;
     transition: none;
 }
+
 .ukopia-logo {
     height: 30px;
     transition: none;
 }
+
 .navbar-brand:hover .ukopia-logo {
     transform: none;
 }
+
+/* Responsive navbar */
 @media (max-width: 991px) {
     .navbar-icons {
         margin-top: 15px;
         justify-content: center;
     }
+    
     .navbar-center {
         text-align: center;
         position: static !important;
         transform: none !important;
     }
 }
+
+
+/* Footer */
 .footer {
     background-color: #111518;
     color: #fff;
     padding: 40px 20px;
     width: 100%;
 }
+
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
     gap: 60px;
 }
+
 .left-section {
     flex: 1;
     max-width: 400px;
 }
+
 .logo {
     max-width: 200px;
     margin-bottom: 30px; 
 }
+
 .partners-section {
     display: flex;
     flex-direction: column;
 }
+
 .partners-row {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 25px;
 }
+
 .partners-row img {
     max-height: 100px;
     max-width: 80px;
@@ -163,12 +200,14 @@ body {
     height: auto;
     object-fit: contain;
 }
+
 .right-section {
     flex: 2;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 50px;
 }
+
 .footer-column h3 {
     font-size: 18px;
     font-weight: bold;
@@ -176,6 +215,7 @@ body {
     letter-spacing: 0.5px;
     color: #fff;
 }
+
 .footer-column a {
     display: block;
     color: #ccc;
@@ -184,45 +224,55 @@ body {
     font-size: 14px;
     transition: color 0.3s ease;
 }
+
 .footer-column a:hover {
     color: #fff;
 }
+
 .footer-column p {
     color: #ccc;
     font-size: 14px;
     line-height: 1.6;
     margin-top: 10px;
 }
+
 @media (max-width: 768px) {
     .footer-container {
         flex-direction: column;
         gap: 40px;
     }
+
     .left-section {
         max-width: 100%;
         text-align: center;
     }
+
     .partners-row {
         justify-content: center;
     }
+
     .right-section {
         grid-template-columns: 1fr;
         gap: 30px;
         text-align: center;
     }
 }
+
 @media (max-width: 480px) {
     .footer {
         padding: 30px 15px;
     }
+
     .partners-row {
         gap: 15px;
         flex-wrap: wrap;
     }
+
     .partners-row img {
         max-height: 30px;
         max-width: 70px;
     }
+
     .right-section {
         gap: 25px;
     }

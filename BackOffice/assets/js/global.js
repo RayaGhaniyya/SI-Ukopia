@@ -1,12 +1,20 @@
-﻿function showNotification(message, type = 'info') {
+// ============================================
+// GLOBAL.JS - UKOPIA BACKOFFICE (VERSI RAPI)
+// ============================================
+
+// === NOTIFICATION SYSTEM ===
+function showNotification(message, type = 'info') {
   const oldNotif = document.querySelector('.notification');
   if (oldNotif) oldNotif.remove();
+
   const notification = document.createElement('div');
   notification.className = `notification notification-${type}`;
+  
   let icon = 'ℹ';
   if (type === 'success') icon = '✓';
   if (type === 'error') icon = '✕';
   if (type === 'warning') icon = '⚠';
+  
   notification.innerHTML = `
     <div class="notification-content">
       <span class="notification-icon">${icon}</span>
@@ -14,6 +22,7 @@
       <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
     </div>
   `;
+  
   document.body.appendChild(notification);
   setTimeout(() => notification.classList.add('show'), 10);
   setTimeout(() => {
@@ -21,9 +30,12 @@
     setTimeout(() => notification.remove(), 300);
   }, 4000);
 }
+
+// === LOADING STATE ===
 function showLoading(message = 'Loading...') {
   const oldLoader = document.getElementById('global-loader');
   if (oldLoader) oldLoader.remove();
+
   const loader = document.createElement('div');
   loader.id = 'global-loader';
   loader.className = 'loader-overlay';
@@ -35,14 +47,21 @@ function showLoading(message = 'Loading...') {
   `;
   document.body.appendChild(loader);
 }
+
 function hideLoading() {
   const loader = document.getElementById('global-loader');
   if (loader) loader.remove();
 }
+
+// ============================================
+// FORM AUTO-SAVE - Universal
+// ============================================
 function initFormAutoSave(form) {
   if (!form) return;
+  
   const formId = form.id;
   const inputs = form.querySelectorAll('input[type="text"], input[type="date"], input[type="email"], input[type="number"], textarea, select');
+  
   inputs.forEach(input => {
     const savedValue = localStorage.getItem(`${formId}_${input.name}`);
     if (savedValue && !input.value) {
@@ -52,6 +71,7 @@ function initFormAutoSave(form) {
       localStorage.setItem(`${formId}_${input.name}`, input.value);
     });
   });
+  
   form.addEventListener('submit', () => {
     setTimeout(() => {
       inputs.forEach(input => {
@@ -60,6 +80,7 @@ function initFormAutoSave(form) {
     }, 1000);
   });
 }
+
 function loadSavedFormData() {
   const forms = document.querySelectorAll('form[id]');
   forms.forEach(form => {
@@ -76,9 +97,14 @@ function loadSavedFormData() {
     }
   });
 }
+
+// ============================================
+// IMAGE PREVIEW - Universal
+// ============================================
 function handleImagePreview(input, previewContainerId = 'imagePreview', uploadButtonId = 'uploadButton') {
   const file = input.files[0];
   if (!file) return;
+
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
   if (!validTypes.includes(file.type)) {
     showNotification('Format file tidak didukung! Gunakan JPG, PNG, atau WEBP.', 'error');
@@ -101,10 +127,12 @@ function handleImagePreview(input, previewContainerId = 'imagePreview', uploadBu
     const img = document.createElement('img');
     img.src = e.target.result;
     img.alt = 'Preview Image';
+    // Salin style dari HTML kamu agar konsisten
     img.style.width = '100%'; 
     img.style.height = '100%';
     img.style.objectFit = 'cover';
     img.style.borderRadius = '8px';
+    
     previewContainer.appendChild(img);
     previewContainer.style.display = 'flex';
   };
@@ -113,6 +141,16 @@ function handleImagePreview(input, previewContainerId = 'imagePreview', uploadBu
   };
   reader.readAsDataURL(file);
 }
+
+// ============================================
+// TABLE SEARCH - Dihapus
+// ============================================
+
+// ============================================
+// TABLE UTILITIES - Dihapus
+// ============================================
+
+// === DATE UTILITIES ===
 function isValidDate(dateString) {
   const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   if (!dateString.match(regex)) return false;
@@ -122,12 +160,14 @@ function isValidDate(dateString) {
   const daysInMonth = [ 31, (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
   return d <= daysInMonth[m - 1];
 }
+
 function formatDateInput(input) {
   let value = input.value.replace(/\D/g, '');
   if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
   if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
   input.value = value;
 }
+
 function getTodayDate() {
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
@@ -135,6 +175,7 @@ function getTodayDate() {
   const yyyy = today.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
+
 function initDateInput(inputId) {
   const input = document.getElementById(inputId);
   if (!input) return;
@@ -147,6 +188,8 @@ function initDateInput(inputId) {
     }
   });
 }
+
+// === FORMAT UTILITIES ===
 function formatRupiah(number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
 }
@@ -176,6 +219,10 @@ function truncate(text, maxLength = 100, suffix = '...') {
   if (!text || text.length <= maxLength) return text;
   return text.substring(0, maxLength).trim() + suffix;
 }
+
+// ============================================
+// GLOBAL POPUP SYSTEM
+// ============================================
 function openPopup(title = "Popup", contentHTML = "", options = {}) {
   closePopup();
   const { width = "600px", showClose = true } = options;
@@ -200,6 +247,10 @@ function closePopup() {
     setTimeout(() => popup.remove(), 200);
   }
 }
+
+// ============================================
+// DEBOUNCE UTILITY
+// ============================================
 function debounce(func, wait = 300) {
   let timeout;
   return function executedFunction(...args) {
@@ -211,13 +262,19 @@ function debounce(func, wait = 300) {
     timeout = setTimeout(later, wait);
   };
 }
+
+// ============================================
+// FUNGSI UNIVERSAL UNTUK TAMBAH VARIAN
+// ============================================
 function initVariantForm(addBtnId, containerId, templateId) {
     const addVariantBtn = document.getElementById(addBtnId);
     const variantContainer = document.getElementById(containerId);
     const variantTemplate = document.getElementById(templateId);
+
     if (!addVariantBtn || !variantContainer || !variantTemplate) {
         return; 
     }
+
     addVariantBtn.addEventListener('click', function() {
         const newVariantRow = variantTemplate.content.cloneNode(true);
         const firstDeleteBtn = variantContainer.querySelector('.btn-danger[disabled]');
@@ -227,26 +284,39 @@ function initVariantForm(addBtnId, containerId, templateId) {
         variantContainer.appendChild(newVariantRow);
     });
 }
+
+// ============================================
+// FUNGSI UNIVERSAL UNTUK HAPUS VARIAN
+// ============================================
+// VVVVV--- NAMA FUNGSI DIUBAH AGAR SESUAI DENGAN HTML ---VVVVV
 function removeOrMarkVariant(button, minRows = 1) { 
     const row = button.closest('.variant-row');
     if (!row) return;
+
     const container = button.closest('[id^="variantContainer"]'); 
+    
     const variantIdInput = row.querySelector('input[name^="varian_id"]'); 
+    
     if (variantIdInput && variantIdInput.value !== 'new') {
+        // 1. VARIAN LAMA (dari DB): Tandai untuk dihapus
         const deleteInput = document.getElementById('deleteVariantsInput');
         if (deleteInput) {
             let idsToDelete = deleteInput.value.split(',');
             if (idsToDelete[0] === '') idsToDelete = [];
+            
             idsToDelete.push(variantIdInput.value);
             deleteInput.value = idsToDelete.join(',');
+
             row.classList.add('deleting');
             row.querySelectorAll('input, select').forEach(el => el.disabled = true);
             button.style.display = 'none';
             console.log("Akan dihapus (ID):", deleteInput.value);
         }
     } else {
+        // 2. VARIAN BARU (dari template) atau Halaman Add: Cek jumlah minimum
         if (container && container.children.length > minRows) {
             row.remove();
+            
             if (container.children.length === minRows) {
                 const lastDeleteBtn = container.querySelector('.btn-danger:not([style*="display: none"])');
                 if (lastDeleteBtn) {
@@ -254,6 +324,7 @@ function removeOrMarkVariant(button, minRows = 1) {
                 }
             }
         } else {
+            // Ini baris terakhir, jangan hapus
             if (typeof showNotification === 'function') {
                 showNotification('Minimal harus ada ' + minRows + ' varian produk.', 'warning');
             } else {
@@ -262,4 +333,3 @@ function removeOrMarkVariant(button, minRows = 1) {
         }
     }
 }
-

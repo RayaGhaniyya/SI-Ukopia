@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
@@ -8,6 +8,7 @@ include("../../Component/head.php");
     <div class="dashboard-container">
         <div class="form-container" style="max-width: 600px;">
             <h1><i class="fas fa-upload"></i> Upload Promo Baru</h1>
+            
             <form id="promoForm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Gambar Banner (Landscape disarankan)</label>
@@ -21,10 +22,12 @@ include("../../Component/head.php");
         </div>
     </div>
 </div>
+
 <script>
 document.getElementById('promoForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
+    
     fetch('action/store.php', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(d => {

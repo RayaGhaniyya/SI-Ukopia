@@ -1,31 +1,44 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
+
+// Validasi input
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
 if ($id <= 0) {
     echo json_encode(['success' => false, 'message' => 'ID galeri tidak valid!']);
     exit;
 }
+
 try {
+    // Cek apakah galeri exists
     $stmt_check = $conn->prepare("SELECT judul FROM galery WHERE id_galery = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
     $result_check = $stmt_check->get_result();
+
     if ($result_check->num_rows == 0) {
         echo json_encode(['success' => false, 'message' => 'Data galeri tidak ditemukan!']);
         exit;
     }
+
     $galery_data = $result_check->fetch_assoc();
     $stmt_check->close();
+
+    // Ambil semua gambar dari detail_galery
     $stmt = $conn->prepare("SELECT gambar FROM detail_galery WHERE id_galery = ? ORDER BY id_detail_galery ASC");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
+
     $images = [];
     while ($row = $result->fetch_assoc()) {
+        // Tambahkan prefix ../ karena dipanggil dari Gallery/index.php
         $images[] = "../" . $row['gambar'];
     }
+
     $stmt->close();
+
     if (empty($images)) {
         echo json_encode([
             'success' => false,
@@ -33,6 +46,7 @@ try {
         ]);
         exit;
     }
+
     echo json_encode([
         'success' => true,
         'images' => $images,
@@ -45,5 +59,5 @@ try {
         'message' => 'Terjadi kesalahan: ' . $e->getMessage()
     ]);
 }
-$conn->close();
 
+$conn->close();

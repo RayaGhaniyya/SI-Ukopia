@@ -1,23 +1,32 @@
-﻿<?php
+<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
+
+// Ambil kategori - FIXED: gunakan table kategori (bukan kategori_menu)
 $kategori_query = "SELECT id_kategori_menu, nama_kategori FROM kategori_menu ORDER BY nama_kategori ASC";
 $kategori_result = mysqli_query($conn, $kategori_query);
+
+// Debug: Cek apakah query berhasil
 if (!$kategori_result) {
     die("<div style='background:red;color:white;padding:20px;margin:20px;'>Error Query Kategori: " . mysqli_error($conn) . "</div>");
 }
 ?>
+
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
+
     <div class="dashboard-container">
         <div class="form-container">
             <h1><i class="fas fa-plus-circle"></i> Tambah Menu</h1>
+
             <form id="menuAddForm" enctype="multipart/form-data">
                 <label>Nama Menu <span style="color:red;">*</span></label>
                 <input type="text" name="nama_menu" maxlength="50" required placeholder="Masukkan nama menu">
+
                 <label>Deskripsi <span style="color:red;">*</span></label>
                 <textarea name="deskripsi" rows="4" required placeholder="Masukkan deskripsi menu"></textarea>
+
                 <div class="form-row">
                     <div>
                         <label>Gambar Menu <span style="color:red;">*</span></label>
@@ -26,14 +35,17 @@ if (!$kategori_result) {
                         </small>
                         <input type="file" id="fileInput" name="gambar" accept="image/jpeg,image/jpg,image/png,image/webp"
                             onchange="handleImagePreview(this, 'imagePreview', 'uploadButton')" style="display:none;" required>
+
                         <div id="imagePreview" class="image-preview-single" onclick="document.getElementById('fileInput').click()">
                             <span>Klik untuk memilih gambar</span>
                         </div>
+
                         <button type="button" id="uploadButton" class="btn btn-info btn-sm"
                             onclick="document.getElementById('fileInput').click()" style="margin-top:10px; width:200px; max-width:100%;">
                             <i class="fas fa-plus"></i> Pilih Gambar
                         </button>
                     </div>
+
                     <div>
                         <label>Kategori <span style="color:red;">*</span></label>
                         <select name="id_kategori" required>
@@ -48,6 +60,7 @@ if (!$kategori_result) {
                         </select>
                     </div>
                 </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Simpan
@@ -60,6 +73,6 @@ if (!$kategori_result) {
         </div>
     </div>
 </div>
+
 <script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>
-

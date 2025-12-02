@@ -1,4 +1,7 @@
-﻿* {
+/* ============================================
+AUTH.CSS V13 (Sliding Overlay Form) + Notifikasi Pop-up
+============================================ */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -14,6 +17,7 @@
     85% { opacity: 1; transform: scale(1.2) translate(-2%, 2%); }
     100% { opacity: 0; transform: scale(1.2) translate(-2%, 2%); }
 }
+
 body {
     background: #f4f4f4;
     color: #333;
@@ -24,6 +28,8 @@ body {
     width: 100%;
     padding: 20px;
 }
+
+/* Auth Wrapper (Card mengambang) */
 .auth-wrapper {
     position: relative; 
     width: 100%;
@@ -34,14 +40,21 @@ body {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
     overflow: hidden; 
 }
+
+/* =================================
+   CONTAINER UNTUK 2 FORM (LOGIN & REG)
+   ================================= */
 .auth-form-container {
     position: absolute; 
     inset: 0;
     z-index: 5; 
     display: flex; 
 }
+
+/* [PERUBAHAN] Aturan CSS dipisah agar Login bisa ke tengah */
 .auth-form-login,
 .auth-form-register {
+    /* Ini adalah style yang sama untuk keduanya */
     width: 50%;
     height: 100%;
     padding: 30px 40px;
@@ -53,17 +66,27 @@ body {
     opacity: 0;
     transition: opacity 0.5s ease, transform 0.6s ease;
 }
+
 .auth-form-login {
+    /* [FIX] Aturan khusus LOGIN: kembali ke tengah, tidak perlu scroll */
     justify-content: center; 
     overflow-y: hidden;
     right: 0; 
     opacity: 1; 
 }
+
 .auth-form-register {
+    /* [FIX] Aturan khusus REGISTER: rata atas dan bisa di-scroll */
     justify-content: flex-start;
     overflow-y: auto;
     left: 0; 
 }
+/* [SELESAI PERUBAHAN] */
+
+
+/* =================================
+   PANEL OVERLAY (YANG BERGESER)
+   ================================= */
 .auth-overlay-panel {
     position: absolute;
     top: 0;
@@ -94,6 +117,11 @@ body {
 .auth-slideshow .slide:nth-child(2) { background-image: url('../img/Gallery-Homepage/foto 2.JPG'); animation-delay: 5s; }
 .auth-slideshow .slide:nth-child(3) { background-image: url('../img/Gallery-Homepage/foto 3.JPG'); animation-delay: 10s; }
 .auth-slideshow .slide:nth-child(4) { background-image: url('../img/Gallery-Homepage/foto 4.JPG'); animation-delay: 15s; }
+
+
+/* =================================
+   ANIMASI SLIDING
+   ================================= */
 .auth-wrapper.is-register-view .auth-overlay-panel {
     transform: translateX(100%); 
 }
@@ -109,6 +137,11 @@ body {
 .auth-form-login {
     animation: fadeInUp 0.8s 0.4s ease backwards;
 }
+
+
+/* =================================
+   STYLE FORM
+   ================================= */
 .auth-form-login h2,
 .auth-form-register h2 {
     font-size: 1.6rem;
@@ -132,6 +165,7 @@ body {
     color: #333;
     margin-bottom: 5px;
 }
+
 .password-wrapper {
     position: relative;
     display: flex;
@@ -149,6 +183,8 @@ body {
 .password-icon:hover {
     color: #111;
 }
+
+
 .auth-form input[type="email"],
 .auth-form input[type="text"],
 .auth-form input[type="password"] {
@@ -161,9 +197,13 @@ body {
     font-size: 0.95rem;
     transition: all 0.3s ease; 
 }
+
+/* Beri ruang untuk icon mata */
 .password-wrapper input {
     padding-right: 40px !important; 
 }
+
+
 .auth-form input:focus {
     outline: none;
     border-color: #111;
@@ -212,12 +252,18 @@ body {
     color: #111; 
     text-decoration: none;
     font-weight: 500;
-    cursor: pointer; 
+    cursor: pointer; /* Penting untuk JS */
 }
 .auth-link a:hover {
     text-decoration: underline;
 }
+
+/* (Style alert inline DIHAPUS) */
 .auth-alert { display: none; }
+
+
+/* VVVVV--- CSS NOTIFIKASI BARU (Modern, Tengah Atas) ---VVVVV
+*/
 .notification {
 position: fixed;
 top: 20px;
@@ -273,16 +319,24 @@ flex-shrink: 0;
 .notification-close:hover {
 background: rgba(255, 255, 255, 0.2);
 }
-.notification-success {  }
-.notification-error {  }
-.notification-warning {  }
+.notification-success { /* (Background default) */ }
+.notification-error { /* (Background default) */ }
+.notification-warning { /* (Background default) */ }
+
 .notification-success .notification-icon { color: #10b981; }
 .notification-error .notification-icon { color: #ef4444; }
 .notification-warning .notification-icon { color: #f59e0b; }
+/* ^^^^^--- SELESAI PENAMBAHAN CSS NOTIFIKASI ---^^^^^ */
+
+
+/* VVVVV--- TAMBAHKAN BLOK CSS BARU INI (Untuk verify.php) ---VVVVV
+*/
+
+/* (1) Wrapper khusus untuk halaman 'verify.php') */
 .verify-wrapper {
     position: relative;
     width: 100%;
-    max-width: 450px; 
+    max-width: 450px; /* Ukuran ramping */
     min-height: auto;
     background: #ffffff; 
     border-radius: 16px;
@@ -291,6 +345,8 @@ background: rgba(255, 255, 255, 0.2);
     padding: 30px 40px;
     animation: fadeInUp 0.8s 0.2s ease backwards;
 }
+
+/* (2) Style untuk "Status Card" di halaman verifikasi */
 .verification-status {
     display: flex;
     flex-direction: column;
@@ -311,10 +367,10 @@ background: rgba(255, 255, 255, 0.2);
     color: #fff;
 }
 .verification-status.is-success .verification-icon {
-    background: #198754; 
+    background: #198754; /* Hijau */
 }
 .verification-status.is-error .verification-icon {
-    background: #dc3545; 
+    background: #dc3545; /* Merah */
 }
 .verification-status h2 {
     font-size: 1.6rem;
@@ -327,6 +383,12 @@ background: rgba(255, 255, 255, 0.2);
     color: #555;
     margin-bottom: 25px;
 }
+
+/* ============================================
+   TAMBAHAN UNTUK FORGOT-PASSWORD.PHP (V2 - SUDAH DIPERBAIKI)
+   ============================================ */
+
+/* (1) Atur layout dasar 50/50 untuk forgot-password */
 .auth-left-panel {
     position: absolute;
     top: 0;
@@ -336,6 +398,7 @@ background: rgba(255, 255, 255, 0.2);
     overflow: hidden; 
     z-index: 10; 
 }
+
 .auth-right-panel {
     position: absolute;
     top: 0;
@@ -344,48 +407,63 @@ background: rgba(255, 255, 255, 0.2);
     height: 100%;
     z-index: 5;
 }
+
+/* (2) Atur container di dalam right-panel */
 .auth-right-panel .auth-form-container {
     position: relative;
-    width: 100% !important; 
+    width: 100% !important; /* Paksa 100% (override inline style) */
     height: 100%;
     overflow: hidden; 
 }
+
+/* (3) Atur 3 form agar visible dan posisinya benar */
 .auth-right-panel .auth-form-login,
 .auth-right-panel .auth-form-register,
 .auth-right-panel .auth-form-reset {
-    width: 100%;    
-    opacity: 1;     
-    left: 0;        
-    right: auto;    
+    /* Reset style dari login.php */
+    width: 100%;    /* Penuh 100% dari panel kanan */
+    opacity: 1;     /* === INI KUNCINYA: PAKSA TERLIHAT === */
+    left: 0;        /* Reset posisi horizontal */
+    right: auto;    /* Reset posisi horizontal */
+    
+    /* Style dasar (sama seperti sebelumnya) */
     height: 100%;
     padding: 30px 40px;
     display: flex;
     flex-direction: column;
+    /* [FIX] Gunakan flex-start + overflow-y seperti di form register */
     justify-content: flex-start; 
     overflow-y: auto;
+    
     background: #ffffff;
     position: absolute;
     top: 0;
     transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
+
+/* (4) Atur posisi awal 3 form (geser ke samping) */
 .auth-right-panel .auth-form-login {
-    transform: translateX(0); 
+    transform: translateX(0); /* Form 1 (Email) tampil */
 }
 .auth-right-panel .auth-form-register {
-    transform: translateX(100%); 
+    transform: translateX(100%); /* Form 2 (Kode) geser ke kanan */
 }
 .auth-right-panel .auth-form-reset {
-    transform: translateX(200%); 
+    transform: translateX(200%); /* Form 3 (Reset) geser 2x ke kanan */
 }
+
+
+/* (5) Atur logika sliding saat class .is-code-view/is-reset-view ditambah */
 .auth-wrapper.is-code-view .auth-form-login {
     transform: translateX(-100%);
 }
 .auth-wrapper.is-code-view .auth-form-register {
-    transform: translateX(0); 
+    transform: translateX(0); /* Tampilkan form kode */
 }
 .auth-wrapper.is-code-view .auth-form-reset {
     transform: translateX(100%);
 }
+
 .auth-wrapper.is-reset-view .auth-form-login {
     transform: translateX(-200%);
 }
@@ -393,6 +471,9 @@ background: rgba(255, 255, 255, 0.2);
     transform: translateX(-100%);
 }
 .auth-wrapper.is-reset-view .auth-form-reset {
-    transform: translateX(0); 
+    transform: translateX(0); /* Tampilkan form reset */
 }
 
+/* [DIHAPUS] Seluruh blok "@media (max-width: 768px) { ... }" 
+   telah dihapus untuk memaksa layout 50/50 di semua ukuran.
+*/
