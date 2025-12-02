@@ -5,52 +5,94 @@ include("../../../Component/session.php");
 if (isset($_GET['id'])) {
 
     $id_produk = $_GET['id'];
+    $file_path_utama = '';
+    $galeri_paths = [];
 
-    // --- LANGKAH 1: Ambil URL Gambar SEBELUM Dihapus ---
-    $file_path = '';
+    // --- LANGKAH 1: Ambil Data Gambar (Utama & Galeri) untuk dihapus fisik ---
+    // 1.a Gambar Utama
     $stmt_get = $conn->prepare("SELECT gambar_url FROM produk WHERE id_produk = ?");
     $stmt_get->bind_param("i", $id_produk);
     $stmt_get->execute();
     $result = $stmt_get->get_result();
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $gambar_url = $row['gambar_url'];
-
-        // --- LANGKAH 2: Konversi URL ke Path Fisik Server ---
-        if (!empty($gambar_url)) {
-            $file_name = basename($gambar_url);
-
-            // Path ke folder gambar (sama seperti 'store_bean.php')
-            $file_path = dirname(__DIR__, 3) . '/assets/img/produk/' . $file_name;
+    if ($row = $result->fetch_assoc()) {
+        if (!empty($row['gambar_url'])) {
+            $file_path_utama = dirname(__DIR__, 3) . '/assets/img/produk/' . basename($row['gambar_url']);
         }
     }
     $stmt_get->close();
+
+    // 1.b Gambar Galeri
+    $stmt_galeri = $conn->prepare("SELECT gambar_url FROM produk_galeri WHERE id_produk = ?");
+    $stmt_galeri->bind_param("i", $id_produk);
+    $stmt_galeri->execute();
+    $res_galeri = $stmt_galeri->get_result();
+    while ($row_gal = $res_galeri->fetch_assoc()) {
+        if (!empty($row_gal['gambar_url'])) {
+            $galeri_paths[] = dirname(__DIR__, 3) . '/assets/img/gallery/' . basename($row_gal['gambar_url']);
+        }
+    }
+    $stmt_galeri->close();
     // --- Selesai Ambil Path ---
 
 
-    // --- LANGKAH 3: Hapus Data dari Database (Pakai Transaksi) ---
+    // --- LANGKAH 2: HAPUS BERANTAI (Database) ---
     $conn->begin_transaction();
 
     try {
-        // Hapus data dari tabel 'produk'
-        // (ON DELETE CASCADE di DB kamu akan otomatis hapus data di 'detail_produk')
+        // A. Hapus Keranjang user yang berisi produk ini (Subquery)
+        $query_keranjang = "DELETE FROM keranjang WHERE id_detail_produk IN (SELECT id_detail_produk FROM detail_produk WHERE id_produk = ?)";
+        $stmt_k = $conn->prepare($query_keranjang);
+        $stmt_k->bind_param("i", $id_produk);
+        $stmt_k->execute();
+        $stmt_k->close();
+
+        // B. Hapus Detail Transaksi (INI YANG BIKIN ERROR SEBELUMNYA)
+        // Kita hapus paksa riwayat item ini di transaksi manapun
+        $query_transaksi = "DELETE FROM detail_transaksi WHERE id_detail_produk IN (SELECT id_detail_produk FROM detail_produk WHERE id_produk = ?)";
+        $stmt_t = $conn->prepare($query_transaksi);
+        $stmt_t->bind_param("i", $id_produk);
+        $stmt_t->execute();
+        $stmt_t->close();
+
+        // C. Hapus Ulasan Produk
+        $stmt_u = $conn->prepare("DELETE FROM ulasan_produk WHERE id_produk = ?");
+        $stmt_u->bind_param("i", $id_produk);
+        $stmt_u->execute();
+        $stmt_u->close();
+
+        // D. Hapus Produk Galeri
+        $stmt_pg = $conn->prepare("DELETE FROM produk_galeri WHERE id_produk = ?");
+        $stmt_pg->bind_param("i", $id_produk);
+        $stmt_pg->execute();
+        $stmt_pg->close();
+
+        // E. Hapus Produk Utama 
+        // (detail_produk akan terhapus otomatis karena ON DELETE CASCADE di DB)
         $stmt_delete = $conn->prepare("DELETE FROM produk WHERE id_produk = ?");
         $stmt_delete->bind_param("i", $id_produk);
         $stmt_delete->execute();
         $stmt_delete->close();
 
-        // --- LANGKAH 4: Hapus File Gambar Fisik ---
-        if (!empty($file_path) && file_exists($file_path)) {
-            unlink($file_path); // Hapus file dari folder assets/img/produk
+
+        // --- LANGKAH 3: Hapus File Fisik ---
+        // Hapus Gambar Utama
+        if (!empty($file_path_utama) && file_exists($file_path_utama)) {
+            unlink($file_path_utama);
+        }
+        // Hapus Gambar Galeri
+        foreach ($galeri_paths as $path) {
+            if (!empty($path) && file_exists($path)) {
+                unlink($path);
+            }
         }
 
+        // Jika semua berhasil
         $conn->commit();
-        $_SESSION['message'] = "Produk berhasil dihapus.";
+        $_SESSION['message'] = "Produk berhasil di-Hard Delete (termasuk riwayat transaksinya).";
         $_SESSION['message_type'] = "success";
     } catch (mysqli_sql_exception $exception) {
         $conn->rollback();
-        $_SESSION['message'] = "Gagal menghapus produk: " . $exception->getMessage();
+        $_SESSION['message'] = "Gagal Hard Delete: " . $exception->getMessage();
         $_SESSION['message_type'] = "error";
     }
 } else {

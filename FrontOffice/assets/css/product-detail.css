@@ -31,7 +31,7 @@ main.product-detail-section {
 }
 
 /* =========================================
-   3. PANEL KIRI (GAMBAR & SLIDER) - [DIPERBAIKI]
+   3. PANEL KIRI (GAMBAR & SLIDER) - [TETAP DIPERBAIKI]
    ========================================= */
 .left-panel {
     width: 40%;
@@ -54,28 +54,27 @@ main.product-detail-section {
     position: relative;
 }
 
-/* Container Gambar Utama (Fixed Height biar gak loncat) */
+/* Container Gambar Utama */
 .main-image-box {
     width: 100%;
-    height: 450px; /* Kunci tinggi maksimal */
+    height: 450px; 
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     margin-bottom: 20px;
-    padding: 0 40px; /* Jarak kiri kanan agar tidak nabrak tombol */
+    padding: 0 40px; 
 }
 
-/* Gambar Utama (Kunci Ukuran & Rasio) */
 .main-image-box img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Agar gambar utuh tidak terpotong */
+    object-fit: contain; 
     filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
     transition: opacity 0.3s ease;
 }
 
-/* Tombol Navigasi Slider (Panah) */
+/* Tombol Slider */
 .slider-nav {
     position: absolute;
     top: 50%;
@@ -105,7 +104,7 @@ main.product-detail-section {
 .slider-nav.prev { left: 20px; }
 .slider-nav.next { right: 20px; }
 
-/* Thumbnail Container */
+/* Thumbnail */
 .thumbnail-container {
     display: flex;
     gap: 10px;
@@ -138,7 +137,6 @@ main.product-detail-section {
     transform: scale(1.05);
 }
 
-/* Tombol Back Pojok Kiri Atas */
 .back-button {
     position: absolute;
     top: 25px;
@@ -259,6 +257,9 @@ main.product-detail-section {
 .product-buttons .buy { background: #333; color: #fff; }
 .product-buttons .buy:hover { opacity: 0.85; }
 
+/* =========================================
+   5. REVIEW SECTION (DIKEMBALIKAN KE KUNING)
+   ========================================= */
 .review-section-wrapper {
     width: 100%;
     background: #fff;
@@ -267,7 +268,141 @@ main.product-detail-section {
     border-top: 1px dashed #eee;
 }
 
-/* RESPONSIVE */
+/* HEADER BINTANG UTAMA */
+.review-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.big-rating {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #000;
+}
+
+.stars {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #FFC107; /* KEMBALI KUNING SECARA DEFAULT */
+}
+
+/* Jika ada logika PHP yang memakai class .gold / .grey */
+.stars .gold { color: #FFC107; }
+.stars .grey { color: #e0e0e0; }
+
+/* FORM INPUT BINTANG */
+.review-form {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+    margin-bottom: 40px;
+}
+
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.star-input input { display: none; }
+
+.star-input label {
+    font-size: 2rem;
+    color: #ddd; /* Abu-abu kalau belum dipilih */
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+/* Saat dipilih atau di-hover -> KUNING */
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label {
+    color: #FFC107; 
+}
+
+.star-input label:hover {
+    transform: scale(1.1);
+}
+
+.review-form textarea {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    resize: vertical;
+    outline: none;
+    margin-bottom: 20px;
+}
+.review-form textarea:focus { border-color: #000; }
+
+.submit-review {
+    background: #000;
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.submit-review:hover { opacity: 0.8; }
+
+/* LIST REVIEW ITEM */
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-item {
+    padding: 25px;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.reviewer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.reviewer-info strong { font-size: 1.05rem; color: #000; }
+.review-date { font-size: 0.85rem; color: #999; }
+
+/* BINTANG PADA LIST REVIEW USER */
+.user-rating {
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+    color: #FFC107; /* KEMBALI KUNING DEFAULT */
+}
+/* Tetap support class gold/grey kalau PHP generate */
+.user-rating .gold { color: #FFC107; }
+.user-rating .grey { color: #e0e0e0; }
+
+.review-text {
+    color: #444;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.login-alert {
+    text-align: center;
+    padding: 40px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    color: #666;
+}
+.login-alert a { color: #000; font-weight: 600; text-decoration: underline; }
+
+/* =========================================
+   6. RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
     html, body { overflow: auto; height: auto; }
     main.product-detail-section { height: auto; }
