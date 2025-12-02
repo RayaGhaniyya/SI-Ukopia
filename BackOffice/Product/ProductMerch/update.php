@@ -3,35 +3,23 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// (Logika PHP kamu SAMA PERSIS, tidak diubah)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    $_SESSION['message'] = "ID Produk tidak valid.";
-    $_SESSION['message_type'] = "error";
     header("Location: index.php");
     exit;
 }
 $id_produk = (int)$_GET['id'];
-$stmt_produk = $conn->prepare("SELECT * FROM produk WHERE id_produk = ? AND id_kategori = 3");
+
+// Ambil Data
+$stmt_produk = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
 $stmt_produk->bind_param("i", $id_produk);
 $stmt_produk->execute();
-$produk_result = $stmt_produk->get_result();
-if ($produk_result->num_rows === 0) {
-    $_SESSION['message'] = "Produk Merchandise tidak ditemukan.";
-    $_SESSION['message_type'] = "error";
-    header("Location: index.php");
-    exit;
-}
-$produk = $produk_result->fetch_assoc();
+$produk = $stmt_produk->get_result()->fetch_assoc();
 $stmt_produk->close();
-$stmt_variants = $conn->prepare("SELECT * FROM detail_produk WHERE id_produk = ? ORDER BY id_detail_produk ASC");
-$stmt_variants->bind_param("i", $id_produk);
-$stmt_variants->execute();
-$variants_result = $stmt_variants->get_result();
-$variants = $variants_result->fetch_all(MYSQLI_ASSOC);
-$stmt_variants->close();
+
+// Ambil Varian & Galeri
+$variants = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM detail_produk WHERE id_produk = $id_produk"), MYSQLI_ASSOC);
+$galeri_items = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM produk_galeri WHERE id_produk = $id_produk"), MYSQLI_ASSOC);
 $size_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM size ORDER BY ukuran ASC"), MYSQLI_ASSOC);
-$id_kategori_merch = 3;
-// --- AKHIR LOGIKA PHP ---
 ?>
 
 <div class="container">
@@ -40,94 +28,77 @@ $id_kategori_merch = 3;
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-edit"></i> Edit Merchandise</h1>
-            <a href="index.php" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
+            <a href="index.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali</a>
         </div>
 
-        <form class="form-container" action="action/update.php" method="POST" enctype="multipart/form-data" id="editMerchForm">
+        <form class="form-container" action="action/update.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
-            <input type="hidden" name="id_kategori" value="<?= $id_kategori_merch ?>">
-            <h3>Informasi Utama Produk</h3>
 
+            <h3>Informasi Produk</h3>
             <div class="form-row">
                 <div>
-                    <label for="nama_produk">Nama Produk</label>
-                    <input type="text" id="nama_produk" name="nama_produk" value="<?= htmlspecialchars($produk['nama_produk']) ?>" required>
+                    <label>Nama Produk</label>
+                    <input type="text" name="nama_produk" value="<?= htmlspecialchars($produk['nama_produk']) ?>" required>
                 </div>
                 <div>
-                    <label>Gambar Menu (Opsional)</label>
-                    <small style="color:#666; display:block; margin-bottom:8px;">
-                        * Klik gambar untuk mengubah. Kosongkan jika tidak ingin mengubah.
-                    </small>
-                    <input
-                        type="file"
-                        id="fileInputMerch"
-                        name="gambar_url"
-                        accept="image/png, image/jpeg, image/webp"
-                        onchange="handleImagePreview(this, 'imagePreviewMerch')"
-                        style="display:none;">
-
-                    <div id="imagePreviewMerch"
-                        class="image-preview-single"
-                        onclick="document.getElementById('fileInputMerch').click()"
-                        style="display:flex; width: 200px; height: 200px;">
-                        <img src="<?= htmlspecialchars(str_replace("localhost", $_SERVER['HTTP_HOST'], $produk['gambar_url'])) ?>" alt="Preview">
+                    <label>Gambar Utama</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <img src="<?= str_replace("localhost", $_SERVER['HTTP_HOST'], $produk['gambar_url']) ?>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                        <input type="file" name="gambar_url" accept="image/*">
                     </div>
                 </div>
             </div>
 
-            <label for="deskripsi">Deskripsi Lengkap Produk</label>
-            <textarea id="deskripsi" name="deskripsi" rows="4"><?= htmlspecialchars($produk['deskripsi']) ?></textarea>
+            <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 10px; border: 1px solid #eee;">
+                <label style="font-weight:bold;">Galeri Foto</label>
 
-            <input type="hidden" name="origin" value="">
-            <input type="hidden" name="altitude" value="">
-            <input type="hidden" name="variety" value="">
-            <input type="hidden" name="process" value="">
-            <input type="hidden" name="notes" value="">
-            <input type="hidden" name="link" value="">
+                <?php if (count($galeri_items) > 0): ?>
+                    <div class="d-flex gap-2 flex-wrap mb-3">
+                        <?php foreach ($galeri_items as $foto):
+                            $url_foto = str_replace("localhost", $_SERVER['HTTP_HOST'], $foto['gambar_url']);
+                        ?>
+                            <div style="position: relative; width: 80px; height: 80px;">
+                                <img src="<?= $url_foto ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px; border:1px solid #ddd;">
+                                <a href="action/delete_galeri.php?id=<?= $foto['id_galeri'] ?>&id_produk=<?= $id_produk ?>"
+                                    onclick="return confirm('Hapus foto ini?')"
+                                    style="position: absolute; top: -5px; right: -5px; background: #dc3545; color: white; border-radius: 50%; width: 20px; height: 20px; text-align: center; line-height: 20px; font-size: 12px; text-decoration: none;">&times;</a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
 
-            <div class="variant-section">
-                <div class="variant-header">
-                    <h3>Varian (Size, Harga & Stok)</h3>
-                    <button type="button" class="btn btn-success" id="addVariantBtn">
-                        <i class="fas fa-plus"></i> Tambah Varian Baru
-                    </button>
-                </div>
-                <div class="variant-row merch-variant" style="margin-bottom: 5px;">
-                    <label>Ukuran (Size)</label>
-                    <label class="col-grind">(Grind)</label>
-                    <label>Harga (Rp)</label>
-                    <label>Stok</label>
-                    <label>Aksi</label>
-                </div>
+                <label>Tambah Foto Baru (Bisa Banyak)</label>
+                <input type="file" name="galeri[]" multiple accept="image/*" class="form-control">
+            </div>
+
+            <label style="margin-top:15px;">Deskripsi</label>
+            <textarea name="deskripsi" rows="3"><?= htmlspecialchars($produk['deskripsi']) ?></textarea>
+
+            <div class="variant-section mt-4">
+                <h3>Varian Produk</h3>
                 <div id="variantContainer">
-                    <?php foreach ($variants as $index => $variant): ?>
+                    <?php foreach ($variants as $variant): ?>
                         <div class="variant-row merch-variant">
                             <input type="hidden" name="varian_id[]" value="<?= $variant['id_detail_produk'] ?>">
                             <select name="varian_size[]" required>
                                 <?php foreach ($size_options as $option): ?>
-                                    <option value="<?= $option['id_size'] ?>" <?= ($variant['id_size'] == $option['id_size']) ? 'selected' : '' ?>><?= htmlspecialchars($option['ukuran']) ?></option>
+                                    <option value="<?= $option['id_size'] ?>" <?= ($variant['id_size'] == $option['id_size']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($option['ukuran']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
-                            <select name="varian_grind[]" class="col-grind">
+                            <select name="varian_grind[]" style="display:none;">
                                 <option value="">(N/A)</option>
                             </select>
-                            <input type="number" name="varian_harga[]" value="<?= $variant['harga'] ?>" placeholder="150000" required>
-                            <input type="number" name="varian_stok[]" value="<?= $variant['stok'] ?>" placeholder="50" required>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeOrMarkVariant(this, 0)">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <input type="number" name="varian_harga[]" value="<?= $variant['harga'] ?>" required>
+                            <input type="number" name="varian_stok[]" value="<?= $variant['stok'] ?>" required>
                         </div>
                     <?php endforeach; ?>
-                    <?php if (empty($variants)): ?>
-                        <p style="text-align: center; color: #888;">Belum ada varian. Klik 'Tambah Varian Baru' untuk menambahkan.</p>
-                    <?php endif; ?>
                 </div>
             </div>
             <input type="hidden" name="delete_variants" id="deleteVariantsInput" value="">
 
-            <div class="form-actions">
+            <div class="form-actions mt-4">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
                 </button>
@@ -135,31 +106,4 @@ $id_kategori_merch = 3;
         </form>
     </div>
 </div>
-
-<template id="variantTemplate">
-    <div class="variant-row merch-variant">
-        <input type="hidden" name="varian_id[]" value="new">
-        <select name="varian_size[]" required>
-            <option value="">-- Pilih Size --</option>
-            <?php foreach ($size_options as $option): ?>
-                <option value="<?= $option['id_size'] ?>"><?= htmlspecialchars($option['ukuran']) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <select name="varian_grind[]" class="col-grind">
-            <option value="">(N/A)</option>
-        </select>
-        <input type="number" name="varian_harga[]" placeholder="150000" required>
-        <input type="number" name="varian_stok[]" placeholder="50" required>
-        <button type="button" class="btn btn-danger btn-sm" onclick="removeOrMarkVariant(this, 0)">
-            <i class="fas fa-trash"></i>
-        </button>
-    </div>
-</template>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        initVariantForm('addVariantBtn', 'variantContainer', 'variantTemplate');
-    });
-</script>
-
 <?php include("../../Component/bottom.php"); ?>

@@ -1,7 +1,7 @@
 <?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
-include("../../Component/head.php"); // head.php sudah me-load 'productbeans.css' dan 'productmerch.css'
+include("../../Component/head.php");
 
 // 1. Ambil data untuk Dropdown Size
 $size_query = "SELECT * FROM size ORDER BY ukuran ASC";
@@ -37,7 +37,7 @@ $id_kategori_merch = 3;
                 <div>
                     <label>Gambar Utama Produk <span style="color:red;">*</span></label>
                     <small style="color:#666; display:block; margin-bottom:8px;">
-                        * Format: JPG, JPEG, PNG, WEBP. Max 5MB.
+                        * Gambar yang muncul di halaman depan (Thumbnail).
                     </small>
                     <input type="file" id="fileInputMerch" name="gambar_url" accept="image/jpeg,image/jpg,image/png,image/webp"
                         onchange="handleImagePreview(this, 'imagePreviewMerch', 'uploadButtonMerch')" style="display:none;" required>
@@ -55,7 +55,15 @@ $id_kategori_merch = 3;
                 </div>
             </div>
 
-            <label for="deskripsi">Deskripsi Lengkap Produk</label>
+            <div style="margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px dashed #ccc;">
+                <label style="font-weight: bold;">Galeri Foto Tambahan (Opsional)</label>
+                <small style="color:#666; display:block; margin-bottom:10px;">
+                    * Anda bisa memilih banyak foto sekaligus (Tahan tombol CTRL saat memilih).
+                </small>
+                <input type="file" name="galeri[]" multiple accept="image/*" class="form-control">
+            </div>
+
+            <label for="deskripsi" style="margin-top: 20px;">Deskripsi Lengkap Produk</label>
             <textarea id="deskripsi" name="deskripsi" rows="4"></textarea>
 
             <input type="hidden" name="origin" value="">
@@ -64,7 +72,6 @@ $id_kategori_merch = 3;
             <input type="hidden" name="process" value="">
             <input type="hidden" name="notes" value="">
             <input type="hidden" name="link" value="">
-
 
             <div class="variant-section">
                 <div class="variant-header">
@@ -90,7 +97,7 @@ $id_kategori_merch = 3;
                             <?php endforeach; ?>
                         </select>
 
-                        <select name="varian_grind[]" class="col-grind">
+                        <select name="varian_grind[]" class="col-grind" style="background:#eee; pointer-events:none;">
                             <option value="">(N/A)</option>
                         </select>
 
@@ -104,10 +111,9 @@ $id_kategori_merch = 3;
                 </div>
             </div>
 
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Simpan Produk
+                    <i class="fas fa-save"></i> Simpan
                 </button>
             </div>
         </form>
@@ -125,7 +131,7 @@ $id_kategori_merch = 3;
             <?php endforeach; ?>
         </select>
 
-        <select name="varian_grind[]" class="col-grind">
+        <select name="varian_grind[]" class="col-grind" style="background:#eee; pointer-events:none;">
             <option value="">(N/A)</option>
         </select>
 

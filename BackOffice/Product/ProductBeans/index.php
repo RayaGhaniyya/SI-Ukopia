@@ -5,17 +5,18 @@ include("../../Component/head.php");
 include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 
+// --- LOGIKA PAGINATION & SEARCH ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
 
 $search_term = $_GET['search'] ?? '';
-
 $base_url_pagin = '?';
 $params = [];
 $types = "";
 
+// Filter Kategori Beans (ID 1 & 2)
 $where_conditions = ["p.id_kategori IN (1, 2)"];
 
 if ($search_term != '') {
@@ -30,8 +31,8 @@ if ($search_term != '') {
 
 $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 
-// QUERY PERTAMA (Hitung Total Data)
-$count_query = "SELECT COUNT(*) as total FROM produk p $where_sql";
+// Hitung Total
+$count_query = "SELECT COUNT(DISTINCT p.id_produk) as total FROM produk p $where_sql";
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
     $stmt_count->bind_param($types, ...$params);
@@ -42,15 +43,18 @@ $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// QUERY KEDUA (Ambil Data untuk Halaman Ini)
+// Ambil Data + Galeri
 $order_by_sql = " ORDER BY p.id_produk DESC LIMIT ? OFFSET ?";
 $data_query = "
     SELECT 
-        p.id_produk, p.nama_produk, p.gambar_url, p.origin, p.notes, 
-        k.nama_kategori 
+        p.id_produk, p.nama_produk, p.gambar_url, p.origin, p.notes,
+        k.nama_kategori,
+        GROUP_CONCAT(pg.gambar_url SEPARATOR ',') as list_galeri
     FROM produk p
     JOIN kategori k ON p.id_kategori = k.id_kategori
+    LEFT JOIN produk_galeri pg ON p.id_produk = pg.id_produk
     $where_sql
+    GROUP BY p.id_produk
     $order_by_sql
 ";
 
@@ -63,7 +67,6 @@ $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
-// --- LOGIKA SELESAI ---
 ?>
 
 <div class="container">
@@ -72,122 +75,143 @@ $result = $stmt_data->get_result();
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-coffee"></i> Manajemen Beans</h1>
-            <a href="add.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Tambah
-            </a>
+            <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
         </div>
 
-        <?php
-        if (isset($_SESSION['message'])) {
-            $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
-            echo '<script>';
-            echo "document.addEventListener('DOMContentLoaded', function() {";
-            echo "  showNotification('" . addslashes($_SESSION['message']) . "', '" . $message_type . "');";
-            echo "});";
-            echo '</script>';
-            unset($_SESSION['message']);
-            unset($_SESSION['message_type']);
-        }
-        ?>
+        <?php if (isset($_SESSION['message'])): ?>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    showNotification('<?= addslashes($_SESSION['message']) ?>', '<?= $_SESSION['message_type'] ?>');
+                });
+            </script>
+            <?php unset($_SESSION['message']); unset($_SESSION['message_type']); ?>
+        <?php endif; ?>
 
         <div class="table-card">
             <div class="table-header">
-                <h2><i class="fas fa-list"></i> Data Beans (Total: <?= $total_rows ?> data)</h2>
-
+                <h2>Data Beans (Total: <?= $total_rows ?>)</h2>
                 <form action="index.php" method="GET" class="search-group">
-                    <input
-                        type="text"
-                        name="search"
-                        id="searchProduk"
-                        placeholder="Search..."
-                        value="<?= htmlspecialchars($search_term) ?>">
-
-                    <button type="submit" class="btn" title="Cari">
-                        <i class="fas fa-search"></i>
-                    </button>
+                    <input type="text" name="search" placeholder="Search..." value="<?= htmlspecialchars($search_term) ?>">
+                    <button type="submit" class="btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
 
             <div class="table-responsive">
-                <table class="data-table" id="produkTable">
+                <table class="data-table">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Gambar</th>
-                            <th>Nama Produk</th>
-                            <th>Kategori</th>
-                            <th>Origin</th>
-                            <th>Notes (Singkat)</th>
-                            <th>Aksi</th>
+                            <th width="5%">No</th>
+                            <th width="10%">Thumbnail</th>
+                            <th width="20%">Nama Produk</th>
+                            <th width="10%">Galeri</th>
+                            <th width="15%">Origin</th>
+                            <th width="25%">Notes</th>
+                            <th width="15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if ($result && mysqli_num_rows($result) > 0) {
+                        <?php if ($result && mysqli_num_rows($result) > 0): 
                             $no = $offset + 1;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $nama_produk = htmlspecialchars($row['nama_produk']);
-                                $gambar_url = htmlspecialchars($row['gambar_url']);
-
-                                $notes_short = strlen($row['notes']) > 50
-                                    ? substr(htmlspecialchars($row['notes']), 0, 50) . '...'
-                                    : htmlspecialchars($row['notes']);
-
-                                $gambar_dinamis = str_replace("localhost", $current_host, $gambar_url);
+                            while ($row = mysqli_fetch_assoc($result)):
+                                $gambar_utama = str_replace("localhost", $current_host, $row['gambar_url']);
+                                
+                                // Siapkan data JSON Galeri
+                                $gallery_array = [];
+                                if (!empty($row['list_galeri'])) {
+                                    $raw_urls = explode(',', $row['list_galeri']);
+                                    foreach ($raw_urls as $url) {
+                                        $gallery_array[] = str_replace("localhost", $current_host, $url);
+                                    }
+                                }
+                                $gallery_json = htmlspecialchars(json_encode($gallery_array), ENT_QUOTES, 'UTF-8');
+                                $jumlah_foto = count($gallery_array);
                         ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td>
-                                        <img src="<?php echo $gambar_dinamis; ?>" alt="<?php echo $nama_produk; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                                    </td>
-                                    <td><strong><?= $nama_produk ?></strong></td>
-                                    <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
-                                    <td><?= htmlspecialchars($row['origin']) ?></td>
-                                    <td><?= $notes_short ?></td>
-                                    <td>
-                                        <div class="action-buttons" style="display: flex; justify-content: center; gap: 5px;">
-
-                                            <a href="update.php?id=<?= $row['id_produk'] ?>" class="btn btn-warning btn-sm" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-
-                                            <a href="action/delete.php?id=<?= $row['id_produk'] ?>"
-                                                class="btn btn-danger btn-sm"
-                                                title="Hapus"
-                                                onclick="return confirm('Yakin ingin menghapus produk ini? SEMUA varian (harga & stok) produk ini akan ikut terhapus.');">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                        } else {
-                            ?>
                             <tr>
-                                <td colspan="7">
-                                    <div class="empty-state">
-                                        <i class="fas fa-search"></i>
-                                        <p>Tidak ada data beans ditemukan<?php if ($search_term != '') echo " untuk pencarian '<b>" . htmlspecialchars($search_term) . "</b>'"; ?>.</p>
-                                    </div>
+                                <td><?= $no++ ?></td>
+                                <td>
+                                    <img src="<?= $gambar_utama ?>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                                </td>
+                                <td>
+                                    <strong><?= htmlspecialchars($row['nama_produk']) ?></strong><br>
+                                    <small class="text-muted"><?= htmlspecialchars($row['nama_kategori']) ?></small>
+                                </td>
+                                <td>
+                                    <?php if ($jumlah_foto > 0): ?>
+                                        <button type="button" class="btn btn-info btn-sm" onclick="openGalleryModal('<?= htmlspecialchars($row['nama_produk']) ?>', <?= $gallery_json ?>)">
+                                            <i class="fas fa-images"></i> (<?= $jumlah_foto ?>)
+                                        </button>
+                                    <?php else: ?>
+                                        <span class="text-muted">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= htmlspecialchars($row['origin']) ?></td>
+                                <td><?= htmlspecialchars($row['notes']) ?></td>
+                                <td>
+                                    <a href="update.php?id=<?= $row['id_produk'] ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                    <a href="action/delete.php?id=<?= $row['id_produk'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Hapus produk ini?');"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
-                        <?php
-                        }
-                        $stmt_data->close();
-                        ?>
+                        <?php endwhile; else: ?>
+                            <tr><td colspan="7" class="text-center">Data tidak ditemukan.</td></tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
-
-            <div class="table-footer" style="padding-top: 10px;">
-                <?php
-                renderPaginator($total_pages, $current_page, $base_url_pagin);
-                ?>
+            <div class="table-footer">
+                <?php renderPaginator($total_pages, $current_page, $base_url_pagin); ?>
             </div>
-
         </div>
     </div>
 </div>
+
+<div id="galleryModal" class="popup-overlay">
+    <div class="popup-card">
+        <div class="popup-header">
+            <h3 id="galleryTitle">Galeri Produk</h3>
+            <button class="popup-close" onclick="closeGalleryModal()">&times;</button>
+        </div>
+        
+        <div class="popup-body">
+            <div id="galleryGrid" class="gallery-grid">
+                </div>
+        </div>
+        
+        <div class="popup-footer">
+            <button onclick="closeGalleryModal()" class="btn btn-secondary btn-sm">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openGalleryModal(title, images) {
+        document.getElementById('galleryTitle').textContent = "Galeri: " + title;
+        const container = document.getElementById('galleryGrid');
+        container.innerHTML = ''; // Bersihkan isi lama
+        
+        if (images.length > 0) {
+            images.forEach(src => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'gallery-item-wrapper';
+                
+                const img = document.createElement('img');
+                img.className = 'gallery-image';
+                img.src = src;
+                
+                wrapper.onclick = () => window.open(src, '_blank');
+
+                wrapper.appendChild(img);
+                container.appendChild(wrapper);
+            });
+        } else {
+            container.innerHTML = '<p class="text-muted text-center w-100 py-4">Tidak ada foto tambahan.</p>';
+        }
+        
+        document.getElementById('galleryModal').classList.add('show');
+    }
+
+    function closeGalleryModal() {
+        document.getElementById('galleryModal').classList.remove('show');
+    }
+</script>
 
 <?php include("../../Component/bottom.php"); ?>
