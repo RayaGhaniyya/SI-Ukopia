@@ -6,7 +6,7 @@ include("../Component/pagination.php"); // Pastikan file ini ada
 $current_host = $_SERVER['HTTP_HOST'];
 
 // --- 1. SETUP VARIABEL ---
-$id_kategori = 1; // ARABICA
+$id_kategori = 2; // ARABICA
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

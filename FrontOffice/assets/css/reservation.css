@@ -58,7 +58,7 @@ section.reservation-section {
 .right-content {
     flex: 1;
     position: relative;
-    background: url("../img/Reservation/Reservation-Homepage.jpg") no-repeat center center/cover;
+    background: url("../img/Reservation/Reservation-img2.png") no-repeat center center/cover;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,7 +67,7 @@ section.reservation-section {
 .right-content .overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .form-box {
@@ -119,22 +119,23 @@ section.reservation-section {
     gap: 10px; /* <-- UPDATED (dari 12px) */
 }
 
+/* ... (Kode CSS Lainnya di atas TETAP SAMA) ... */
+
+/* --- 1. STYLE TOMBOL HARI (FINAL) --- */
 .days button {
     flex: 1;
     padding: 0; 
-    border: none;
-    background: #eee;
-    color: #333;
+    
+    /* DEFAULT (Belum Dipilih): Putih Bersih */
+    background: #ffffff; 
+    border: 1px solid #ccc; /* Border tipis abu-abu */
+    color: #333; /* Teks gelap */
+    
     border-radius: 10px;
     font-weight: 600;
     font-size: 14px; 
     cursor: pointer;
-
-    /* === PERBAIKAN ANIMASI (GANTI 'transition' LAMA) === */
-    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
-    
-    /* === TAMBAHAN (AGAR TIDAK LOMPAT SAAT DIKLIK) === */
-    border: 2px solid transparent; /* Cadangkan ruang untuk border */
+    transition: all 0.25s ease;
 
     /* Properti layout kotak */
     aspect-ratio: 1 / 1; 
@@ -144,35 +145,40 @@ section.reservation-section {
     justify-content: center; 
 }
 
+/* Hover: Sedikit abu-abu muda (efek halus) */
 .days button:hover {
-    background: #26282C;
-    color: #fff;
+    background: #f9f9f9;
+    border-color: #bbb;
+    color: #000;
 }
 
+/* ACTIVE (Dipilih): Hitam Pekat + Border Putih Tipis */
 .days button.active {
-    background: #26282C;
-    color: #fff;
-    border: 2px solid #fff; /* Sekarang hanya ganti warna, tidak 'lompat' */
+    background: #000000; /* Hitam total */
+    color: #ffffff;      /* Teks Putih */
+    border: 2px solid #ffffff; /* Border Putih Tipis sesuai request */
     transform: scale(1.05);
-    /* transition: all 0.2s ease; <-- HAPUS BARIS INI */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Shadow biar makin stand-out */
 }
 
+/* DISABLED (Tidak Bisa Dipilih): Abu-abu redup */
 .days button:disabled {
-    background: #555;
-    color: #888;
+    background: #f0f0f0;
+    color: #ccc;
+    border-color: #e0e0e0;
     cursor: not-allowed;
     text-decoration: line-through;
-    opacity: 0.7;
+    opacity: 0.8;
+}
+/* Matikan hover effect untuk disabled */
+.days button:disabled:hover {
+    background: #f0f0f0;
+    border-color: #e0e0e0;
+    color: #ccc;
+    transform: none;
 }
 
-/* .days button:disabled:hover,
-.days button:disabled.active {
-    transform: none;
-    border: none;
-    box-shadow: none;
-    background: #555;
-    color: #888;
-} */
+/* ... (Kode CSS Lainnya di bawah TETAP SAMA) ... */
 
 .time-select {
     display: flex;
@@ -280,26 +286,37 @@ section.reservation-section {
 }
 
 .confirm-btn {
-    margin-top: 1.5rem; /* <-- UPDATED (dari 1rem) */
-    padding: 12px; /* <-- UPDATED (dari 14px) */
+    margin-top: 1.5rem;
+    padding: 14px; /* Sedikit lebih tebal */
     border: none;
     border-radius: 10px;
-    background: #26282C;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1rem; /* <-- UPDATED (dari 1.1rem) */
+    /* DEFAULT: Hitam Pekat */
+    background: #000000; 
+    color: #ffffff;
+    
+    font-weight: 700;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
+/* Hover: Abu Gelap (Charcoal) */
 .confirm-btn:hover {
-    background: #848484;
+    background: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 2px solid #ffffff;
 }
 
+/* Disabled */
 .confirm-btn:disabled {
-    background: #555;
+    background: #999;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .reservation-popup {

@@ -3,12 +3,14 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// (Logika PHP kamu untuk ambil data dropdown Kategori, Size, Grind SAMA)
+// Ambil data untuk Dropdown
 $kategori_query = "SELECT * FROM kategori WHERE id_kategori IN (1, 2)";
 $kategori_result = mysqli_query($conn, $kategori_query);
+
 $size_query = "SELECT * FROM size ORDER BY ukuran ASC";
 $size_result = mysqli_query($conn, $size_query);
 $size_options = mysqli_fetch_all($size_result, MYSQLI_ASSOC);
+
 $grind_query = "SELECT * FROM grind_size ORDER BY nama_grind ASC";
 $grind_result = mysqli_query($conn, $grind_query);
 $grind_options = mysqli_fetch_all($grind_result, MYSQLI_ASSOC);
@@ -52,7 +54,7 @@ $grind_options = mysqli_fetch_all($grind_result, MYSQLI_ASSOC);
 
                     <div id="imagePreviewBeans" class="image-preview-single"
                         onclick="document.getElementById('fileInputBeans').click()"
-                        style="width: 200px; height: 200px;">
+                        style="width: 200px; height: 200px; cursor: pointer;">
                         <span>Klik untuk memilih gambar</span>
                     </div>
 
@@ -69,19 +71,27 @@ $grind_options = mysqli_fetch_all($grind_result, MYSQLI_ASSOC);
                     <input type="text" id="altitude" name="altitude">
                     <label for="variety">Variety (cth: Ateng, Timtim)</label>
                     <input type="text" id="variety" name="variety">
+
+                    <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px dashed #ccc;">
+                        <label style="font-weight:bold;">Galeri Foto (Opsional)</label>
+                        <small class="text-muted d-block mb-2">* Tahan CTRL untuk pilih banyak foto.</small>
+                        <input type="file" name="galeri[]" multiple accept="image/*" class="form-control">
+                    </div>
                 </div>
             </div>
 
             <label for="process">Process (cth: Natural, Full Wash)</label>
             <input type="text" id="process" name="process">
+
             <label for="notes">Tasting Notes (Pisahkan dengan koma, cth: Fruity, Sweet, Chocolate)</label>
             <input type="text" id="notes" name="notes">
+
             <label for="deskripsi">Deskripsi Lengkap Produk</label>
             <textarea id="deskripsi" name="deskripsi" rows="4"></textarea>
-            <label for="link">Link (Opsional, jika ada cth: ke Tokopedia)</label>
-            <input type="text" id="link" name="link">
 
-            <div class="variant-section">
+            <input type="hidden" name="link" value="">
+
+            <div class="variant-section mt-4">
                 <div class="variant-header">
                     <h3>Varian Harga & Stok</h3>
                     <button type="button" class="btn btn-success" id="addVariantBtn">
@@ -118,9 +128,9 @@ $grind_options = mysqli_fetch_all($grind_result, MYSQLI_ASSOC);
                 </div>
             </div>
 
-            <div class="form-actions">
+            <div class="form-actions mt-4">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Simpan Produk
+                    <i class="fas fa-save"></i> Simpan
                 </button>
             </div>
         </form>
