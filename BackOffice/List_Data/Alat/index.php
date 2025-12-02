@@ -110,7 +110,7 @@ $result = $stmt_data->get_result();
                     </select>
 
                     <div style="display: flex;">
-                        <input type="text" name="search" placeholder="Cari nama alat..." value="<?= htmlspecialchars($search_term) ?>" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; border-right: none;">
+                        <input type="text" name="search" placeholder="Search.." value="<?= htmlspecialchars($search_term) ?>" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; border-right: none;">
                         <button type="submit" class="btn" style="border-radius: 0 4px 4px 0;"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
