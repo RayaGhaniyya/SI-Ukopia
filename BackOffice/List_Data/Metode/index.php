@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
@@ -7,7 +7,6 @@ include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Metode/";
 
-// --- LOGIKA PAGINATION & SEARCH ---
 $limit = 10;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -26,7 +25,6 @@ if ($search_term != '') {
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
 
-// Count Total
 $stmt_count = $conn->prepare("SELECT COUNT(*) as total FROM metode" . $where_sql);
 if (!empty($params)) $stmt_count->bind_param($types, ...$params);
 $stmt_count->execute();
@@ -34,7 +32,6 @@ $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// Get Data
 $query = "SELECT * FROM metode" . $where_sql . " ORDER BY nama_metode ASC LIMIT ? OFFSET ?";
 $stmt_data = $conn->prepare($query);
 $params[] = $limit; 

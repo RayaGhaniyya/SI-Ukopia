@@ -1,8 +1,4 @@
-// ============================================
-// GLOBAL.JS - UKOPIA BACKOFFICE (VERSI RAPI)
-// ============================================
-
-// === NOTIFICATION SYSTEM ===
+﻿
 function showNotification(message, type = 'info') {
   const oldNotif = document.querySelector('.notification');
   if (oldNotif) oldNotif.remove();
@@ -31,7 +27,6 @@ function showNotification(message, type = 'info') {
   }, 4000);
 }
 
-// === LOADING STATE ===
 function showLoading(message = 'Loading...') {
   const oldLoader = document.getElementById('global-loader');
   if (oldLoader) oldLoader.remove();
@@ -53,9 +48,6 @@ function hideLoading() {
   if (loader) loader.remove();
 }
 
-// ============================================
-// FORM AUTO-SAVE - Universal
-// ============================================
 function initFormAutoSave(form) {
   if (!form) return;
   
@@ -98,9 +90,6 @@ function loadSavedFormData() {
   });
 }
 
-// ============================================
-// IMAGE PREVIEW - Universal
-// ============================================
 function handleImagePreview(input, previewContainerId = 'imagePreview', uploadButtonId = 'uploadButton') {
   const file = input.files[0];
   if (!file) return;
@@ -127,7 +116,6 @@ function handleImagePreview(input, previewContainerId = 'imagePreview', uploadBu
     const img = document.createElement('img');
     img.src = e.target.result;
     img.alt = 'Preview Image';
-    // Salin style dari HTML kamu agar konsisten
     img.style.width = '100%'; 
     img.style.height = '100%';
     img.style.objectFit = 'cover';
@@ -142,15 +130,8 @@ function handleImagePreview(input, previewContainerId = 'imagePreview', uploadBu
   reader.readAsDataURL(file);
 }
 
-// ============================================
-// TABLE SEARCH - Dihapus
-// ============================================
 
-// ============================================
-// TABLE UTILITIES - Dihapus
-// ============================================
 
-// === DATE UTILITIES ===
 function isValidDate(dateString) {
   const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   if (!dateString.match(regex)) return false;
@@ -189,7 +170,6 @@ function initDateInput(inputId) {
   });
 }
 
-// === FORMAT UTILITIES ===
 function formatRupiah(number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
 }
@@ -220,9 +200,6 @@ function truncate(text, maxLength = 100, suffix = '...') {
   return text.substring(0, maxLength).trim() + suffix;
 }
 
-// ============================================
-// GLOBAL POPUP SYSTEM
-// ============================================
 function openPopup(title = "Popup", contentHTML = "", options = {}) {
   closePopup();
   const { width = "600px", showClose = true } = options;
@@ -248,9 +225,6 @@ function closePopup() {
   }
 }
 
-// ============================================
-// DEBOUNCE UTILITY
-// ============================================
 function debounce(func, wait = 300) {
   let timeout;
   return function executedFunction(...args) {
@@ -263,9 +237,6 @@ function debounce(func, wait = 300) {
   };
 }
 
-// ============================================
-// FUNGSI UNIVERSAL UNTUK TAMBAH VARIAN
-// ============================================
 function initVariantForm(addBtnId, containerId, templateId) {
     const addVariantBtn = document.getElementById(addBtnId);
     const variantContainer = document.getElementById(containerId);
@@ -285,10 +256,6 @@ function initVariantForm(addBtnId, containerId, templateId) {
     });
 }
 
-// ============================================
-// FUNGSI UNIVERSAL UNTUK HAPUS VARIAN
-// ============================================
-// VVVVV--- NAMA FUNGSI DIUBAH AGAR SESUAI DENGAN HTML ---VVVVV
 function removeOrMarkVariant(button, minRows = 1) { 
     const row = button.closest('.variant-row');
     if (!row) return;
@@ -298,7 +265,6 @@ function removeOrMarkVariant(button, minRows = 1) {
     const variantIdInput = row.querySelector('input[name^="varian_id"]'); 
     
     if (variantIdInput && variantIdInput.value !== 'new') {
-        // 1. VARIAN LAMA (dari DB): Tandai untuk dihapus
         const deleteInput = document.getElementById('deleteVariantsInput');
         if (deleteInput) {
             let idsToDelete = deleteInput.value.split(',');
@@ -313,7 +279,6 @@ function removeOrMarkVariant(button, minRows = 1) {
             console.log("Akan dihapus (ID):", deleteInput.value);
         }
     } else {
-        // 2. VARIAN BARU (dari template) atau Halaman Add: Cek jumlah minimum
         if (container && container.children.length > minRows) {
             row.remove();
             
@@ -324,7 +289,6 @@ function removeOrMarkVariant(button, minRows = 1) {
                 }
             }
         } else {
-            // Ini baris terakhir, jangan hapus
             if (typeof showNotification === 'function') {
                 showNotification('Minimal harus ada ' + minRows + ' varian produk.', 'warning');
             } else {
@@ -333,4 +297,5 @@ function removeOrMarkVariant(button, minRows = 1) {
         }
     }
 }
+
 

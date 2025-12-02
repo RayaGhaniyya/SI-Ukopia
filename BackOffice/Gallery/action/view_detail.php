@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
-// Validasi input
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id <= 0) {
@@ -11,7 +10,6 @@ if ($id <= 0) {
 }
 
 try {
-    // Cek apakah galeri exists
     $stmt_check = $conn->prepare("SELECT judul FROM galery WHERE id_galery = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
@@ -25,7 +23,6 @@ try {
     $galery_data = $result_check->fetch_assoc();
     $stmt_check->close();
 
-    // Ambil semua gambar dari detail_galery
     $stmt = $conn->prepare("SELECT gambar FROM detail_galery WHERE id_galery = ? ORDER BY id_detail_galery ASC");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -33,7 +30,6 @@ try {
 
     $images = [];
     while ($row = $result->fetch_assoc()) {
-        // Tambahkan prefix ../ karena dipanggil dari Gallery/index.php
         $images[] = "../" . $row['gambar'];
     }
 
@@ -61,3 +57,4 @@ try {
 }
 
 $conn->close();
+

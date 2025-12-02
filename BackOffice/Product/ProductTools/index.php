@@ -1,11 +1,10 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 
-// --- LOGIKA PAGINATION & SEARCH (KHUSUS TOOLS & APPROVE) ---
 
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -18,11 +17,8 @@ $base_url_pagin = '?';
 $params = [];
 $types = "";
 
-// 2. KONDISI WAJIB: KATEGORI 4 (Brewing Tools) & 6 (Ukopia Approve)
-// [PERBAIKAN] Mengganti ID 5 menjadi 6 sesuai database kamu
 $where_conditions = ["p.id_kategori IN (4, 6)"];
 
-// 3. LOGIKA SEARCH (Cari di nama atau link)
 if ($search_term != '') {
     $search_like = "%" . $search_term . "%";
     $where_conditions[] = "(p.nama_produk LIKE ? OR p.link LIKE ?)";
@@ -34,7 +30,6 @@ if ($search_term != '') {
 
 $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 
-// 4. QUERY PERTAMA (Hitung Total Data)
 $count_query = "
     SELECT COUNT(*) as total 
     FROM produk p
@@ -52,7 +47,6 @@ $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
 
-// 5. QUERY KEDUA (Ambil Data untuk Halaman Ini)
 $order_by_sql = " ORDER BY p.id_produk DESC LIMIT ? OFFSET ?";
 
 $data_query = "
@@ -74,7 +68,6 @@ $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
-// --- LOGIKA SELESAI ---
 ?>
 
 <div class="container">
@@ -139,7 +132,6 @@ $result = $stmt_data->get_result();
                                 $nama_produk = htmlspecialchars($row['nama_produk']);
                                 $gambar_url = htmlspecialchars($row['gambar_url']);
 
-                                // Potong link agar tidak terlalu panjang
                                 $link_short = strlen($row['link']) > 50
                                     ? substr(htmlspecialchars($row['link']), 0, 50) . '...'
                                     : htmlspecialchars($row['link']);

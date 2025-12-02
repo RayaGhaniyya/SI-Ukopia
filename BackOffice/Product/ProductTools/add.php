@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// Ambil data Kategori 4 (Tools) & 6 (Approve)
 $kategori_query = "SELECT * FROM kategori WHERE id_kategori IN (4, 6)";
 $kategori_result = mysqli_query($conn, $kategori_query);
 ?>

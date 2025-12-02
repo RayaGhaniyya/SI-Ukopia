@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
@@ -14,7 +14,6 @@ if ($uid_akun <= 0) {
 }
 
 try {
-    // Fungsi untuk mendapatkan tanggal klaim reward
     function getClaimDate($conn, $uid, $reward_id) {
         $sql = "SELECT tanggal_dapat FROM riwayat_reward WHERE uid_customer = ? AND id_reward = ? AND status_klaim = 'Sudah Dipakai' ORDER BY tanggal_dapat DESC LIMIT 1";
         $stmt = $conn->prepare($sql);
@@ -25,7 +24,6 @@ try {
         return $result['tanggal_dapat'] ?? null;
     }
 
-    // 1. Ambil total poin terbaru dari akun_customer
     $point_sql = "SELECT total_poin FROM akun_customer WHERE uid = ?";
     $point_stmt = $conn->prepare($point_sql);
     $point_stmt->bind_param("i", $uid_akun);
@@ -33,13 +31,11 @@ try {
     $total_points = $point_stmt->get_result()->fetch_assoc()['total_poin'] ?? 0;
     $point_stmt->close();
     
-    // 2. Mapping Reward ID dari DB ke field di LoyaltyUserStatus.kt
     $status_data = [
         "total_points" => $total_points,
         "discount10_claim_date" => getClaimDate($conn, $uid_akun, 1), // 5 pts (ID 1)
         "free_serve_claim_date" => getClaimDate($conn, $uid_akun, 2), // 10 pts (ID 2)
         "free_tshirt_claim_date" => getClaimDate($conn, $uid_akun, 3), // 20 pts (ID 3)
-        // Sisanya diisi null untuk menyesuaikan struktur LoyaltyUserStatus.kt
         "discount10_slot15_claim_date" => null, 
         "discount10_25_claim_date" => null,
         "free_serve_30_claim_date" => null,
@@ -58,7 +54,6 @@ try {
         "discount10_95_claim_date" => null
     ];
     
-    // 3. Bentuk Response
     $response = [
         "success" => true,
         "message" => "Status loyalty berhasil diambil.",

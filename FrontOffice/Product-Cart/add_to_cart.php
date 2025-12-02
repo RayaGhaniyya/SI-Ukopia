@@ -1,10 +1,9 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 
 header('Content-Type: application/json');
 
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     echo json_encode(['status' => 'error', 'message' => 'Silakan login terlebih dahulu!']);
     exit;
@@ -15,27 +14,22 @@ $input = json_decode(file_get_contents('php://input'), true);
 $id_detail_produk = isset($input['id_detail_produk']) ? intval($input['id_detail_produk']) : 0;
 $qty_baru = isset($input['qty']) ? intval($input['qty']) : 1;
 
-// Validasi Dasar
 if ($id_detail_produk == 0 || $qty_baru <= 0) {
     echo json_encode(['status' => 'error', 'message' => 'Data produk tidak valid.']);
     exit;
 }
 
-// 2. Ambil Data Stok Real-time
 $queryStok = mysqli_query($conn, "SELECT stok FROM detail_produk WHERE id_detail_produk = '$id_detail_produk'");
 $dataProduk = mysqli_fetch_assoc($queryStok);
 $stok_tersedia = intval($dataProduk['stok']);
 
-// 3. Cek Jumlah yang SUDAH ADA di Keranjang User
 $queryCart = mysqli_query($conn, "SELECT jumlah FROM keranjang WHERE uid_akun = '$uid_akun' AND id_detail_produk = '$id_detail_produk'");
 $dataCart = mysqli_fetch_assoc($queryCart);
 $qty_di_keranjang = $dataCart ? intval($dataCart['jumlah']) : 0;
 
-// 4. LOGIKA VALIDASI GABUNGAN (FIX BUG)
 $total_akan_datang = $qty_di_keranjang + $qty_baru;
 
 if ($total_akan_datang > $stok_tersedia) {
-    // Hitung sisa yang boleh ditambahkan
     $sisa_bisa_diambil = $stok_tersedia - $qty_di_keranjang;
 
     if ($sisa_bisa_diambil <= 0) {
@@ -48,9 +42,7 @@ if ($total_akan_datang > $stok_tersedia) {
     exit;
 }
 
-// 5. Proses Insert / Update
 if ($qty_di_keranjang > 0) {
-    // UPDATE (Tambah jumlah)
     $update = mysqli_query($conn, "UPDATE keranjang SET jumlah = jumlah + $qty_baru WHERE uid_akun = '$uid_akun' AND id_detail_produk = '$id_detail_produk'");
     if ($update) {
         echo json_encode(['status' => 'success', 'message' => 'Jumlah produk di keranjang diperbarui!']);
@@ -58,7 +50,6 @@ if ($qty_di_keranjang > 0) {
         echo json_encode(['status' => 'error', 'message' => 'Gagal update keranjang.']);
     }
 } else {
-    // INSERT (Baru)
     $insert = mysqli_query($conn, "INSERT INTO keranjang (uid_akun, id_detail_produk, jumlah) VALUES ('$uid_akun', '$id_detail_produk', '$qty_baru')");
     if ($insert) {
         echo json_encode(['status' => 'success', 'message' => 'Produk berhasil masuk keranjang!']);
@@ -66,3 +57,4 @@ if ($qty_di_keranjang > 0) {
         echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan ke keranjang.']);
     }
 }
+

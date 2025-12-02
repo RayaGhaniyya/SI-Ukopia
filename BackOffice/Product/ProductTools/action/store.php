@@ -1,11 +1,9 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 include("../../../Component/session.php");
 
-// --- FUNGSI UNTUK UPLOAD GAMBAR (Sama seperti sebelumnya) ---
 function uploadGambar($file, $current_host)
 {
-    // Path ke folder assets/img/produk
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
     $uploadUrl = 'http://' . $current_host . '/SI-Ukopia/BackOffice/assets/img/produk/';
 
@@ -32,28 +30,23 @@ function uploadGambar($file, $current_host)
         return ['success' => false, 'message' => 'Error: Hanya format JPG, JPEG, PNG, & WEBP yang diizinkan.'];
     }
 }
-// --- AKHIR FUNGSI UPLOAD ---
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // (Kita tidak perlu Transaksi di sini karena hanya 1 query)
 
     try {
-        // 1. Ambil data utama
         $nama_produk = $_POST['nama_produk'];
         $id_kategori = (int)$_POST['id_kategori']; // 4 (Tools) or 5 (Approve)
         $deskripsi = $_POST['deskripsi'] ?? null;
         $link = $_POST['link'] ?? null;
 
-        // Ambil data 'beans' (kosong) agar query-nya pas
         $origin = $_POST['origin'] ?? null;
         $altitude = $_POST['altitude'] ?? null;
         $variety = $_POST['variety'] ?? null;
         $process = $_POST['process'] ?? null;
         $notes = $_POST['notes'] ?? null;
 
-        // 2. Proses Upload Gambar
         $gambar_url = '';
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $current_host = $_SERVER['HTTP_HOST'];
@@ -67,8 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             throw new Exception("Error: Gambar utama wajib diisi.");
         }
 
-        // 3. Simpan ke tabel 'produk'
-        // (Query ini SAMA PERSIS dengan 2 file store.php lainnya)
         $stmt_produk = $conn->prepare(
             "INSERT INTO produk (id_kategori, nama_produk, gambar_url, link, origin, altitude, notes, process, variety, deskripsi) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -97,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $stmt_produk->close();
     } catch (Exception $e) {
-        // Jika ada error (Upload / SQL)
         $_SESSION['message'] = "Gagal menyimpan produk: " . $e->getMessage();
         $_SESSION['message_type'] = "error";
         header('Location: ../add.php'); // Kembali ke form add
@@ -109,3 +99,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Location: ../index.php');
     exit;
 }
+

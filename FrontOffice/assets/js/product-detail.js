@@ -1,6 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     
-    // --- CEK FLASH MESSAGE (Notifikasi dari halaman lain) ---
     const savedMsg = localStorage.getItem('toast_msg');
     const savedType = localStorage.getItem('toast_type');
 
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('toast_type');
     }
 
-    // --- SETUP VARIABEL UI ---
     const plusBtn = document.querySelector('.plus');
     const minusBtn = document.querySelector('.minus');
     const countSpan = document.querySelector('.count');
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPrice = 0;
     let selectedDetailID = null;
 
-    // --- FORMAT RUPIAH ---
     const formatRupiah = (number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }).format(number);
     };
 
-    // --- UPDATE TAMPILAN ---
     const updateInfo = () => {
         const activeGrind = document.querySelector('.grind-btn.active');
         const activeSize = document.querySelector('.size-btn.active');
@@ -88,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- EVENT LISTENERS ---
     const optionButtons = document.querySelectorAll('.option-btn');
     optionButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -117,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LOGIKA ADD TO CART (Masuk Database) ---
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', () => {
             if (!selectedDetailID) { showToast("Silakan pilih varian produk terlebih dahulu!", "error"); return; }
@@ -149,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LOGIKA BUY IT NOW (Langsung Checkout via Session) ---
     if (buyNowBtn) {
         buyNowBtn.addEventListener('click', () => {
              if (!selectedDetailID) { showToast("Silakan pilih varian produk terlebih dahulu!", "error"); return; }
@@ -159,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
              buyNowBtn.textContent = "Memproses...";
              buyNowBtn.disabled = true;
 
-             // Kirim ke action_buy_now.php
              fetch('../Product-Cart/action_buy_now.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -168,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Redirect Langsung ke Checkout
                     window.location.href = '../Product-Checkout/index.php';
                 } else {
                     showToast(data.message, "error");

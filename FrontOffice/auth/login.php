@@ -1,21 +1,16 @@
-<?php
+﻿<?php
 session_start();
-// Path: dari auth/ -> FrontOffice/ -> SI-Ukopia/ -> Koneksi/
 include("../../Koneksi/koneksi.php");
 
-// 1. Cek apakah user SUDAH login?
 if (isset($_SESSION['customer_uid'])) {
-    // Jika user iseng buka halaman login padahal sudah login
     if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
         header('Location: ../Product-Checkout/index.php');
     } else {
-        // [UPDATE] Arahkan ke HomePage (bukan Profile)
         header('Location: ../HomePage/index.php');
     }
     exit;
 }
 
-// 2. Logika Proses Login
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST['form_type'] == 'login') {
 
     $login_identifier = $_POST['login_identifier'];
@@ -25,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
         header('Location: login.php?status=error&message=Email/Username dan Password wajib diisi');
         exit;
     } else {
-        // Cek Email ATAU Username
         $stmt = $conn->prepare("SELECT uid, nama, password, is_verified FROM akun_customer WHERE email = ? OR username = ?");
         $stmt->bind_param("ss", $login_identifier, $login_identifier);
         $stmt->execute();
@@ -34,27 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
         if ($result->num_rows === 1) {
             $customer = $result->fetch_assoc();
 
-            // Verifikasi Password
             if (password_verify($password, $customer['password'])) {
 
-                // Cek Status Verifikasi Email
                 if ($customer['is_verified'] == 0) {
                     $_SESSION['verification_email'] = $login_identifier;
                     header('Location: login.php?status=error&message=Akun belum aktif. Silakan cek email atau login ulang.');
                     exit;
                 } else {
-                    // --- LOGIN BERHASIL ---
                     $_SESSION['customer_uid'] = $customer['uid'];
                     $_SESSION['customer_nama'] = $customer['nama'];
 
-                    // Simpan session sekarang juga sebelum redirect
                     session_write_close();
 
-                    // Redirect Cerdas
                     if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
                         header('Location: ../Product-Checkout/index.php');
                     } else {
-                        // [UPDATE] GANTI DARI PROFILE KE HOMEPAGE DI SINI
                         header('Location: ../HomePage/index.php');
                     }
                     exit;
@@ -72,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['form_type']) && $_POST
 }
 $conn->close();
 
-// Cek apakah user sedang membuka tab Register (dari URL)
 $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
 ?>
 

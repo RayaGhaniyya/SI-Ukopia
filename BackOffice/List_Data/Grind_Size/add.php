@@ -1,5 +1,4 @@
-<?php
-// [UBAH] Path koneksi sesuai lokasi folder
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");

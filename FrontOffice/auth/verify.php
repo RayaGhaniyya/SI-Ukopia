@@ -1,6 +1,5 @@
-<?php
+﻿<?php
 session_start();
-// Path 2x ../ (dari auth/ -> FrontOffice/ -> SI-Ukopia/ -> Koneksi/)
 include("../../Koneksi/koneksi.php");
 
 $message = "";

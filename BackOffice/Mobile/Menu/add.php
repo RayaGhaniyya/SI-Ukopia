@@ -1,13 +1,11 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// Ambil kategori - FIXED: gunakan table kategori (bukan kategori_menu)
 $kategori_query = "SELECT id_kategori_menu, nama_kategori FROM kategori_menu ORDER BY nama_kategori ASC";
 $kategori_result = mysqli_query($conn, $kategori_query);
 
-// Debug: Cek apakah query berhasil
 if (!$kategori_result) {
     die("<div style='background:red;color:white;padding:20px;margin:20px;'>Error Query Kategori: " . mysqli_error($conn) . "</div>");
 }

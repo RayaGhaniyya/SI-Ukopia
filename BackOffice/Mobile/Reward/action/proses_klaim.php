@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 session_start();
 
@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $kode = trim($_POST['kode_unik']);
 
-// 1. Cek Ketersediaan Kode
 $query = "SELECT r.*, k.nama_reward, c.nama as nama_customer 
           FROM riwayat_reward r
           JOIN katalog_reward k ON r.id_reward = k.id_reward
@@ -22,21 +21,17 @@ $result = $stmt->get_result();
 $data = $result->fetch_assoc();
 
 if (!$data) {
-    // Kasus A: Kode tidak ada
     $_SESSION['message'] = "Kode Voucher TIDAK DITEMUKAN!";
     $_SESSION['message_type'] = "error";
     header("Location: ../klaim.php"); exit;
 }
 
 if ($data['status_klaim'] == 'Sudah Dipakai') {
-    // Kasus B: Kode sudah pernah dipakai (Curang/Double)
     $_SESSION['message'] = "GAGAL! Voucher ini SUDAH DIPAKAI pada tanggal " . $data['tanggal_dapat'];
     $_SESSION['message_type'] = "error";
     header("Location: ../klaim.php"); exit;
 }
 
-// Kasus C: Kode Valid & Belum Dipakai -> PROSES
-// Update status jadi 'Sudah Dipakai'
 $update = $conn->prepare("UPDATE riwayat_reward SET status_klaim = 'Sudah Dipakai' WHERE kode_unik = ?");
 $update->bind_param("s", $kode);
 

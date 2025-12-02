@@ -1,5 +1,4 @@
-// 1. FUNGSI TOAST (NOTIFIKASI POJOK/TENGAH)
-function showToast(message, type = 'success') {
+﻿function showToast(message, type = 'success') {
     let container = document.getElementById('toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -24,18 +23,13 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// 2. FUNGSI CONFIRM (POPUP TENGAH) - UPDATED
-// Parameter: pesan, fungsi_aksi, judul_popup (opsional), teks_tombol (opsional)
 function showConfirm(message, onConfirm, title = "Konfirmasi Hapus", btnText = "Hapus") {
-    // Hapus jika ada overlay lama
     const existing = document.querySelector('.confirm-overlay');
     if(existing) existing.remove();
 
-    // Buat Elemen Overlay
     const overlay = document.createElement('div');
     overlay.className = 'confirm-overlay';
 
-    // HTML Popup (Dinamis sesuai parameter)
     overlay.innerHTML = `
         <div class="confirm-box">
             <div class="confirm-icon">
@@ -52,7 +46,6 @@ function showConfirm(message, onConfirm, title = "Konfirmasi Hapus", btnText = "
 
     document.body.appendChild(overlay);
 
-    // Event Listener Tombol
     const btnCancel = overlay.querySelector('.btn-cancel');
     const btnConfirm = overlay.querySelector('.btn-confirm');
 
@@ -65,7 +58,6 @@ function showConfirm(message, onConfirm, title = "Konfirmasi Hapus", btnText = "
         overlay.remove(); 
     });
     
-    // Klik luar untuk tutup
     overlay.addEventListener('click', (e) => {
         if(e.target === overlay) overlay.remove();
     });

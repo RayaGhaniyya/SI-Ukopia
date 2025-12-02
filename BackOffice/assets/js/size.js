@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    SIZE JS - UKOPIA BACKOFFICE
    
    Dependencies dari global.js:
@@ -9,9 +9,7 @@
    - initTableSearch()
    ============================================ */
 
-// ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
-  // Form Add
   const addForm = document.getElementById("SizeAddForm");
   if (addForm) {
     addForm.addEventListener("submit", (e) =>
@@ -20,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(addForm);
   }
 
-  // Form Update
   const updateForm = document.getElementById("SizeUpdateForm");
   if (updateForm) {
     updateForm.addEventListener("submit", (e) =>
@@ -29,11 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm);
   }
 
-  // Load saved form data
   loadSavedFormData();
 });
 
-// ===== FORM SUBMIT HANDLER =====
 async function handleSizeSubmit(e, url, successMessage) {
   e.preventDefault();
   
@@ -86,7 +81,6 @@ async function handleSizeSubmit(e, url, successMessage) {
   }
 }
 
-// ===== DELETE HANDLER =====
 async function confirmDelete(id) {
   if (!id) {
     showNotification("ID Size tidak valid", "error");

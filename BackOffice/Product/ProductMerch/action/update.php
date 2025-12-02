@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 session_start();
 include("../../../../Koneksi/koneksi.php"); // Naik 4 level
 
-// --- FUNGSI UPLOAD (Sama) ---
 function uploadGambar($file, $current_host)
 {
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -28,12 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $current_host = $_SERVER['HTTP_HOST'];
 
-        // 1. AMBIL DATA UTAMA
         $id_produk = $_POST['id_produk'];
         $nama_produk = $_POST['nama_produk'];
         $deskripsi = $_POST['deskripsi'] ?? '';
 
-        // Data Opsional (Default Kosong)
         $origin = $_POST['origin'] ?? '';
         $altitude = $_POST['altitude'] ?? '';
         $process = $_POST['process'] ?? '';
@@ -41,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notes = $_POST['notes'] ?? '';
         $link = $_POST['link'] ?? '';
 
-        // 2. HANDLE GAMBAR UTAMA BARU
         $sql_update_img = "";
         $params_img = [];
         $types_img = "";
@@ -49,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $upload = uploadGambar($_FILES['gambar_url'], $current_host);
             if ($upload['success']) {
-                // Hapus gambar lama (Optional)
                 $qOld = $conn->query("SELECT gambar_url FROM produk WHERE id_produk = '$id_produk'");
                 $dOld = $qOld->fetch_assoc();
                 if ($dOld && !empty($dOld['gambar_url'])) {
@@ -66,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // 3. UPDATE TABEL PRODUK
         $sql_produk = "UPDATE produk SET nama_produk=?, deskripsi=?, origin=?, altitude=?, process=?, variety=?, notes=?, link=? $sql_update_img WHERE id_produk=?";
         $stmt = $conn->prepare($sql_produk);
 
@@ -77,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $stmt->close();
 
-        // 4. UPLOAD GALERI BARU (Jika Ada)
         if (isset($_FILES['galeri']) && !empty($_FILES['galeri']['name'][0])) {
             $files = $_FILES['galeri'];
             $count = count($files['name']);
@@ -102,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_galeri->close();
         }
 
-        // 5. UPDATE / INSERT VARIAN
         if (isset($_POST['varian_id'])) {
             $varian_ids = $_POST['varian_id'];
             $varian_sizes = $_POST['varian_size'];
@@ -133,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_insert_var->close();
         }
 
-        // 6. HAPUS VARIAN
         if (!empty($_POST['delete_variants'])) {
             $ids_to_delete = explode(',', $_POST['delete_variants']);
             $ids_to_delete = array_filter($ids_to_delete);
@@ -156,3 +147,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 }
+

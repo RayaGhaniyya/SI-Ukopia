@@ -1,10 +1,9 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
 
-// --- LOGIKA DATA ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -16,7 +15,6 @@ $where_conditions = [];
 $params = [];
 $types = "";
 
-// JOIN ke akun_customer untuk ambil nama pembuat
 $base_query = " FROM resep r JOIN akun_customer c ON r.uid_akun = c.uid ";
 
 if ($search_term != '') {
@@ -29,7 +27,6 @@ if ($search_term != '') {
 
 $where_sql = !empty($where_conditions) ? " WHERE " . implode(" AND ", $where_conditions) : "";
 
-// Count Total
 $stmt_count = $conn->prepare("SELECT COUNT(*) as total " . $base_query . $where_sql);
 if (!empty($params)) $stmt_count->bind_param($types, ...$params);
 $stmt_count->execute();
@@ -37,7 +34,6 @@ $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// Get Data
 $stmt_data = $conn->prepare("SELECT r.*, c.nama as nama_pembuat " . $base_query . $where_sql . " ORDER BY r.tanggal DESC LIMIT ? OFFSET ?");
 $params[] = $limit; 
 $params[] = $offset; 

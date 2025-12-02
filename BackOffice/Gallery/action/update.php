@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -11,7 +11,6 @@ $judul = trim($_POST['judul'] ?? '');
 $deskripsi = trim($_POST['deskripsi'] ?? '');
 $tanggal = trim($_POST['tanggal'] ?? '');
 
-// Validasi
 if ($id_galery <= 0) exit(json_encode(['success' => false, 'message' => 'ID tidak valid!']));
 if (empty($judul) || empty($deskripsi) || empty($tanggal)) {
     exit(json_encode(['success' => false, 'message' => 'Semua field wajib diisi!']));
@@ -20,7 +19,6 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $tanggal)) {
     exit(json_encode(['success' => false, 'message' => 'Format tanggal tidak valid!']));
 }
 
-// Cek exists
 $stmt_check = $conn->prepare("SELECT id_galery FROM galery WHERE id_galery = ?");
 $stmt_check->bind_param("i", $id_galery);
 $stmt_check->execute();
@@ -32,20 +30,17 @@ $stmt_check->close();
 $conn->begin_transaction();
 
 try {
-    // Update gallery
     $stmt = $conn->prepare("UPDATE galery SET judul=?, deskripsi=?, tanggal=? WHERE id_galery=?");
     $stmt->bind_param("sssi", $judul, $deskripsi, $tanggal, $id_galery);
     if (!$stmt->execute()) throw new Exception("Gagal update data");
     $stmt->close();
 
-    // Cek gambar baru
     $hasNewImages = isset($_FILES['gambar']) && !empty($_FILES['gambar']['tmp_name'][0]);
 
     if ($hasNewImages) {
         $totalFiles = count($_FILES['gambar']['tmp_name']);
         if ($totalFiles > 4) throw new Exception("Maksimal 4 gambar!");
 
-        // Validasi files
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         $maxSize = 5 * 1024 * 1024;
         $uploadedFiles = [];
@@ -65,7 +60,6 @@ try {
             $uploadedFiles[] = ['tmp' => $_FILES['gambar']['tmp_name'][$i], 'name' => $fileName];
         }
 
-        // Get old images
         $stmt_old = $conn->prepare("SELECT gambar FROM detail_galery WHERE id_galery = ?");
         $stmt_old->bind_param("i", $id_galery);
         $stmt_old->execute();
@@ -74,13 +68,11 @@ try {
         while ($row = $result_old->fetch_assoc()) $oldImages[] = $row['gambar'];
         $stmt_old->close();
 
-        // Delete old records
         $stmt_delete = $conn->prepare("DELETE FROM detail_galery WHERE id_galery = ?");
         $stmt_delete->bind_param("i", $id_galery);
         $stmt_delete->execute();
         $stmt_delete->close();
 
-        // Upload new images
         $uploadDir = "../../assets/img/gallery/";
         if (!file_exists($uploadDir)) mkdir($uploadDir, 0755, true);
 
@@ -106,7 +98,6 @@ try {
 
         $stmt_detail->close();
 
-        // Delete old files
         foreach ($oldImages as $oldPath) {
             $fullPath = "../../" . $oldPath;
             if (file_exists($fullPath)) unlink($fullPath);
@@ -121,3 +112,4 @@ try {
 }
 
 $conn->close();
+

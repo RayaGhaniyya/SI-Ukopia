@@ -1,20 +1,17 @@
-<?php
+﻿<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/NavBar.php");
 include("../Component/Loader.php");
 
-// Pagination
 $itemsPerPage = 5;
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($currentPage - 1) * $itemsPerPage;
 
-// Count total galleries
 $countQuery = "SELECT COUNT(*) as total FROM galery";
 $countResult = mysqli_query($conn, $countQuery);
 $totalItems = mysqli_fetch_assoc($countResult)['total'];
 $totalPages = ceil($totalItems / $itemsPerPage);
 
-// Fetch galleries with images
 $query = "
     SELECT 
         g.id_galery,
@@ -30,7 +27,6 @@ $result = mysqli_query($conn, $query);
 $galleries = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
-    // Fetch images for this gallery
     $id = $row['id_galery'];
     $imgQuery = "SELECT gambar FROM detail_galery WHERE id_galery = $id LIMIT 4";
     $imgResult = mysqli_query($conn, $imgQuery);
@@ -67,7 +63,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                         <div class="galery-images">
                             <div class="img-grid">
                                 <?php
-                                // Tampilkan max 4 gambar
                                 $imageCount = min(4, count($gallery['images']));
                                 for ($i = 0; $i < $imageCount; $i++):
                                     $imgPath = "../../BackOffice/" . $gallery['images'][$i];
@@ -78,7 +73,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 <?php endfor; ?>
 
                                 <?php
-                                // Fill dengan placeholder jika kurang dari 4
                                 for ($i = $imageCount; $i < 4; $i++):
                                 ?>
                                     <img src="../assets/img/placeholder.jpg" alt="Placeholder">

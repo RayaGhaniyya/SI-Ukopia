@@ -1,16 +1,14 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// 1. Validasi ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: index.php");
     exit;
 }
 $id_produk = (int)$_GET['id'];
 
-// 2. Ambil Data Produk Utama
 $stmt = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
 $stmt->bind_param("i", $id_produk);
 $stmt->execute();
@@ -22,23 +20,19 @@ if (!$produk) {
     exit;
 }
 
-// 3. Ambil Data Varian (Hanya Size, Harga, Stok)
 $stmt_var = $conn->prepare("SELECT * FROM detail_produk WHERE id_produk = ? ORDER BY id_detail_produk ASC");
 $stmt_var->bind_param("i", $id_produk);
 $stmt_var->execute();
 $variants = $stmt_var->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt_var->close();
 
-// 4. Ambil Data Galeri
 $stmt_gal = $conn->prepare("SELECT * FROM produk_galeri WHERE id_produk = ?");
 $stmt_gal->bind_param("i", $id_produk);
 $stmt_gal->execute();
 $gallery = $stmt_gal->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt_gal->close();
 
-// Data Dropdown
 $size_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM size ORDER BY ukuran ASC"), MYSQLI_ASSOC);
-// Kita hardcode Kategori Merch (ID 3)
 $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori = 3");
 ?>
 
@@ -177,7 +171,6 @@ $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori
 </template>
 
 <script>
-    // 1. PREVIEW GAMBAR UTAMA (Single)
     function handleImagePreview(input, imgId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -188,7 +181,6 @@ $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori
         }
     }
 
-    // 2. PREVIEW GALERI BARU (Multiple)
     function handleGalleryPreview(input, containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = ''; // Reset
@@ -207,7 +199,6 @@ $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori
         }
     }
 
-    // 3. Logic Varian
     document.getElementById('addVariantBtn').addEventListener('click', () => {
         const clone = document.getElementById('variantTemplate').content.cloneNode(true);
         document.getElementById('variantContainer').appendChild(clone);
@@ -225,7 +216,6 @@ $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori
         row.remove();
     }
 
-    // 4. Logic Hapus Foto Galeri Lama
     function markGalleryForDelete(id) {
         if (confirm('Hapus foto ini? (Akan terhapus permanen setelah klik Simpan)')) {
             const input = document.getElementById('deleteGalleryInput');

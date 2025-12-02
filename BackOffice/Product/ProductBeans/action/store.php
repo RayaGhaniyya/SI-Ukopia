@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 session_start();
 include("../../../../Koneksi/koneksi.php");
 
-// --- FUNGSI UPLOAD ---
 function uploadGambar($file, $current_host)
 {
     $uploadDir = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -20,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $current_host = $_SERVER['HTTP_HOST'];
 
-        // Data Utama
         $nama = $_POST['nama_produk'];
         $kategori = (int)$_POST['id_kategori'];
         $deskripsi = $_POST['deskripsi'] ?? '';
@@ -31,20 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notes = $_POST['notes'] ?? '';
         $link = ''; // Beans tidak pakai link eksternal
 
-        // 1. Upload Gambar Utama
         if (!isset($_FILES['gambar_url']) || $_FILES['gambar_url']['error'] != 0) throw new Exception("Gambar utama wajib diisi.");
         $res = uploadGambar($_FILES['gambar_url'], $current_host);
         if (!$res['success']) throw new Exception($res['message']);
         $gambar_url = $res['url'];
 
-        // 2. Insert Produk
         $stmt = $conn->prepare("INSERT INTO produk (id_kategori, nama_produk, gambar_url, link, origin, altitude, notes, process, variety, deskripsi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("isssssssss", $kategori, $nama, $gambar_url, $link, $origin, $altitude, $notes, $process, $variety, $deskripsi);
         $stmt->execute();
         $id_produk = $conn->insert_id;
         $stmt->close();
 
-        // 3. Upload Galeri (Multiple)
         if (isset($_FILES['galeri']) && !empty($_FILES['galeri']['name'][0])) {
             $files = $_FILES['galeri'];
             $count = count($files['name']);
@@ -69,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_g->close();
         }
 
-        // 4. Insert Varian
         $stmt_v = $conn->prepare("INSERT INTO detail_produk (id_produk, id_grind, id_size, stok, harga) VALUES (?, ?, ?, ?, ?)");
         $sizes = $_POST['varian_size'];
         $grinds = $_POST['varian_grind'];
@@ -97,3 +91,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: ../add.php');
     }
 }
+

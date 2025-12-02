@@ -1,15 +1,10 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// ==========================================================
-// PERUBAHAN 1: Definisikan base URL untuk gambar
-// ==========================================================
 $current_host = $_SERVER['HTTP_HOST'];
-// Pastikan ini sesuai dengan path ke folder Uploads Anda
 $BASE_IMAGE_URL = "http://{$current_host}/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
-// ==========================================================
 
 
 $id_menu = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -19,7 +14,6 @@ if ($id_menu <= 0) {
     exit;
 }
 
-// Ambil data menu
 $stmt = $conn->prepare("SELECT * FROM menu WHERE id_menu = ?");
 $stmt->bind_param("i", $id_menu);
 $stmt->execute();
@@ -31,7 +25,6 @@ if (!$menu) {
 }
 $stmt->close();
 
-// Ambil kategori - SESUAI DATABASE: kategori_menu dengan id_kategori_menu
 $kategori_query = "SELECT id_kategori_menu, nama_kategori FROM kategori_menu ORDER BY nama_kategori ASC";
 $kategori_result = mysqli_query($conn, $kategori_query);
 

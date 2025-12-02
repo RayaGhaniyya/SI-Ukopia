@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
@@ -16,7 +16,6 @@ if ($id_alamat == 0) {
     exit;
 }
 
-// Ambil data alamat spesifik milik user ini
 $stmt = $conn->prepare("SELECT * FROM alamat_customer WHERE id_alamat = ? AND uid_customer = ?");
 $stmt->bind_param("ii", $id_alamat, $uid);
 $stmt->execute();

@@ -1,11 +1,9 @@
-<?php
+﻿<?php
 session_start();
-// Path naik 4 tingkat: action -> Transaksi -> BackOffice -> SI-Ukopia -> Koneksi
 include("../../../Koneksi/koneksi.php");
 
 header('Content-Type: application/json');
 
-// Cek Login Admin
 if (!isset($_SESSION['username'])) {
     echo json_encode(['success' => false, 'message' => 'Sesi habis']);
     exit;
@@ -19,13 +17,11 @@ if ($id == 0 || empty($status)) {
     exit;
 }
 
-// Update Status
 $sql = "UPDATE transaksi SET status_pesanan = ? WHERE id_transaksi = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("si", $status, $id);
 
 if ($stmt->execute()) {
-    // Jika Batal, Kembalikan Stok
     if ($status == 'Batal') {
         $qItems = mysqli_query($conn, "SELECT id_detail_produk, jumlah FROM detail_transaksi WHERE id_transaksi = '$id'");
         while ($item = mysqli_fetch_assoc($qItems)) {
@@ -37,3 +33,4 @@ if ($stmt->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Gagal update database']);
 }
+

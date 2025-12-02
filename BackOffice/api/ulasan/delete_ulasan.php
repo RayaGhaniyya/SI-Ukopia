@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 header('Content-Type: application/json');
 include_once '../../config/database.php';
 
@@ -16,7 +16,6 @@ if (
     exit();
 }
 
-// Keamanan: Hapus HANYA jika id_ulasan dan uid_akun cocok
 $sql = "DELETE FROM ulasan_menu WHERE id_ulasan = ? AND uid_akun = ?";
 
 $stmt = $db->prepare($sql);
@@ -26,7 +25,6 @@ if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
         echo json_encode(['status' => 'success', 'message' => 'Ulasan berhasil dihapus.']);
     } else {
-        // Ini terjadi jika ID ulasan salah atau user mencoba menghapus ulasan orang lain
         http_response_code(403); // Forbidden
         echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus ulasan. Pastikan ulasan ini milik Anda.']);
     }

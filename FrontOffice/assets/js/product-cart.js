@@ -1,10 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
     const cartTable = document.querySelector(".cart-table");
     const cartTotalDisplay = document.getElementById("cart-total");
     const selectAllCheckbox = document.getElementById("select-all");
     const checkoutBtn = document.getElementById("btn-checkout");
 
-    // Format Rupiah Helper
     const formatRupiah = (num) => {
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }).format(num);
     };
 
-    // 1. FUNGSI UPDATE TOTAL
     const updateSummary = () => {
         let total = 0;
         const items = document.querySelectorAll(".cart-item");
@@ -32,17 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // 2. FUNGSI KIRIM KE DATABASE (AJAX)
     const updateDB = async (id_keranjang, action, qty = 0) => {
         try {
-            // PERBAIKAN PATH: Cukup panggil nama file karena satu folder
             const response = await fetch("update_cart.php", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id_keranjang, action, qty })
             });
             
-            // Cek jika respons bukan JSON (misal error HTML 404)
             if (!response.ok) throw new Error("Server Error");
             
             const result = await response.json();
@@ -54,11 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // 3. EVENT LISTENER (Delegation)
     if (cartTable) {
         cartTable.addEventListener("click", async (e) => {
             const target = e.target;
-            // Tangani klik pada icon sampah juga (target.closest)
             const deleteBtn = target.closest(".delete-btn");
             const row = target.closest(".cart-item");
             
@@ -71,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const totalSpan = row.querySelector(".product-total");
             let currentQty = parseInt(countSpan.textContent);
 
-            // --- TOMBOL PLUS ---
             if (target.classList.contains("plus")) {
                 if (currentQty < maxStock) {
                     const newQty = currentQty + 1;
@@ -84,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // --- TOMBOL MINUS ---
             else if (target.classList.contains("minus")) {
                 if (currentQty > 1) {
                     const newQty = currentQty - 1;
@@ -95,14 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // --- TOMBOL DELETE ---
             else if (deleteBtn) {
                 showConfirm("Yakin ingin menghapus item ini?", async () => {
                     const success = await updateDB(id, 'delete');
                     if (success) {
                         showToast("Item berhasil dihapus", "success");
                         
-                        // Animasi Hapus
                         row.style.transition = "all 0.5s ease";
                         row.style.opacity = "0";
                         row.style.transform = "translateX(50px)";
@@ -110,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         setTimeout(() => {
                             row.remove();
                             updateSummary();
-                            // Reload jika kosong agar layout empty state muncul
                             if (document.querySelectorAll(".cart-item").length === 0) {
                                 location.reload();
                             }
@@ -122,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // EVENT CHECKBOX
         cartTable.addEventListener("change", (e) => {
             if (e.target.classList.contains("item-check")) {
                 updateSummary();
@@ -132,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 4. EVENT SELECT ALL
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener("change", (e) => {
             const isChecked = e.target.checked;
@@ -141,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // 5. EVENT CHECKOUT
     if (checkoutBtn) {
         checkoutBtn.addEventListener("click", () => {
             const totalText = cartTotalDisplay.textContent;
@@ -155,6 +140,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Jalankan sekali saat load
     updateSummary();
 });

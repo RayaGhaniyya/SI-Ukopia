@@ -1,11 +1,10 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 
-// --- LOGIKA PAGINATION & SEARCH ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -16,7 +15,6 @@ $base_url_pagin = '?';
 $params = [];
 $types = "";
 
-// Filter Kategori Beans (ID 1 & 2)
 $where_conditions = ["p.id_kategori IN (1, 2)"];
 
 if ($search_term != '') {
@@ -31,7 +29,6 @@ if ($search_term != '') {
 
 $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 
-// Hitung Total
 $count_query = "SELECT COUNT(DISTINCT p.id_produk) as total FROM produk p $where_sql";
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
@@ -43,7 +40,6 @@ $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// Ambil Data + Galeri
 $order_by_sql = " ORDER BY p.id_produk DESC LIMIT ? OFFSET ?";
 $data_query = "
     SELECT 
@@ -115,7 +111,6 @@ $result = $stmt_data->get_result();
                             while ($row = mysqli_fetch_assoc($result)):
                                 $gambar_utama = str_replace("localhost", $current_host, $row['gambar_url']);
                                 
-                                // Siapkan data JSON Galeri
                                 $gallery_array = [];
                                 if (!empty($row['list_galeri'])) {
                                     $raw_urls = explode(',', $row['list_galeri']);

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -10,7 +10,6 @@ $judul = trim($_POST['judul'] ?? '');
 $deskripsi = trim($_POST['deskripsi'] ?? '');
 $tanggal = trim($_POST['tanggal'] ?? '');
 
-// Validasi input
 if (empty($judul) || empty($deskripsi) || empty($tanggal)) {
     exit(json_encode(['success' => false, 'message' => 'Semua field wajib diisi!']));
 }
@@ -28,7 +27,6 @@ if ($totalFiles > 4) {
     exit(json_encode(['success' => false, 'message' => 'Maksimal 4 gambar!']));
 }
 
-// Validasi files
 $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 $maxSize = 5 * 1024 * 1024;
 $uploadedFiles = [];
@@ -62,7 +60,6 @@ for ($i = 0; $i < $totalFiles; $i++) {
 $conn->begin_transaction();
 
 try {
-    // Insert gallery
     $stmt = $conn->prepare("INSERT INTO galery (judul, deskripsi, tanggal) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $judul, $deskripsi, $tanggal);
 
@@ -71,7 +68,6 @@ try {
     $id_galery = $conn->insert_id;
     $stmt->close();
 
-    // Upload images
     $uploadDir = "../../assets/img/gallery/";
     if (!file_exists($uploadDir)) mkdir($uploadDir, 0755, true);
 
@@ -105,3 +101,4 @@ try {
 }
 
 $conn->close();
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -13,7 +13,6 @@ if ($id <= 0 || empty($nama)) {
 }
 
 try {
-    // [UBAH] Update kolom biji
     $stmt = $conn->prepare("UPDATE kategori_menu SET nama_kategori = ?, biji = ? WHERE id_kategori_menu = ?");
     $stmt->bind_param("sii", $nama, $biji, $id);
     

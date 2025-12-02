@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
@@ -10,7 +10,6 @@ if ($id_galery <= 0) {
     exit;
 }
 
-// Ambil data galeri
 $stmt = $conn->prepare("SELECT * FROM galery WHERE id_galery = ?");
 $stmt->bind_param("i", $id_galery);
 $stmt->execute();
@@ -22,7 +21,6 @@ if (!$data) {
 }
 $stmt->close();
 
-// Ambil gambar existing
 $stmt_img = $conn->prepare("SELECT gambar FROM detail_galery WHERE id_galery = ?");
 $stmt_img->bind_param("i", $id_galery);
 $stmt_img->execute();

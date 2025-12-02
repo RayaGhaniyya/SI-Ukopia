@@ -1,5 +1,4 @@
-<?php
-// include("../koneksi/koneksi.php");
+﻿<?php
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 ?>

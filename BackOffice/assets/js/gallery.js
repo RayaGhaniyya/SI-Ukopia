@@ -1,22 +1,18 @@
-/* ============================================
+﻿/* ============================================
    GALLERY.JS - UKOPIA BACKOFFICE (OPTIMIZED)
    Hanya fungsi spesifik gallery
    Fungsi universal sudah di global.js
    ============================================ */
 
-// Global variable untuk menyimpan file yang dipilih (gallery specific)
 let selectedFiles = [];
 
-// ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
-  // Set tanggal hari ini secara default
   const dateInput = document.getElementById("tanggal");
   if (dateInput && !dateInput.value) {
     const today = new Date();
     dateInput.value = today.toISOString().split("T")[0];
   }
 
-  // Form Add Gallery
   const addForm = document.getElementById("galleryAddForm");
   if (addForm) {
     addForm.addEventListener("submit", (e) =>
@@ -25,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(addForm); // Dari global.js
   }
 
-  // Form Update Gallery
   const updateForm = document.getElementById("galleryUpdateForm");
   if (updateForm) {
     updateForm.addEventListener("submit", (e) =>
@@ -34,22 +29,18 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm); // Dari global.js
   }
 
-  // Close popup dengan ESC key
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeDetailPopup();
   });
 
-  // Click outside popup to close
   document.addEventListener("click", (e) => {
     const popup = document.getElementById("detailPopup");
     if (popup && e.target === popup) closeDetailPopup();
   });
   
-  // Load saved form data (dari global.js)
   loadSavedFormData();
 });
 
-// ===== ADD MORE IMAGES (GALLERY SPECIFIC) =====
 function addMoreImages(input) {
   if (!input.files || input.files.length === 0) return;
 
@@ -77,7 +68,6 @@ function addMoreImages(input) {
   input.value = '';
 }
 
-// ===== RENDER PREVIEW (GALLERY SPECIFIC) =====
 function renderPreview() {
   const preview = document.getElementById("previewContainer");
   if (!preview) return;
@@ -152,19 +142,16 @@ function renderPreview() {
   preview.appendChild(infoDiv);
 }
 
-// ===== REMOVE FILE =====
 function removeFile(index) {
   selectedFiles.splice(index, 1);
   renderPreview();
   showNotification(`Gambar dihapus. Total: ${selectedFiles.length} gambar`, "info");
 }
 
-// ===== LEGACY FUNCTION (backward compatibility) =====
 function previewGalleryImages(input) {
   addMoreImages(input);
 }
 
-// ===== FORM SUBMIT HANDLER (GALLERY SPECIFIC) =====
 async function handleGallerySubmit(e, url, successMessage) {
   e.preventDefault();
   
@@ -231,7 +218,6 @@ async function handleGallerySubmit(e, url, successMessage) {
   }
 }
 
-// ===== SHOW DETAIL GALLERY =====
 async function showDetail(id) {
   if (!id) {
     showNotification("ID galeri tidak valid", "error");
@@ -291,7 +277,6 @@ async function showDetail(id) {
   }
 }
 
-// ===== CLOSE DETAIL POPUP =====
 function closeDetailPopup() {
   const popup = document.getElementById("detailPopup");
   if (!popup) return;
@@ -300,7 +285,6 @@ function closeDetailPopup() {
   setTimeout(() => popup.style.display = "none", 300);
 }
 
-// ===== DELETE GALLERY =====
 async function confirmDelete(id) {
   if (!id) {
     showNotification("ID galeri tidak valid", "error");
@@ -337,3 +321,4 @@ async function confirmDelete(id) {
     showNotification("Terjadi kesalahan saat menghapus data", "error");
   }
 }
+

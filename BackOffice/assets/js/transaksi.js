@@ -1,11 +1,9 @@
-/* ============================================
+﻿/* ============================================
    LOGIKA MANAJEMEN TRANSAKSI
    File: BackOffice/assets/js/transaksi.js
    ============================================ */
 
-// 1. Fungsi Lihat Detail (Membuka Modal)
 async function lihatDetail(id) {
-    // Tampilkan Modal dengan Loading
     const modalEl = document.getElementById('detailModal');
     const modal = new bootstrap.Modal(modalEl);
     
@@ -19,11 +17,9 @@ async function lihatDetail(id) {
     modal.show();
 
     try {
-        // Ambil konten dari detail.php
         const response = await fetch(`detail.php?id=${id}`);
         const html = await response.text();
         
-        // Masukkan ke dalam modal
         document.getElementById('modalBodyContent').innerHTML = html;
     } catch (error) {
         document.getElementById('modalBodyContent').innerHTML = `
@@ -35,7 +31,6 @@ async function lihatDetail(id) {
     }
 }
 
-// 2. Fungsi Update Status
 async function updateStatus(id, statusBaru) {
     if(!confirm(`Apakah Anda yakin ingin mengubah status pesanan #${id} menjadi "${statusBaru}"?`)) return;
 
@@ -46,7 +41,6 @@ async function updateStatus(id, statusBaru) {
         formData.append('id', id);
         formData.append('status', statusBaru);
 
-        // Kirim ke Backend
         const response = await fetch('action/update_status.php', {
             method: 'POST',
             body: formData
@@ -60,10 +54,8 @@ async function updateStatus(id, statusBaru) {
                 showNotification(result.message, "success");
             }
             
-            // Tutup modal
             closeDetailModal();
 
-            // Reload halaman otomatis
             setTimeout(() => location.reload(), 1000);
         } else {
             if (typeof showNotification === 'function') {
@@ -79,7 +71,6 @@ async function updateStatus(id, statusBaru) {
     }
 }
 
-// 3. Fungsi Tutup Modal Manual (Helper)
 function closeDetailModal() {
     const modalEl = document.getElementById('detailModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
@@ -91,12 +82,10 @@ function closeDetailModal() {
    File: BackOffice/assets/js/transaksi.js
    ============================================ */
 
-// 1. Fungsi Lihat Detail (Membuka Modal)
 async function lihatDetail(id) {
     const modalEl = document.getElementById('detailModal');
     const modal = new bootstrap.Modal(modalEl);
     
-    // Tampilkan Loading di dalam Modal
     document.getElementById('modalBodyContent').innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status"></div>
@@ -107,11 +96,9 @@ async function lihatDetail(id) {
     modal.show();
 
     try {
-        // Fetch konten HTML dari detail.php
         const response = await fetch(`detail.php?id=${id}`);
         const html = await response.text();
         
-        // Masukkan ke body modal
         document.getElementById('modalBodyContent').innerHTML = html;
     } catch (error) {
         document.getElementById('modalBodyContent').innerHTML = `
@@ -121,12 +108,9 @@ async function lihatDetail(id) {
     }
 }
 
-// 2. Fungsi Update Status (Proses Utama)
 async function updateStatus(id, statusBaru) {
-    // Konfirmasi dulu
     if(!confirm(`Apakah Anda yakin ingin mengubah status pesanan #${id} menjadi "${statusBaru}"?`)) return;
 
-    // Tampilkan Loading Global
     showLoading("Mengupdate status...");
 
     try {
@@ -140,20 +124,15 @@ async function updateStatus(id, statusBaru) {
         });
         const result = await response.json();
 
-        // Sembunyikan Loading Global
         hideLoading();
 
         if(result.success) {
-            // Notifikasi SUKSES (Dari Global.js)
             showNotification(result.message, "success");
             
-            // Tutup Modal Detail
             closeDetailModal();
 
-            // Reload halaman agar tabel terupdate
             setTimeout(() => location.reload(), 1000);
         } else {
-            // Notifikasi ERROR (Dari Global.js)
             showNotification(result.message, "error");
         }
     } catch (error) {
@@ -163,7 +142,6 @@ async function updateStatus(id, statusBaru) {
     }
 }
 
-// 3. Helper: Tutup Modal Manual
 function closeDetailModal() {
     const modalEl = document.getElementById('detailModal');
     const modal = bootstrap.Modal.getInstance(modalEl);

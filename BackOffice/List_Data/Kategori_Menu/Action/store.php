@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -9,12 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $nama_kategori = trim($_POST['nama_kategori'] ?? '');
 $biji = intval($_POST['biji'] ?? 0); // [BARU] Ambil status biji
 
-// Validasi
 if (empty($nama_kategori)) {
     exit(json_encode(['success' => false, 'message' => 'Nama kategori wajib diisi!']));
 }
 
-// Cek Duplikasi
 $stmt_check = $conn->prepare("SELECT id_kategori_menu FROM kategori_menu WHERE nama_kategori = ?");
 $stmt_check->bind_param("s", $nama_kategori);
 $stmt_check->execute();
@@ -24,7 +22,6 @@ if ($stmt_check->get_result()->num_rows > 0) {
 $stmt_check->close();
 
 try {
-    // [UBAH] Insert kolom 'biji'
     $stmt = $conn->prepare("INSERT INTO kategori_menu (nama_kategori, biji) VALUES (?, ?)");
     $stmt->bind_param("si", $nama_kategori, $biji);
 

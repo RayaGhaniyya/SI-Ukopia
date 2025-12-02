@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 session_start();
 
@@ -15,25 +15,19 @@ if (empty($keyword)) {
     exit;
 }
 
-// LOGIKA PENCARIAN (OR)
-// Mencari berdasarkan no_telpon ATAU username
 $stmt = $conn->prepare("SELECT uid, nama FROM akun_customer WHERE email = ? OR username = ?");
 $stmt->bind_param("ss", $keyword, $keyword);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Tutup statement dan koneksi segera setelah mengambil hasil
 $stmt->close();
 $conn->close();
 
 if ($user) {
-    // KASUS: User Ditemukan
-    // Redirect ke halaman input menu dengan membawa ID User
     header("Location: ../add.php?uid=" . $user['uid']);
     exit;
 } else {
-    // KASUS: User Tidak Ditemukan
     $_SESSION['error'] = "Customer dengan No. Telpon / Username '<b>$keyword</b>' tidak ditemukan!";
     header("Location: ../index.php");
     exit;

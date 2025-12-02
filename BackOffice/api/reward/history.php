@@ -1,11 +1,9 @@
-<?php
-// Sesuaikan path koneksi
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 
-// 1. Ambil UID dari parameter URL
 $uid_customer = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
 
 if ($uid_customer <= 0) {
@@ -17,8 +15,6 @@ if ($uid_customer <= 0) {
 }
 
 try {
-    // 2. Query Ambil Riwayat Reward + Nama Reward
-    // Mengurutkan dari yang terbaru (DESC)
     $query = "SELECT 
                 r.id_riwayat, 
                 r.tanggal_dapat, 
@@ -48,7 +44,6 @@ try {
         ];
     }
 
-    // 3. Response JSON
     echo json_encode([
         'success' => true,
         'message' => 'Data riwayat reward berhasil diambil',

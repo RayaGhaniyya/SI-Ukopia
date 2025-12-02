@@ -1,26 +1,21 @@
-<?php
-// [UBAH] Path koneksi sesuai lokasi folder
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// [UBAH] Nama parameter ID sesuai primary key
 $id_grind = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($id_grind <= 0) {
-    // [UBAH] Text alert dan redirect
     echo "<script>alert('ID Grind Size tidak valid!'); window.location.href='index.php';</script>";
     exit;
 }
 
-// [UBAH] Query - nama tabel dan kolom
 $stmt = $conn->prepare("SELECT * FROM grind_size WHERE id_grind = ?");
 $stmt->bind_param("i", $id_grind);
 $stmt->execute();
 $data = $stmt->get_result()->fetch_assoc();
 
 if (!$data) {
-    // [UBAH] Text alert
     echo "<script>alert('Data Grind Size tidak ditemukan!'); window.location.href='index.php';</script>";
     exit;
 }

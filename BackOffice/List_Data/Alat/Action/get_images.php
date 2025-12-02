@@ -1,5 +1,4 @@
-<?php
-// action/get_images.php - Ambil daftar gambar berdasarkan kategori
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 

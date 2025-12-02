@@ -1,11 +1,10 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 
 $id_resep = isset($_GET['id_resep']) ? intval($_GET['id_resep']) : 0;
 
-// Base URL Gambar Alat
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
 $base_img_alat = "$protocol://$host/si-ukopia/BackOffice/List_Data/Uploads/Alat/";
@@ -15,7 +14,6 @@ try {
         throw new Exception("ID Resep tidak valid");
     }
 
-    // 1. Ambil Data Lengkap Resep
     $sql = "SELECT 
                 r.*, 
                 m.nama_metode, 
@@ -35,14 +33,11 @@ try {
         throw new Exception("Resep tidak ditemukan");
     }
 
-    // Hitung Ratio Otomatis (Opsional, buat bantu tampilan UI)
-    // Rumus: 1 : (Air / Kopi)
     $ratio = 0;
     if ($data_resep['jumlah_kopi'] > 0) {
         $ratio = round($data_resep['jumlah_air'] / $data_resep['jumlah_kopi'], 1);
     }
 
-    // 2. Ambil Alat yang dipakai
     $sql_alat = "SELECT 
                     a.id_alat, 
                     a.nama_alat, 
@@ -70,17 +65,14 @@ try {
     }
     $stmt_alat->close();
 
-    // Gabungkan Data
     $response_data = [
         'id_resep'        => intval($data_resep['id_resep']),
         'nama_resep'      => $data_resep['nama_resep'],
         'deskripsi'       => $data_resep['deskripsi'],
         'tanggal'         => $data_resep['tanggal'], // "2025-11-25"
         
-        // Bagian Equipment (List Alat)
         'equipment'       => $list_alat,
 
-        // Bagian Detail Angka
         'jumlah_kopi'     => intval($data_resep['jumlah_kopi']),
         'jumlah_air'      => intval($data_resep['jumlah_air']),
         'grind_size'      => $data_resep['ukuran_gilingan'],
@@ -89,10 +81,8 @@ try {
         'tds'             => intval($data_resep['tds']),
         'waktu_ekstraksi' => intval($data_resep['waktu_ekstraksi']),
         
-        // Kalkulasi Ratio (Biar UI tinggal tampilkan)
         'ratio_text'      => "1:" . $ratio,
         
-        // Info Tambahan
         'metode'          => $data_resep['nama_metode'],
         'pembuat'         => $data_resep['nama_pembuat']
     ];

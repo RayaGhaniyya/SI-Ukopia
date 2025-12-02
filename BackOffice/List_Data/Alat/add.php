@@ -1,11 +1,10 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
 $kategori = mysqli_query($conn, "SELECT * FROM kategori_alat ORDER BY nama_kategori_alat ASC");
 
-// Base URL untuk preview gambar existing
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Alat/";
 ?>
@@ -145,7 +144,6 @@ $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads
 <script>
 const BASE_IMAGE_URL = "<?= $BASE_IMAGE_URL ?>";
 
-// Toggle antara existing image dan upload new
 function toggleImageOption(option) {
     const existingSection = document.getElementById('existingImageSection');
     const newSection = document.getElementById('newImageSection');
@@ -156,7 +154,6 @@ function toggleImageOption(option) {
         newSection.style.display = 'none';
         fileInput.removeAttribute('required');
         
-        // Load existing images jika kategori sudah dipilih
         const kategoriId = document.getElementById('kategoriSelect').value;
         if (kategoriId) {
             loadExistingImages(kategoriId);
@@ -169,7 +166,6 @@ function toggleImageOption(option) {
     }
 }
 
-// Load gambar yang sudah ada berdasarkan kategori
 async function loadExistingImages(kategoriId) {
     const container = document.getElementById('existingImagesContainer');
     
@@ -218,19 +214,15 @@ async function loadExistingImages(kategoriId) {
     }
 }
 
-// Select existing image
 function selectExistingImage(filename, element) {
-    // Remove previous selection
     document.querySelectorAll('.image-library-item').forEach(item => {
         item.classList.remove('selected');
     });
     
-    // Mark as selected
     element.classList.add('selected');
     document.getElementById('selectedExistingImage').value = filename;
 }
 
-// Preview image untuk upload baru
 function handleImagePreviewAlat(input, previewBoxId, btnUploadId) {
     const previewBox = document.getElementById(previewBoxId);
     const btnUpload = document.getElementById(btnUploadId);

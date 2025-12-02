@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include("../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
@@ -16,7 +16,6 @@ if ($id_transaksi == 0) {
     exit;
 }
 
-// 1. Ambil Data Utama Transaksi + Alamat
 $queryMain = mysqli_query($conn, "
     SELECT t.*, 
            a.label_alamat, a.nama_penerima, a.no_telepon, a.alamat_lengkap, a.kota, a.provinsi, a.kode_pos
@@ -32,7 +31,6 @@ if (!$transaksi) {
     exit;
 }
 
-// 2. Ambil Detail Item Produk
 $queryItems = mysqli_query($conn, "
     SELECT dt.*, 
            p.nama_produk, p.gambar_url, 
@@ -47,14 +45,13 @@ $queryItems = mysqli_query($conn, "
 
 $items = [];
 while ($row = mysqli_fetch_assoc($queryItems)) {
-    // Fix gambar localhost
     $row['gambar_url'] = str_replace("localhost", $_SERVER['HTTP_HOST'], $row['gambar_url']);
     $items[] = $row;
 }
 
-// 3. Kirim Response Lengkap
 echo json_encode([
     'status' => 'success',
     'transaksi' => $transaksi,
     'items' => $items
 ]);
+

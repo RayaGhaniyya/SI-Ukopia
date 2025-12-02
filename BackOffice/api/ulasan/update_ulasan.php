@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 header('Content-Type: application/json');
 include_once '../../config/database.php';
 
@@ -18,7 +18,6 @@ if (
     exit();
 }
 
-// Keamanan: Update HANYA jika id_ulasan dan uid_akun cocok
 $sql = "UPDATE ulasan_menu SET 
             rating = ?, 
             komentar = ?,
@@ -27,14 +26,12 @@ $sql = "UPDATE ulasan_menu SET
             id_ulasan = ? AND uid_akun = ?"; // Cek keamanan
 
 $stmt = $db->prepare($sql);
-// 'dsii' -> double, string, integer, integer
 $stmt->bind_param("dsii", $data->rating, $data->komentar, $data->id_ulasan, $data->uid_akun);
 
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
         echo json_encode(['status' => 'success', 'message' => 'Ulasan berhasil diperbarui.']);
     } else {
-        // Ini terjadi jika ID ulasan salah atau user mencoba mengedit ulasan orang lain
         http_response_code(403); // Forbidden
         echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui ulasan. Pastikan ulasan ini milik Anda.']);
     }

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
@@ -6,7 +6,6 @@ include("../Component/pagination.php");
 
 $current_host = $_SERVER['HTTP_HOST'];
 
-// --- 1. SETUP ---
 $id_kategori = 4; // TOOLS
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
@@ -14,12 +13,10 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 50;
 $offset = ($page - 1) * $limit;
 
-// --- 2. BASE URL ---
 $baseUrl = "?";
 if (!empty($keyword)) $baseUrl .= "keyword=" . urlencode($keyword) . "&";
 if ($sort != 'default') $baseUrl .= "sort=" . urlencode($sort) . "&";
 
-// --- 3. FILTER ---
 $whereClause = "WHERE p.id_kategori = ?";
 $params = [$id_kategori];
 $types = "i";
@@ -32,7 +29,6 @@ if (!empty($keyword)) {
     $types .= "ss";
 }
 
-// --- 4. HITUNG TOTAL ---
 $countSql = "SELECT COUNT(*) as total FROM produk p $whereClause";
 $stmtCount = $conn->prepare($countSql);
 $stmtCount->bind_param($types, ...$params);
@@ -41,12 +37,9 @@ $totalRows = $stmtCount->get_result()->fetch_assoc()['total'];
 $totalPages = ceil($totalRows / $limit);
 $stmtCount->close();
 
-// --- 5. SORTING ---
 $orderBy = "ORDER BY p.nama_produk ASC";
 if ($sort == 'newest') $orderBy = "ORDER BY p.id_produk DESC";
-// Note: Tools tidak ada sort by price karena query ini tidak ambil harga
 
-// --- 6. QUERY DATA ---
 $sql = "SELECT p.id_produk, p.nama_produk, p.gambar_url, p.link 
         FROM produk p $whereClause $orderBy LIMIT ? OFFSET ?";
 

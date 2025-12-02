@@ -1,33 +1,25 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header("Location: ../auth/login.php");
     exit;
 }
 $uid = $_SESSION['customer_uid'];
 
-// Variabel Default
 $items = [];
 $subtotal = 0;
 $back_url = '../Product-Cart/index.php'; // Default: Kembali ke Keranjang
 $back_text = 'Kembali ke Keranjang';
 
-// ==========================================================
-// LOGIKA PINTAR: CEK MODE CHECKOUT (KERANJANG VS BUY NOW)
-// ==========================================================
 
-// Cek apakah sedang dalam mode Buy Now?
 if (isset($_SESSION['checkout_mode']) && $_SESSION['checkout_mode'] === 'buy_now' && isset($_SESSION['buy_now_item'])) {
 
-    // --- MODE 1: BUY NOW (Ambil 1 Barang dari Session) ---
     $id_varian = $_SESSION['buy_now_item']['id_detail_produk'];
     $qty_beli  = $_SESSION['buy_now_item']['qty'];
 
-    // Query Ambil Detail Produk + Kategori + ID Produk
     $queryItem = mysqli_query($conn, "
         SELECT 
             dp.id_detail_produk, dp.harga, dp.stok,
@@ -45,12 +37,10 @@ if (isset($_SESSION['checkout_mode']) && $_SESSION['checkout_mode'] === 'buy_now
         $items[] = $row;
         $subtotal += ($row['harga'] * $qty_beli);
 
-        // --- LOGIKA PENENTUAN LINK KEMBALI ---
         $cat = $row['id_kategori'];
         $pid = $row['id_produk'];
         $back_text = 'Kembali ke Produk';
 
-        // Cek Kategori untuk menentukan file detail yang benar
         if ($cat == 1) { // Filter
             $back_url = "../Product-Detail/filter-detail.php?id=$pid";
         } elseif ($cat == 2) { // Espresso
@@ -58,13 +48,11 @@ if (isset($_SESSION['checkout_mode']) && $_SESSION['checkout_mode'] === 'buy_now
         } elseif ($cat == 3) { // Merchandise
             $back_url = "../Product-Detail/merchandise-detail.php?id=$pid";
         } else {
-            // Default jika kategori lain (Tools/Approve)
             $back_url = "../Product/filter.php";
         }
     }
 } else {
 
-    // --- MODE 2: KERANJANG NORMAL (Ambil dari Database Keranjang) ---
     $queryCart = mysqli_query($conn, "
         SELECT k.*, p.nama_produk, p.gambar_url, dp.harga, s.ukuran, g.nama_grind 
         FROM keranjang k
@@ -85,17 +73,14 @@ if (isset($_SESSION['checkout_mode']) && $_SESSION['checkout_mode'] === 'buy_now
         $subtotal += ($row['harga'] * $row['jumlah']);
     }
 
-    // Back URL tetap ke Cart (Default)
 }
 
-// 3. Ambil Daftar Alamat User
 $queryAlamat = mysqli_query($conn, "SELECT * FROM alamat_customer WHERE uid_customer = '$uid' ORDER BY is_utama DESC");
 $alamatList = [];
 while ($row = mysqli_fetch_assoc($queryAlamat)) {
     $alamatList[] = $row;
 }
 
-// Hitung Total Akhir
 $ongkir = 20000;
 $biaya_layanan = 2500;
 $total_bayar = $subtotal + $ongkir + $biaya_layanan;

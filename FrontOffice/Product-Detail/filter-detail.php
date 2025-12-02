@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
@@ -149,19 +149,16 @@ $jsonGambar = json_encode($gallery_images); // Kirim array gambar ke JS
         const galleryImages = <?= $jsonGambar ?>;
         let currentIdx = 0;
 
-        // Fungsi Slider Logic
         function updateGallery() {
             const mainImg = document.getElementById('mainImage');
             const thumbs = document.querySelectorAll('.thumb-item');
 
-            // Fade Effect
             mainImg.style.opacity = 0;
             setTimeout(() => {
                 mainImg.src = galleryImages[currentIdx];
                 mainImg.style.opacity = 1;
             }, 200);
 
-            // Update Active Thumb
             thumbs.forEach(t => t.classList.remove('active'));
             if (thumbs[currentIdx]) thumbs[currentIdx].classList.add('active');
         }

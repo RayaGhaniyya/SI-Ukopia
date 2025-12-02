@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// (Logika PHP kamu SAMA PERSIS, tidak diubah)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     $_SESSION['message'] = "ID Produk tidak valid.";
     $_SESSION['message_type'] = "error";
@@ -24,10 +23,8 @@ if ($produk_result->num_rows === 0) {
 $produk = $produk_result->fetch_assoc();
 $stmt_produk->close();
 
-// Query ini sudah benar (4, 6)
 $kategori_query = "SELECT * FROM kategori WHERE id_kategori IN (4, 6)";
 $kategori_result = mysqli_query($conn, $kategori_query);
-// --- AKHIR LOGIKA PHP ---
 ?>
 
 <div class="container">

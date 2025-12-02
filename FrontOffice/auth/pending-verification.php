@@ -1,17 +1,13 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php"); // Path 2x ../
 
-// (1) Cek apakah email user ada di session
-// (Jika tidak ada, user tidak bisa asal buka halaman ini)
 if (!isset($_SESSION['verification_email'])) {
-    // Jika tidak ada email, tendang ke login
     header('Location: login.php');
     exit;
 }
 $email = $_SESSION['verification_email'];
 
-// (2) Ambil pesan notifikasi dari URL (jika ada)
 $status = $_GET['status'] ?? '';
 $message = $_GET['message'] ?? '';
 ?>
@@ -86,20 +82,17 @@ $message = $_GET['message'] ?? '';
             let cooldown = 60; // 60 detik
 
             function startCooldown() {
-                // 1. Nonaktifkan tombol
                 resendButton.classList.add('disabled');
                 resendButton.style.pointerEvents = 'none'; // Matikan link
 
                 countdownTimer.textContent = `Bisa kirim ulang dalam ${cooldown} detik...`;
 
-                // 2. Mulai hitungan mundur
                 const interval = setInterval(() => {
                     cooldown--;
                     countdownTimer.textContent = `Bisa kirim ulang dalam ${cooldown} detik...`;
 
                     if (cooldown <= 0) {
                         clearInterval(interval);
-                        // 3. Aktifkan tombol lagi
                         countdownTimer.textContent = '';
                         resendButton.classList.remove('disabled');
                         resendButton.style.pointerEvents = 'auto'; // Hidupkan link
@@ -108,20 +101,17 @@ $message = $_GET['message'] ?? '';
                 }, 1000); // 1 detik
             }
 
-            // --- CEK NOTIFIKASI DARI PHP (URL PARAMETER) ---
             const status = "<?= htmlspecialchars($status) ?>";
             const message = "<?= htmlspecialchars($message) ?>";
 
             if (status === 'success') {
                 showToast(message, 'success');
-                // Jika sukses kirim ulang, mulai cooldown
                 localStorage.setItem('cooldown_start', Date.now());
                 startCooldown();
             } else if (status === 'error') {
                 showToast(message, 'error');
             }
 
-            // --- LOGIKA TOMBOL KIRIM ULANG ---
             resendButton.addEventListener('click', function(e) {
                 if (resendButton.classList.contains('disabled')) {
                     e.preventDefault(); // Hentikan klik jika masih cooldown
@@ -129,7 +119,6 @@ $message = $_GET['message'] ?? '';
                 }
             });
 
-            // --- CEK COOLDOWN SAAT REFRESH ---
             const cooldownStart = localStorage.getItem('cooldown_start');
             if (cooldownStart) {
                 const timePassed = Math.floor((Date.now() - cooldownStart) / 1000);

@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 include("../../../Component/session.php");
 
-// --- (Fungsi uploadGambar SAMA) ---
 function uploadGambar($file, $current_host)
 {
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -28,7 +27,6 @@ function uploadGambar($file, $current_host)
         return ['success' => false, 'message' => 'Error: Hanya format JPG, JPEG, PNG, & WEBP yang diizinkan.'];
     }
 }
-// --- (AKHIR FUNGSI UPLOAD) ---
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -73,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Update tabel 'produk' (Induk)
         $query_produk = "
             UPDATE produk SET 
                 id_kategori = ?, nama_produk = ?, deskripsi = ?, origin = ?, 
@@ -116,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if ($stmt_produk->execute()) {
-            // HAPUS FILE GAMBAR LAMA (JIKA ADA)
             if (!empty($old_file_path) && file_exists($old_file_path)) {
                 unlink($old_file_path);
             }
@@ -141,3 +137,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Location: ../index.php?cache=' . time());
     exit;
 }
+

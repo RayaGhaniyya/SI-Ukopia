@@ -1,8 +1,7 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php"); // Path 2x ../
 
-// Tentukan slide mana yang aktif berdasarkan URL
 $view = $_GET['view'] ?? 'email';
 ?>
 

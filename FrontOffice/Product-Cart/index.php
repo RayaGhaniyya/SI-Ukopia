@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 
-// Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header("Location: ../auth/login.php");
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['customer_uid'])) {
 
 $uid = $_SESSION['customer_uid'];
 
-// Query Ambil Data Keranjang + Detail Produk + Gambar + Ukuran + Grind + STOK
 $queryCart = mysqli_query($conn, "
     SELECT k.id_keranjang, k.jumlah, 
            p.nama_produk, p.gambar_url, 

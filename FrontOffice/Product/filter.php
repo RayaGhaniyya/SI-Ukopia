@@ -1,11 +1,10 @@
-<?php
+﻿<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 include("../Component/pagination.php"); // Pastikan file ini ada
 $current_host = $_SERVER['HTTP_HOST'];
 
-// --- 1. SETUP VARIABEL ---
 $id_kategori = 1; // ARABICA
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
@@ -13,12 +12,10 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 50; // 50 Produk per halaman
 $offset = ($page - 1) * $limit;
 
-// --- 2. BASE URL (Untuk Pagination) ---
 $baseUrl = "?";
 if (!empty($keyword)) $baseUrl .= "keyword=" . urlencode($keyword) . "&";
 if ($sort != 'default') $baseUrl .= "sort=" . urlencode($sort) . "&";
 
-// --- 3. SIAPKAN QUERY FILTER ---
 $whereClause = "WHERE p.id_kategori = ?";
 $params = [$id_kategori];
 $types = "i";
@@ -31,7 +28,6 @@ if (!empty($keyword)) {
     $types .= "ss";
 }
 
-// --- 4. HITUNG TOTAL DATA ---
 $countSql = "SELECT COUNT(*) as total FROM produk p $whereClause";
 $stmtCount = $conn->prepare($countSql);
 $stmtCount->bind_param($types, ...$params);
@@ -40,7 +36,6 @@ $totalRows = $stmtCount->get_result()->fetch_assoc()['total'];
 $totalPages = ceil($totalRows / $limit);
 $stmtCount->close();
 
-// --- 5. TENTUKAN SORTING ---
 $orderBy = "ORDER BY p.nama_produk ASC"; // Default A-Z
 
 if ($sort == 'price_asc') {
@@ -51,7 +46,6 @@ if ($sort == 'price_asc') {
     $orderBy = "ORDER BY p.id_produk DESC";
 }
 
-// --- 6. QUERY UTAMA ---
 $sql = "SELECT 
             p.id_produk, 
             p.nama_produk, 

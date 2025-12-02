@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 header("Content-Type: application/json; charset=UTF-8");
 
 try {
-    // Query ini menggunakan LEFT JOIN dan GROUP BY untuk menghitung jumlah alat per kategori
     $sql = "SELECT 
                 k.id_kategori_alat, 
                 k.nama_kategori_alat, 

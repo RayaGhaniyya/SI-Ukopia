@@ -1,10 +1,9 @@
-<?php
+﻿<?php
 include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php"); // File fungsi renderPaginator()
 
-// 1. SET VARIABEL UNTUK DIKIRIM KE HELPER
 $table_name = "reservasi";
 $base_order_by = " ORDER BY 
     CASE status
@@ -16,7 +15,6 @@ $base_order_by = " ORDER BY
     tanggal DESC, 
     jam ASC";
 
-// 2. INCLUDE HELPERNYA
 include("../Component/handle_search_pagination.php");
 ?>
 
@@ -35,14 +33,12 @@ include("../Component/handle_search_pagination.php");
         if (isset($_SESSION['message'])) {
             $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'success';
 
-            // Panggil fungsi showNotification() dari global.js
             echo '<script>';
             echo "document.addEventListener('DOMContentLoaded', function() {";
             echo "  showNotification('" . addslashes($_SESSION['message']) . "', '" . $message_type . "');";
             echo "});";
             echo '</script>';
 
-            // Hapus pesan setelah disiapkan
             unset($_SESSION['message']);
             unset($_SESSION['message_type']);
         }
