@@ -1,0 +1,400 @@
+/* ============================================
+   RESPONSIVE GLOBAL - UKOPIA BACKOFFICE
+   Update untuk global.css
+   ============================================ */
+
+/* === TABLET (768px - 1024px) === */
+@media (max-width: 1024px) {
+    body {
+        padding: 25px 15px 25px 260px;
+    }
+
+    body.sidebar-collapsed {
+        padding-left: 90px;
+    }
+
+    /* Form Container */
+    .form-container {
+        padding: 25px;
+        margin-top: 30px;
+    }
+
+    .form-container h1 {
+        font-size: 1.4rem;
+    }
+
+    /* Table Card */
+    .table-card {
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    /* Form Row - tetap 2 kolom di tablet */
+    .form-row {
+        gap: 15px;
+    }
+
+    /* Data Table */
+    .data-table {
+        min-width: 650px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    /* Dashboard Header */
+    .dashboard-header h1 {
+        font-size: 1.6rem;
+    }
+}
+
+/* === MOBILE (< 768px) === */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px 20px 90px;
+    }
+
+    body.sidebar-collapsed {
+        padding-left: 90px;
+    }
+
+    /* Container */
+    .container {
+        padding: 0 10px;
+    }
+
+    /* Form Container */
+    .form-container {
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    .form-container h1 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    /* Form Row jadi 1 kolom */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-container label {
+        margin-top: 12px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="number"],
+    .form-container input[type="password"],
+    .form-container input[type="date"],
+    .form-container input[type="time"],
+    .form-container input[type="datetime-local"],
+    .form-container input[type="file"],
+    .form-container select,
+    .form-container textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    /* Form Actions - stack vertikal */
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .btn-sm {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    /* Image Preview */
+    .image-preview-single {
+        width: 160px;
+    }
+
+    .image-preview-grid img {
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Table Card */
+    .table-card {
+        padding: 15px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    /* Table Header */
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .table-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .table-header input[type="text"],
+    .table-header input[type="search"] {
+        width: 100%;
+        max-width: none;
+    }
+
+    /* Search Group */
+    .search-group {
+        width: 100%;
+        max-width: none;
+    }
+
+    /* Table Responsive */
+    .table-responsive {
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+
+    .data-table {
+        min-width: 600px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .data-table img {
+        width: 60px;
+        height: 45px;
+    }
+
+    .data-table td .btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        margin: 2px;
+    }
+
+    /* Dashboard Header */
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.4rem;
+    }
+
+    /* Popup Overlay */
+    .popup-overlay {
+        padding: 10px;
+    }
+
+    .popup-box {
+        width: 95%;
+        max-width: none;
+        padding: 20px;
+        max-height: 90vh;
+    }
+
+    .popup-box h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .popup-header {
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    .popup-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .popup-close-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 18px;
+    }
+
+    /* Detail Info */
+    .detail-info {
+        padding: 12px;
+    }
+
+    .detail-info-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 8px 0;
+    }
+
+    .detail-label {
+        font-weight: 700;
+        color: #111;
+        font-size: 13px;
+    }
+
+    .detail-value {
+        font-size: 13px;
+    }
+
+    /* Badge */
+    .badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+
+    /* Empty State */
+    .empty-state {
+        padding: 30px 15px;
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+    }
+
+    .empty-state p {
+        font-size: 13px;
+    }
+
+    /* Notification */
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        min-width: auto;
+        padding: 14px 16px;
+    }
+
+    .notification-message {
+        font-size: 13px;
+    }
+
+    .notification-icon {
+        font-size: 18px;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 20px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+/* === SMALL MOBILE (< 480px) === */
+@media (max-width: 480px) {
+    body {
+        padding: 15px 8px 15px 90px;
+    }
+
+    .form-container,
+    .table-card {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .form-container h1 {
+        font-size: 1.2rem;
+        margin-bottom: 18px;
+    }
+
+    .table-header h2 {
+        font-size: 1rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .popup-box {
+        padding: 16px;
+    }
+
+    .popup-header h2 {
+        font-size: 1rem;
+    }
+
+    .detail-info {
+        padding: 10px;
+    }
+
+    .detail-label,
+    .detail-value {
+        font-size: 12px;
+    }
+
+    .image-preview-single {
+        width: 140px;
+    }
+
+    .image-preview-grid img {
+        width: 130px;
+        height: 130px;
+    }
+
+    /* Smaller buttons on very small screens */
+    .btn {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .data-table {
+        min-width: 550px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+
+    .data-table img {
+        width: 50px;
+        height: 38px;
+    }
+}
+
+/* === LANDSCAPE MODE UNTUK MOBILE === */
+@media (max-height: 500px) and (orientation: landscape) {
+    .popup-box {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+
+    .form-container {
+        margin-top: 15px;
+    }
+}

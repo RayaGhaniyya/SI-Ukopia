@@ -38,37 +38,3 @@
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
-
-/* ============================================
-   RESPONSIVE (Gallery Specific)
-   ============================================ */
-@media (max-width: 768px) {
-  #detailPopup .popup-box {
-    max-width: 500px;
-    padding: 20px;
-  }
-
-  #detailPopup .image-grid {
-    gap: 10px;
-    max-width: 100%;
-  }
-
-  #detailPopup .image-grid img {
-    height: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  #detailPopup .popup-box {
-    max-width: 95%;
-    padding: 15px;
-  }
-
-  #detailPopup .image-grid {
-    gap: 8px;
-  }
-
-  #detailPopup .image-grid img {
-    height: 120px;
-  }
-}

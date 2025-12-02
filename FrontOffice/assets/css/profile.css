@@ -1,7 +1,17 @@
-/* =========================================
-   PROFILE PAGE STYLES (CLEAN)
-   ========================================= */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+/* ==============================================
+   PROFILE.CSS - RESPONSIVE
+============================================== */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: "Poppins", sans-serif; 
+}
+
+body { 
+  background: #111; 
+  color: #fff; 
+}
 
 .profile-body {
     background-color: #f4f7f6;
@@ -17,73 +27,340 @@
 }
 
 .profile-title-header .container {
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 900px; margin: 0 auto; padding: 0 !important;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 0 !important;
 }
 
-.profile-title { font-weight: 700; font-size: 2.2rem; color: #222; margin: 0; }
-.btn-back-home { font-size: 0.9rem; color: #555; text-decoration: none; transition: 0.2s; }
-.btn-back-home:hover { color: #111; }
+.profile-title { 
+    font-weight: 700; 
+    font-size: 2.2rem; 
+    color: #222; 
+    margin: 0; 
+}
+
+.btn-back-home { 
+    font-size: 0.9rem; 
+    color: #555; 
+    text-decoration: none; 
+    transition: 0.2s; 
+}
+
+.btn-back-home:hover { 
+    color: #111; 
+}
 
 .profile-content-container {
-    max-width: 900px; margin: 0 auto !important; padding: 0 0 60px 0 !important;
+    max-width: 900px; 
+    margin: 0 auto !important; 
+    padding: 0 0 60px 0 !important;
 }
 
-/* KARTU PROFIL */
 .profile-card-modern {
-    background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px;
-    margin-bottom: 25px; overflow: hidden;
+    background-color: #ffffff; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 12px;
+    margin-bottom: 25px; 
+    overflow: hidden;
 }
 
 .card-header-modern {
-    padding: 30px; text-align: center; border-bottom: 1px solid #f0f0f0;
+    padding: 30px; 
+    text-align: center; 
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .profile-avatar-modern {
-    width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 0 auto 15px auto;
-    display: flex; align-items: center; justify-content: center;
+    width: 90px; 
+    height: 90px; 
+    border-radius: 50%; 
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    margin: 0 auto 15px auto;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     background-color: #f4f7f6;
 }
-.profile-avatar-modern i { font-size: 3rem; color: #666; }
 
-.profile-name-modern { font-size: 1.75rem; font-weight: 600; margin: 0; color: #111; }
-.profile-username-modern { font-size: 1rem; color: #666; margin: 0; }
+.profile-avatar-modern i { 
+    font-size: 3rem; 
+    color: #666; 
+}
 
-.card-section { padding: 25px 30px; }
-.section-title { font-weight: 600; color: #333; }
-.section-divider { border-top: 1px solid #f0f0f0; margin: 0; }
+.profile-name-modern { 
+    font-size: 1.75rem; 
+    font-weight: 600; 
+    margin: 0; 
+    color: #111; 
+}
 
-.form-control:disabled { background-color: #f0f0f0; border: 1px solid #e0e0e0; opacity: 0.8; }
+.profile-username-modern { 
+    font-size: 1rem; 
+    color: #666; 
+    margin: 0; 
+}
 
-/* LIST ITEMS */
-.list-group-item { padding: 1.25rem 0; border: none; }
-.profile-list-item { display: flex; align-items: center; }
+.card-section { 
+    padding: 25px 30px; 
+}
+
+.section-title { 
+    font-weight: 600; 
+    color: #333; 
+}
+
+.section-divider { 
+    border-top: 1px solid #f0f0f0; 
+    margin: 0; 
+}
+
+.form-control:disabled { 
+    background-color: #f0f0f0; 
+    border: 1px solid #e0e0e0; 
+    opacity: 0.8; 
+}
+
+.list-group-item { 
+    padding: 1.25rem 0; 
+    border: none; 
+}
+
+.profile-list-item { 
+    display: flex; 
+    align-items: center; 
+}
+
 .item-icon {
-    width: 40px; height: 40px; border-radius: 50%; background-color: #f4f7f6;
-    margin-right: 20px; display: flex; align-items: center; justify-content: center; color: #111;
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    background-color: #f4f7f6;
+    margin-right: 20px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #111;
 }
-.item-content { flex-grow: 1; }
-.item-content h6 { font-weight: 600; margin-bottom: 2px; }
-.item-content p { font-size: 0.9rem; color: #666; margin: 0; }
 
-/* ALAMAT */
-.address-content-wrapper { padding-top: 20px; border-top: 1px solid #f0f0f0; margin-top: 20px; }
+.item-content { 
+    flex-grow: 1; 
+}
+
+.item-content h6 { 
+    font-weight: 600; 
+    margin-bottom: 2px; 
+}
+
+.item-content p { 
+    font-size: 0.9rem; 
+    color: #666; 
+    margin: 0; 
+}
+
+.address-content-wrapper { 
+    padding-top: 20px; 
+    border-top: 1px solid #f0f0f0; 
+    margin-top: 20px; 
+}
+
 .address-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 10px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 15px; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    margin-bottom: 10px;
 }
-.address-item h6 { font-weight: 600; margin-bottom: 5px; }
-.address-item p { font-size: 0.9rem; color: #666; margin-bottom: 2px; }
-.address-actions { display: flex; gap: 5px; }
 
-/* PASSWORD EYE */
-.password-wrapper { position: relative; display: flex; align-items: center; }
-.password-icon { position: absolute; right: 14px; cursor: pointer; color: #999; }
-.password-icon:hover { color: #111; }
-.password-wrapper input { padding-right: 40px !important; }
+.address-item h6 { 
+    font-weight: 600; 
+    margin-bottom: 5px; 
+}
 
-/* TOMBOL */
-.btn-primary, .btn-dark { background-color: #111; border-color: #111; }
-.btn-primary:hover, .btn-dark:hover { background-color: #333; border-color: #333; }
-.btn-success { background-color: #198754; border-color: #198754; }
+.address-item p { 
+    font-size: 0.9rem; 
+    color: #666; 
+    margin-bottom: 2px; 
+}
+
+.address-actions { 
+    display: flex; 
+    gap: 5px; 
+}
+
+.password-wrapper { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+}
+
+.password-icon { 
+    position: absolute; 
+    right: 14px; 
+    cursor: pointer; 
+    color: #999; 
+}
+
+.password-icon:hover { 
+    color: #111; 
+}
+
+.password-wrapper input { 
+    padding-right: 40px !important; 
+}
+
+.btn-primary, .btn-dark { 
+    background-color: #111; 
+    border-color: #111; 
+}
+
+.btn-primary:hover, .btn-dark:hover { 
+    background-color: #333; 
+    border-color: #333; 
+}
+
+.btn-success { 
+    background-color: #198754; 
+    border-color: #198754; 
+}
+
+/* Responsive Profile */
+@media (max-width: 1024px) {
+    .profile-content-container {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-title-header {
+        padding: 15px;
+    }
+    
+    .profile-title-header .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .profile-title {
+        font-size: 1.8rem;
+    }
+    
+    .btn-back-home {
+        font-size: 0.85rem;
+    }
+    
+    .profile-content-container {
+        padding: 0 15px 40px !important;
+    }
+    
+    .card-header-modern {
+        padding: 25px 20px;
+    }
+    
+    .profile-avatar-modern {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .profile-avatar-modern i {
+        font-size: 2.5rem;
+    }
+    
+    .profile-name-modern {
+        font-size: 1.5rem;
+    }
+    
+    .profile-username-modern {
+        font-size: 0.95rem;
+    }
+    
+    .card-section {
+        padding: 20px;
+    }
+    
+    .address-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .address-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .item-icon {
+        width: 35px;
+        height: 35px;
+        margin-right: 15px;
+    }
+    
+    .item-content h6 {
+        font-size: 0.95rem;
+    }
+    
+    .item-content p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-title {
+        font-size: 1.5rem;
+    }
+    
+    .btn-back-home {
+        font-size: 0.8rem;
+    }
+    
+    .card-header-modern {
+        padding: 20px 15px;
+    }
+    
+    .profile-avatar-modern {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .profile-avatar-modern i {
+        font-size: 2rem;
+    }
+    
+    .profile-name-modern {
+        font-size: 1.3rem;
+    }
+    
+    .profile-username-modern {
+        font-size: 0.9rem;
+    }
+    
+    .card-section {
+        padding: 15px;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+    }
+    
+    .address-item {
+        padding: 12px;
+    }
+    
+    .address-item h6 {
+        font-size: 0.9rem;
+    }
+    
+    .address-item p {
+        font-size: 0.85rem;
+    }
+    
+    .address-actions .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+}

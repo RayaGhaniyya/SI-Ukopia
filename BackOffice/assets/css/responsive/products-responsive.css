@@ -1,0 +1,275 @@
+/* ============================================
+   RESPONSIVE PRODUCT PAGES - UKOPIA BACKOFFICE
+   Untuk productbeans.css dan productmerch.css
+   ============================================ */
+
+/* === TABLET (768px - 1024px) === */
+@media (max-width: 1024px) {
+    /* Form row tetap 2 kolom di tablet */
+    .form-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    /* Variant section */
+    .variant-section {
+        margin-top: 25px;
+        padding-top: 18px;
+    }
+
+    .variant-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    /* Variant row sedikit lebih compact */
+    .variant-row {
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .variant-row label {
+        font-size: 12px;
+    }
+
+    /* Gallery grid */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .gallery-image {
+        height: 170px;
+    }
+}
+
+/* === MOBILE (< 768px) === */
+@media (max-width: 768px) {
+    /* Form row jadi 1 kolom */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    /* Variant section */
+    .variant-section {
+        margin-top: 20px;
+        padding-top: 15px;
+    }
+
+    .variant-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .variant-header h3 {
+        font-size: 1rem;
+    }
+
+    .variant-header .btn {
+        width: 100%;
+    }
+
+    /* Variant row - jadi vertikal di mobile */
+    .variant-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        position: relative;
+    }
+
+    .variant-row > div {
+        width: 100%;
+    }
+
+    .variant-row label {
+        margin-top: 10px;
+        font-size: 12px;
+    }
+
+    .variant-row input,
+    .variant-row select {
+        width: 100%;
+    }
+
+    /* Tombol hapus varian di pojok kanan atas */
+    .variant-row .btn-danger {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 6px 10px;
+        font-size: 11px;
+        z-index: 1;
+    }
+
+    /* Berikan padding top lebih untuk accommodate tombol hapus */
+    .variant-row > div:first-child label {
+        margin-top: 35px;
+    }
+
+    /* Variant yang akan dihapus */
+    .variant-row.deleting {
+        opacity: 0.5;
+        background: #fff0f0;
+    }
+
+    /* Merch variant (4 kolom) jadi vertikal */
+    .variant-row.merch-variant {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .variant-row.merch-variant .col-grind {
+        display: none;
+    }
+
+    /* Popup overlay untuk product */
+    .popup-overlay .popup-card {
+        width: 95%;
+        max-width: none;
+        padding: 20px;
+    }
+
+    .popup-header h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Gallery grid mobile */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0;
+    }
+
+    .gallery-item-wrapper {
+        border-radius: 6px;
+    }
+
+    .gallery-image {
+        height: 150px;
+    }
+
+    /* Popup footer */
+    .popup-footer {
+        margin-top: 15px;
+        padding-top: 12px;
+    }
+
+    .popup-footer .btn {
+        width: 100%;
+    }
+}
+
+/* === SMALL MOBILE (< 480px) === */
+@media (max-width: 480px) {
+    /* Variant section */
+    .variant-section {
+        margin-top: 18px;
+        padding-top: 12px;
+    }
+
+    .variant-header h3 {
+        font-size: 0.95rem;
+    }
+
+    /* Variant row */
+    .variant-row {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .variant-row label {
+        font-size: 11px;
+        margin-top: 8px;
+    }
+
+    .variant-row input,
+    .variant-row select {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    .variant-row .btn-danger {
+        padding: 5px 8px;
+        font-size: 10px;
+    }
+
+    .variant-row > div:first-child label {
+        margin-top: 30px;
+    }
+
+    /* Gallery grid - tetap 2 kolom tapi lebih kecil */
+    .gallery-grid {
+        gap: 8px;
+    }
+
+    .gallery-image {
+        height: 130px;
+    }
+
+    .popup-overlay .popup-card {
+        padding: 16px;
+    }
+
+    .popup-header h3 {
+        font-size: 1rem;
+    }
+
+    .popup-close {
+        font-size: 20px;
+    }
+}
+
+/* === LANDSCAPE MODE === */
+@media (max-height: 500px) and (orientation: landscape) {
+    .variant-row {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .variant-row label {
+        margin-top: 6px;
+    }
+
+    .popup-overlay .popup-card {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+
+    .popup-body {
+        max-height: calc(95vh - 120px);
+        overflow-y: auto;
+    }
+}
+
+/* === TOUCH IMPROVEMENTS === */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets for variant controls */
+    .variant-row .btn-danger {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .variant-header .btn {
+        min-height: 44px;
+    }
+
+    /* Gallery items */
+    .gallery-item-wrapper {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .gallery-item-wrapper:active {
+        transform: scale(0.98);
+    }
+}

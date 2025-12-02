@@ -1,5 +1,5 @@
 /* ============================================
-AUTH.CSS V13 (Sliding Overlay Form) + Notifikasi Pop-up
+AUTH.CSS V14 (Responsive - Clean & Smooth)
 ============================================ */
 * {
     margin: 0;
@@ -7,10 +7,12 @@ AUTH.CSS V13 (Sliding Overlay Form) + Notifikasi Pop-up
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
+
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes kenBurnsSlide {
     0% { opacity: 0; transform: scale(1.1) translate(0, 0); }
     10% { opacity: 1; }
@@ -29,7 +31,7 @@ body {
     padding: 20px;
 }
 
-/* Auth Wrapper (Card mengambang) */
+/* Auth Wrapper */
 .auth-wrapper {
     position: relative; 
     width: 100%;
@@ -41,9 +43,7 @@ body {
     overflow: hidden; 
 }
 
-/* =================================
-   CONTAINER UNTUK 2 FORM (LOGIN & REG)
-   ================================= */
+/* Container untuk 2 Form */
 .auth-form-container {
     position: absolute; 
     inset: 0;
@@ -51,10 +51,8 @@ body {
     display: flex; 
 }
 
-/* [PERUBAHAN] Aturan CSS dipisah agar Login bisa ke tengah */
 .auth-form-login,
 .auth-form-register {
-    /* Ini adalah style yang sama untuk keduanya */
     width: 50%;
     height: 100%;
     padding: 30px 40px;
@@ -68,7 +66,6 @@ body {
 }
 
 .auth-form-login {
-    /* [FIX] Aturan khusus LOGIN: kembali ke tengah, tidak perlu scroll */
     justify-content: center; 
     overflow-y: hidden;
     right: 0; 
@@ -76,17 +73,12 @@ body {
 }
 
 .auth-form-register {
-    /* [FIX] Aturan khusus REGISTER: rata atas dan bisa di-scroll */
     justify-content: flex-start;
     overflow-y: auto;
     left: 0; 
 }
-/* [SELESAI PERUBAHAN] */
 
-
-/* =================================
-   PANEL OVERLAY (YANG BERGESER)
-   ================================= */
+/* Panel Overlay (Yang Bergeser) */
 .auth-overlay-panel {
     position: absolute;
     top: 0;
@@ -98,10 +90,12 @@ body {
     z-index: 10; 
     transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
 }
+
 .auth-slideshow {
     position: absolute;
     inset: 0;
 }
+
 .auth-slideshow .slide {
     position: absolute;
     inset: 0;
@@ -112,36 +106,34 @@ body {
     transition: opacity 1.5s ease-in-out, transform 8s ease-out;
     animation: kenBurnsSlide 20s infinite; 
 }
+
 .auth-slideshow .slide.is-active { opacity: 1; transform: scale(1); }
 .auth-slideshow .slide:nth-child(1) { background-image: url('../img/Gallery-Homepage/foto 1.JPG'); }
 .auth-slideshow .slide:nth-child(2) { background-image: url('../img/Gallery-Homepage/foto 2.JPG'); animation-delay: 5s; }
 .auth-slideshow .slide:nth-child(3) { background-image: url('../img/Gallery-Homepage/foto 3.JPG'); animation-delay: 10s; }
 .auth-slideshow .slide:nth-child(4) { background-image: url('../img/Gallery-Homepage/foto 4.JPG'); animation-delay: 15s; }
 
-
-/* =================================
-   ANIMASI SLIDING
-   ================================= */
+/* Animasi Sliding */
 .auth-wrapper.is-register-view .auth-overlay-panel {
     transform: translateX(100%); 
 }
+
 .auth-wrapper.is-register-view .auth-form-login {
     opacity: 0;
     pointer-events: none;
 }
+
 .auth-wrapper.is-register-view .auth-form-register {
     opacity: 1;
     pointer-events: all;
     animation: fadeInUp 0.8s 0.4s ease backwards; 
 }
+
 .auth-form-login {
     animation: fadeInUp 0.8s 0.4s ease backwards;
 }
 
-
-/* =================================
-   STYLE FORM
-   ================================= */
+/* Style Form */
 .auth-form-login h2,
 .auth-form-register h2 {
     font-size: 1.6rem;
@@ -149,15 +141,18 @@ body {
     margin-bottom: 8px;
     color: #111;
 }
+
 .auth-form-login p,
 .auth-form-register p {
     font-size: 0.95rem;
     color: #555;
     margin-bottom: 18px;
 }
+
 .auth-form .form-group {
     margin-bottom: 15px;
 }
+
 .auth-form label {
     display: block;
     font-size: 0.85rem;
@@ -171,6 +166,7 @@ body {
     display: flex;
     align-items: center;
 }
+
 .password-icon {
     position: absolute;
     right: 14px;
@@ -180,10 +176,10 @@ body {
     cursor: pointer;
     transition: color 0.2s ease;
 }
+
 .password-icon:hover {
     color: #111;
 }
-
 
 .auth-form input[type="email"],
 .auth-form input[type="text"],
@@ -198,11 +194,9 @@ body {
     transition: all 0.3s ease; 
 }
 
-/* Beri ruang untuk icon mata */
 .password-wrapper input {
     padding-right: 40px !important; 
 }
-
 
 .auth-form input:focus {
     outline: none;
@@ -211,20 +205,24 @@ body {
     box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
     transform: scale(1.02);
 }
+
 .form-options {
     display: flex;
     justify-content: flex-end; 
     margin-top: -5px;
     margin-bottom: 12px;
 }
+
 .form-options a {
     font-size: 0.85rem;
     color: #555;
     text-decoration: none;
 }
+
 .form-options a:hover {
     text-decoration: underline;
 }
+
 .auth-btn {
     width: 100%;
     padding: 11px;
@@ -237,106 +235,105 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .auth-btn:hover {
     background: #333;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+
 .auth-link {
     text-align: center;
     margin-top: 18px;
     font-size: 0.9rem;
     color: #555;
 }
+
 .auth-link a {
     color: #111; 
     text-decoration: none;
     font-weight: 500;
-    cursor: pointer; /* Penting untuk JS */
+    cursor: pointer;
 }
+
 .auth-link a:hover {
     text-decoration: underline;
 }
 
-/* (Style alert inline DIHAPUS) */
 .auth-alert { display: none; }
 
-
-/* VVVVV--- CSS NOTIFIKASI BARU (Modern, Tengah Atas) ---VVVVV
-*/
+/* Notifikasi Pop-up */
 .notification {
-position: fixed;
-top: 20px;
-left: 50%;
-padding: 14px 20px;
-border-radius: 12px;
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-z-index: 99999;
-opacity: 0;
-transform: translate(-50%, -150px);
-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-max-width: 400px;
-min-width: 300px;
-background: rgba(30, 30, 30, 0.85);
-color: white;
-backdrop-filter: blur(10px);
-border: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+    opacity: 0;
+    transform: translate(-50%, -150px);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 400px;
+    min-width: 300px;
+    background: rgba(30, 30, 30, 0.85);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .notification.show {
-opacity: 1;
-transform: translate(-50%, 0); 
+    opacity: 1;
+    transform: translate(-50%, 0); 
 }
+
 .notification-content {
-display: flex;
-align-items: center;
-gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
+
 .notification-icon {
-font-size: 20px;
-font-weight: bold;
-flex-shrink: 0;
+    font-size: 20px;
+    font-weight: bold;
+    flex-shrink: 0;
 }
+
 .notification-message {
-flex: 1;
-font-size: 14px;
-line-height: 1.5;
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.5;
 }
+
 .notification-close {
-width: 24px;
-height: 24px;
-background: rgba(255, 255, 255, 0.1); 
-border: none;
-border-radius: 6px;
-color: #eee; 
-font-size: 18px;
-cursor: pointer;
-transition: all 0.3s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1); 
+    border: none;
+    border-radius: 6px;
+    color: #eee; 
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
+
 .notification-close:hover {
-background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
-.notification-success { /* (Background default) */ }
-.notification-error { /* (Background default) */ }
-.notification-warning { /* (Background default) */ }
 
 .notification-success .notification-icon { color: #10b981; }
 .notification-error .notification-icon { color: #ef4444; }
 .notification-warning .notification-icon { color: #f59e0b; }
-/* ^^^^^--- SELESAI PENAMBAHAN CSS NOTIFIKASI ---^^^^^ */
 
-
-/* VVVVV--- TAMBAHKAN BLOK CSS BARU INI (Untuk verify.php) ---VVVVV
-*/
-
-/* (1) Wrapper khusus untuk halaman 'verify.php') */
+/* Verify Wrapper */
 .verify-wrapper {
     position: relative;
     width: 100%;
-    max-width: 450px; /* Ukuran ramping */
+    max-width: 450px;
     min-height: auto;
     background: #ffffff; 
     border-radius: 16px;
@@ -346,13 +343,13 @@ background: rgba(255, 255, 255, 0.2);
     animation: fadeInUp 0.8s 0.2s ease backwards;
 }
 
-/* (2) Style untuk "Status Card" di halaman verifikasi */
 .verification-status {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
+
 .verification-icon {
     width: 80px;
     height: 80px;
@@ -362,33 +359,34 @@ background: rgba(255, 255, 255, 0.2);
     justify-content: center;
     margin-bottom: 25px;
 }
+
 .verification-icon i {
     font-size: 36px;
     color: #fff;
 }
+
 .verification-status.is-success .verification-icon {
-    background: #198754; /* Hijau */
+    background: #198754;
 }
+
 .verification-status.is-error .verification-icon {
-    background: #dc3545; /* Merah */
+    background: #dc3545;
 }
+
 .verification-status h2 {
     font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 8px;
     color: #111;
 }
+
 .verification-status p {
     font-size: 0.95rem;
     color: #555;
     margin-bottom: 25px;
 }
 
-/* ============================================
-   TAMBAHAN UNTUK FORGOT-PASSWORD.PHP (V2 - SUDAH DIPERBAIKI)
-   ============================================ */
-
-/* (1) Atur layout dasar 50/50 untuk forgot-password */
+/* Forgot Password Layout */
 .auth-left-panel {
     position: absolute;
     top: 0;
@@ -408,58 +406,52 @@ background: rgba(255, 255, 255, 0.2);
     z-index: 5;
 }
 
-/* (2) Atur container di dalam right-panel */
 .auth-right-panel .auth-form-container {
     position: relative;
-    width: 100% !important; /* Paksa 100% (override inline style) */
+    width: 100% !important;
     height: 100%;
     overflow: hidden; 
 }
 
-/* (3) Atur 3 form agar visible dan posisinya benar */
 .auth-right-panel .auth-form-login,
 .auth-right-panel .auth-form-register,
 .auth-right-panel .auth-form-reset {
-    /* Reset style dari login.php */
-    width: 100%;    /* Penuh 100% dari panel kanan */
-    opacity: 1;     /* === INI KUNCINYA: PAKSA TERLIHAT === */
-    left: 0;        /* Reset posisi horizontal */
-    right: auto;    /* Reset posisi horizontal */
-    
-    /* Style dasar (sama seperti sebelumnya) */
+    width: 100%;
+    opacity: 1;
+    left: 0;
+    right: auto;
     height: 100%;
     padding: 30px 40px;
     display: flex;
     flex-direction: column;
-    /* [FIX] Gunakan flex-start + overflow-y seperti di form register */
     justify-content: flex-start; 
     overflow-y: auto;
-    
     background: #ffffff;
     position: absolute;
     top: 0;
     transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-/* (4) Atur posisi awal 3 form (geser ke samping) */
 .auth-right-panel .auth-form-login {
-    transform: translateX(0); /* Form 1 (Email) tampil */
+    transform: translateX(0);
 }
+
 .auth-right-panel .auth-form-register {
-    transform: translateX(100%); /* Form 2 (Kode) geser ke kanan */
+    transform: translateX(100%);
 }
+
 .auth-right-panel .auth-form-reset {
-    transform: translateX(200%); /* Form 3 (Reset) geser 2x ke kanan */
+    transform: translateX(200%);
 }
 
-
-/* (5) Atur logika sliding saat class .is-code-view/is-reset-view ditambah */
 .auth-wrapper.is-code-view .auth-form-login {
     transform: translateX(-100%);
 }
+
 .auth-wrapper.is-code-view .auth-form-register {
-    transform: translateX(0); /* Tampilkan form kode */
+    transform: translateX(0);
 }
+
 .auth-wrapper.is-code-view .auth-form-reset {
     transform: translateX(100%);
 }
@@ -467,13 +459,298 @@ background: rgba(255, 255, 255, 0.2);
 .auth-wrapper.is-reset-view .auth-form-login {
     transform: translateX(-200%);
 }
+
 .auth-wrapper.is-reset-view .auth-form-register {
     transform: translateX(-100%);
 }
+
 .auth-wrapper.is-reset-view .auth-form-reset {
-    transform: translateX(0); /* Tampilkan form reset */
+    transform: translateX(0);
 }
 
-/* [DIHAPUS] Seluruh blok "@media (max-width: 768px) { ... }" 
-   telah dihapus untuk memaksa layout 50/50 di semua ukuran.
-*/
+/* ============================================
+   RESPONSIVE - MOBILE FIRST APPROACH
+============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .auth-wrapper {
+        max-width: 700px;
+    }
+    
+    .auth-form-login,
+    .auth-form-register,
+    .auth-right-panel .auth-form-login,
+    .auth-right-panel .auth-form-register,
+    .auth-right-panel .auth-form-reset {
+        padding: 25px 30px;
+    }
+}
+
+/* Mobile & Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
+    /* Wrapper jadi full width */
+    .auth-wrapper {
+        max-width: 100%;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Overlay Panel jadi Header Image */
+    .auth-overlay-panel {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        left: 0;
+        top: 0;
+        transform: none !important;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .auth-wrapper.is-register-view .auth-overlay-panel {
+        transform: none !important;
+    }
+    
+    /* Form Container Stack */
+    .auth-form-container {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    .auth-form-login,
+    .auth-form-register {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 25px 20px;
+        transform: none !important;
+        left: 0 !important;
+        right: 0 !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+    }
+    
+    /* Toggle Display */
+    .auth-form-login {
+        display: flex;
+    }
+    
+    .auth-form-register {
+        display: none;
+    }
+    
+    .auth-wrapper.is-register-view .auth-form-login {
+        display: none;
+    }
+    
+    .auth-wrapper.is-register-view .auth-form-register {
+        display: flex;
+    }
+    
+    /* Typography Mobile */
+    .auth-form-login h2,
+    .auth-form-register h2 {
+        font-size: 1.4rem;
+    }
+    
+    .auth-form-login p,
+    .auth-form-register p {
+        font-size: 0.9rem;
+    }
+    
+    .auth-form input {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+    
+    .password-wrapper input {
+        padding-right: 38px !important;
+    }
+    
+    .auth-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* Forgot Password Mobile */
+    .auth-left-panel {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        left: 0;
+    }
+    
+    .auth-right-panel {
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+    }
+    
+    .auth-right-panel .auth-form-container {
+        position: relative;
+    }
+    
+    .auth-right-panel .auth-form-login,
+    .auth-right-panel .auth-form-register,
+    .auth-right-panel .auth-form-reset {
+        position: relative;
+        width: 100%;
+        padding: 25px 20px;
+        transform: none !important;
+        display: none;
+    }
+    
+    .auth-right-panel .auth-form-login {
+        display: flex;
+    }
+    
+    .auth-wrapper.is-code-view .auth-right-panel .auth-form-login {
+        display: none;
+    }
+    
+    .auth-wrapper.is-code-view .auth-right-panel .auth-form-register {
+        display: flex;
+    }
+    
+    .auth-wrapper.is-reset-view .auth-right-panel .auth-form-register {
+        display: none;
+    }
+    
+    .auth-wrapper.is-reset-view .auth-right-panel .auth-form-reset {
+        display: flex;
+    }
+    
+    /* Verify Mobile */
+    .verify-wrapper {
+        max-width: 100%;
+        padding: 25px 20px;
+    }
+    
+    .verification-icon {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .verification-icon i {
+        font-size: 32px;
+    }
+    
+    .verification-status h2 {
+        font-size: 1.4rem;
+    }
+    
+    .verification-status p {
+        font-size: 0.9rem;
+    }
+    
+    /* Notification Mobile */
+    .notification {
+        max-width: calc(100% - 30px);
+        min-width: 280px;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+        padding-top: 10px;
+    }
+    
+    .auth-wrapper {
+        border-radius: 12px;
+    }
+    
+    .auth-overlay-panel,
+    .auth-left-panel {
+        height: 150px;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .auth-form-login,
+    .auth-form-register,
+    .auth-right-panel .auth-form-login,
+    .auth-right-panel .auth-form-register,
+    .auth-right-panel .auth-form-reset {
+        padding: 20px 15px;
+    }
+    
+    .auth-form-login h2,
+    .auth-form-register h2 {
+        font-size: 1.3rem;
+    }
+    
+    .auth-form-login p,
+    .auth-form-register p {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-form label {
+        font-size: 0.8rem;
+    }
+    
+    .auth-form input {
+        font-size: 0.85rem;
+        padding: 9px 12px;
+    }
+    
+    .form-options {
+        margin-bottom: 10px;
+    }
+    
+    .form-options a {
+        font-size: 0.8rem;
+    }
+    
+    .auth-btn {
+        padding: 9px;
+        font-size: 0.85rem;
+    }
+    
+    .auth-link {
+        font-size: 0.85rem;
+        margin-top: 15px;
+    }
+    
+    .notification {
+        padding: 12px 16px;
+        min-width: 260px;
+    }
+    
+    .notification-message {
+        font-size: 13px;
+    }
+    
+    .verify-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .verification-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .verification-icon i {
+        font-size: 28px;
+    }
+    
+    .verification-status h2 {
+        font-size: 1.2rem;
+    }
+    
+    .verification-status p {
+        font-size: 0.85rem;
+    }
+}

@@ -1,0 +1,425 @@
+/* ============================================
+   RESPONSIVE - GALLERY, TRANSAKSI, LOGIN
+   UKOPIA BACKOFFICE
+   ============================================ */
+
+/* ============================================
+   GALLERY RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    #detailPopup .popup-box {
+        max-width: 95%;
+        padding: 18px;
+    }
+
+    #detailPopup .image-grid {
+        gap: 8px;
+        max-width: 100%;
+    }
+
+    #detailPopup .image-grid img {
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    #detailPopup .popup-box {
+        padding: 15px;
+    }
+
+    #detailPopup .image-grid {
+        gap: 6px;
+    }
+
+    #detailPopup .image-grid img {
+        height: 100px;
+    }
+}
+
+/* ============================================
+   TRANSAKSI RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .detail-header-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .trx-product-table th,
+    .trx-product-table td {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .trx-product-img {
+        width: 45px;
+        height: 45px;
+        margin-right: 12px;
+    }
+
+    .summary-box {
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        border-radius: 10px;
+    }
+
+    .detail-header-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 18px;
+    }
+
+    .info-group h6 {
+        font-size: 0.85rem;
+        margin-bottom: 12px;
+    }
+
+    .info-item {
+        font-size: 0.85rem;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 6px;
+    }
+
+    .info-label {
+        width: 100%;
+        margin-bottom: 2px;
+        font-size: 0.8rem;
+    }
+
+    /* Table responsive wrapper */
+    .trx-product-table {
+        font-size: 0.85rem;
+    }
+
+    .trx-product-table th,
+    .trx-product-table td {
+        padding: 10px 8px;
+    }
+
+    .trx-product-table th {
+        font-size: 0.75rem;
+    }
+
+    .trx-product-img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+    }
+
+    /* Summary box */
+    .summary-box {
+        min-width: 100%;
+        text-align: left;
+    }
+
+    .summary-row {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+
+    .summary-row.total {
+        font-size: 1.2rem;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    /* Form actions di modal */
+    .form-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-header-grid {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .info-group h6 {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+
+    .info-item {
+        font-size: 0.8rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+    }
+
+    /* Table */
+    .trx-product-table {
+        font-size: 0.8rem;
+    }
+
+    .trx-product-table th,
+    .trx-product-table td {
+        padding: 8px 6px;
+    }
+
+    .trx-product-table th {
+        font-size: 0.7rem;
+    }
+
+    .trx-product-img {
+        width: 35px;
+        height: 35px;
+        margin-right: 8px;
+    }
+
+    .summary-row {
+        font-size: 0.8rem;
+    }
+
+    .summary-row.total {
+        font-size: 1.1rem;
+    }
+}
+
+/* ============================================
+   LOGIN & REGISTER RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .card {
+        padding: 2rem;
+    }
+
+    .title {
+        font-size: 1.6rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .input-box {
+        margin-bottom: 1.6rem;
+    }
+
+    .input-box input {
+        padding: 11px 40px 11px 14px;
+        font-size: 14px;
+    }
+
+    .input-box label {
+        font-size: 13px;
+        left: 14px;
+        top: 11px;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label,
+    .input-box input:not(:placeholder-shown) ~ label {
+        font-size: 11px;
+    }
+
+    .icon,
+    .toggle-password {
+        right: 12px;
+        font-size: 18px;
+    }
+
+    .btn {
+        padding: 11px;
+        font-size: 14px;
+    }
+
+    .register-link {
+        font-size: 14px;
+    }
+
+    .notification {
+        top: 15px;
+        left: 20px;
+        right: 20px;
+        transform: translateX(0) translateY(-20px);
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .notification.show {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .card {
+        padding: 1.8rem;
+    }
+
+    .title {
+        font-size: 1.4rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .input-box {
+        margin-bottom: 1.4rem;
+    }
+
+    .input-box input {
+        padding: 10px 38px 10px 13px;
+        font-size: 13px;
+    }
+
+    .input-box label {
+        font-size: 12px;
+        left: 13px;
+        top: 10px;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label,
+    .input-box input:not(:placeholder-shown) ~ label {
+        font-size: 10px;
+        left: 10px;
+    }
+
+    .icon,
+    .toggle-password {
+        right: 10px;
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .register-link {
+        font-size: 13px;
+        margin-top: 0.8rem;
+    }
+
+    .notification {
+        top: 10px;
+        left: 15px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+
+/* === LANDSCAPE MODE === */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 10px 0;
+    }
+
+    .container {
+        max-width: 600px;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .title {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .input-box {
+        margin-bottom: 1rem;
+    }
+
+    .register-link {
+        margin-top: 0.7rem;
+    }
+}
+
+/* === TOUCH IMPROVEMENTS === */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    .btn {
+        min-height: 44px;
+    }
+
+    .toggle-password {
+        padding: 8px;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input-box input {
+        min-height: 44px;
+    }
+
+    /* Prevent zoom on input focus (iOS) */
+    .input-box input {
+        font-size: 16px;
+    }
+}
+
+/* ============================================
+   MENU MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    #detailPopup .popup-box {
+        max-width: 95%;
+        padding: 18px;
+    }
+
+    #detailPopup .popup-content {
+        padding: 0;
+    }
+
+    #detailPopup .detail-info {
+        padding: 12px;
+    }
+
+    #detailPopup .detail-info-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 8px 0;
+    }
+
+    #detailPopup .detail-label {
+        font-weight: 700;
+        color: #111;
+        font-size: 12px;
+    }
+
+    #detailPopup .detail-value {
+        font-size: 12px;
+    }
+
+    #detailPopup img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    #detailPopup .popup-box {
+        padding: 15px;
+    }
+
+    #detailPopup .detail-info {
+        padding: 10px;
+    }
+
+    #detailPopup h4 {
+        font-size: 0.95rem;
+    }
+}

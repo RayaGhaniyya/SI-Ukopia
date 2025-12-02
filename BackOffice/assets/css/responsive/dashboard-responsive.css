@@ -1,0 +1,243 @@
+/* ============================================
+   RESPONSIVE DASHBOARD - UKOPIA BACKOFFICE
+   Breakpoints Standar:
+   - Desktop: > 1024px
+   - Tablet: 768px - 1024px
+   - Mobile: < 768px
+   ============================================ */
+
+/* === TABLET (768px - 1024px) === */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 25px;
+    }
+
+    /* Charts jadi 1 kolom */
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Bottom grid jadi 1 kolom */
+    .bottom-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Stats grid tetap 2 kolom di tablet */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    /* Adjust bar chart height */
+    .bar-chart {
+        height: 240px;
+    }
+
+    /* Adjust horizontal bar */
+    .h-bar-label {
+        min-width: 120px;
+        font-size: 12px;
+    }
+}
+
+/* === MOBILE (< 768px) === */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.4rem;
+    }
+
+    /* Stats grid jadi 1 kolom */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* Adjust stat card */
+    .stat-card {
+        padding: 20px;
+    }
+
+    .stat-value {
+        font-size: 28px;
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    /* Charts */
+    .chart-card {
+        padding: 20px;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .chart-header h2 {
+        font-size: 16px;
+    }
+
+    .chart-header select {
+        width: 100%;
+        max-width: none;
+    }
+
+    /* Bar chart mobile */
+    .bar-chart {
+        height: 200px;
+        gap: 8px;
+    }
+
+    .bar-label {
+        font-size: 11px;
+    }
+
+    /* Horizontal bar mobile */
+    .h-bar-chart {
+        gap: 12px;
+    }
+
+    .h-bar-label {
+        min-width: 100px;
+        font-size: 11px;
+    }
+
+    .h-bar-track {
+        height: 28px;
+    }
+
+    .h-bar-value {
+        font-size: 11px;
+        padding: 0 8px;
+    }
+
+    /* Table card */
+    .table-card {
+        padding: 20px;
+    }
+
+    .table-card h2 {
+        font-size: 16px;
+    }
+
+    /* Order item mobile */
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .order-info {
+        width: 100%;
+    }
+
+    .order-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .order-details h4 {
+        font-size: 13px;
+    }
+
+    .order-details p {
+        font-size: 11px;
+    }
+
+    .order-status {
+        align-self: flex-start;
+        font-size: 10px;
+        padding: 5px 12px;
+    }
+
+    /* Alert item mobile */
+    .alert-item {
+        padding: 14px;
+    }
+
+    .alert-item h4 {
+        font-size: 12px;
+    }
+
+    .alert-item p {
+        font-size: 11px;
+    }
+}
+
+/* === SMALL MOBILE (< 480px) === */
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .stat-card h3 {
+        font-size: 12px;
+    }
+
+    .stat-subtitle {
+        font-size: 11px;
+    }
+
+    .chart-card,
+    .table-card {
+        padding: 16px;
+    }
+
+    .chart-header h2,
+    .table-card h2 {
+        font-size: 14px;
+    }
+
+    .bar-chart {
+        height: 180px;
+        gap: 6px;
+    }
+
+    .h-bar-label {
+        min-width: 80px;
+        font-size: 10px;
+    }
+
+    .order-item {
+        padding: 12px;
+    }
+
+    .alert-item {
+        padding: 12px;
+    }
+}

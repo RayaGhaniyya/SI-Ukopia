@@ -1,0 +1,287 @@
+/* ============================================
+   RESPONSIVE SIDEBAR - UKOPIA BACKOFFICE
+   Update untuk sidebar.css
+   ============================================ */
+
+/* === TABLET (768px - 1024px) === */
+@media (max-width: 1024px) {
+    /* Sidebar tetap normal di tablet */
+    .sidebar {
+        width: 240px;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+    }
+
+    /* Nav items sedikit lebih compact */
+    .nav-list > li > a {
+        padding: 11px 18px;
+        font-size: 13px;
+    }
+
+    .nav-list a i {
+        font-size: 15px;
+    }
+
+    /* Dropdown menu */
+    .dropdown-menu li a {
+        font-size: 12px;
+        padding: 9px 18px 9px 50px;
+    }
+}
+
+/* === MOBILE (< 768px) === */
+@media (max-width: 768px) {
+    /* Sidebar selalu collapsed di mobile */
+    .sidebar {
+        width: 70px;
+    }
+
+    /* Logo hidden di mobile */
+    .logo-section {
+        padding: 15px 0;
+    }
+
+    .logo {
+        opacity: 0;
+        transform: scale(0.8);
+        pointer-events: none;
+    }
+
+    /* Toggle button di tengah */
+    .toggle-btn {
+        right: 50%;
+        transform: translate(50%, -50%);
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+
+    /* Nav items centered */
+    .nav-list > li > a {
+        justify-content: center;
+        padding: 12px 0;
+        font-size: 16px;
+    }
+
+    .nav-list > li > a:hover {
+        padding: 12px 0;
+    }
+
+    /* Hide text spans */
+    .nav-list > li > a > span {
+        opacity: 0;
+        width: 0;
+        display: none;
+    }
+
+    /* Hide dropdown arrow */
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    /* Dropdown floating style */
+    .dropdown-menu {
+        position: fixed;
+        left: 70px;
+        background: #1e1e1e;
+        min-width: 220px;
+        max-width: 280px;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        padding: 8px 0;
+        display: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+    }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+    .dropdown-menu li a {
+        padding: 10px 20px;
+        border-left: none;
+        font-size: 13px;
+    }
+
+    .dropdown-menu li a:hover {
+        padding-left: 20px;
+    }
+
+    .dropdown-menu li a span {
+        opacity: 1;
+        width: auto;
+        display: inline;
+    }
+
+    /* Profile section */
+    .profile-section a {
+        justify-content: center;
+        margin: 0;
+        padding: 10px 0;
+    }
+
+    .profile-section a span {
+        opacity: 0;
+        width: 0;
+        display: none;
+    }
+
+    .profile-section a i {
+        font-size: 20px;
+    }
+
+    /* Nav animation delays lebih cepat di mobile */
+    .nav-list li:nth-child(1) { animation-delay: 0.03s; }
+    .nav-list li:nth-child(2) { animation-delay: 0.06s; }
+    .nav-list li:nth-child(3) { animation-delay: 0.09s; }
+    .nav-list li:nth-child(4) { animation-delay: 0.12s; }
+    .nav-list li:nth-child(5) { animation-delay: 0.15s; }
+    .nav-list li:nth-child(6) { animation-delay: 0.18s; }
+    .nav-list li:nth-child(7) { animation-delay: 0.21s; }
+}
+
+/* === SMALL MOBILE (< 480px) === */
+@media (max-width: 480px) {
+    .sidebar {
+        width: 60px;
+    }
+
+    /* Adjust body padding untuk sidebar lebih kecil */
+    body {
+        padding-left: 70px !important;
+    }
+
+    body.sidebar-collapsed {
+        padding-left: 70px !important;
+    }
+
+    /* Toggle button lebih kecil */
+    .toggle-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+
+    /* Nav items */
+    .nav-list > li > a {
+        padding: 10px 0;
+    }
+
+    .nav-list a i {
+        font-size: 18px;
+    }
+
+    /* Dropdown menu lebih kecil */
+    .dropdown-menu {
+        left: 60px;
+        min-width: 200px;
+        max-width: 260px;
+        font-size: 12px;
+    }
+
+    .dropdown-menu li a {
+        padding: 9px 16px;
+    }
+
+    /* Profile icon */
+    .profile-section a i {
+        font-size: 18px;
+    }
+}
+
+/* === LANDSCAPE MODE === */
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar {
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .nav-list {
+        padding: 10px 0;
+    }
+
+    .nav-list > li > a {
+        padding: 9px 0;
+    }
+
+    .logo-section {
+        padding: 12px 10px 12px 0;
+    }
+
+    .profile-section {
+        padding: 10px 0;
+    }
+
+    /* Scrollbar untuk landscape */
+    .sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+}
+
+/* === TOUCH DEVICE IMPROVEMENTS === */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    .nav-list > li > a {
+        padding: 14px 20px;
+    }
+
+    .toggle-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .dropdown-menu li a {
+        padding: 12px 20px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Prevent hover states on touch */
+    .nav-list > li > a:hover {
+        transform: none;
+    }
+
+    .toggle-btn:hover {
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+/* === FIX UNTUK SIDEBAR OVERFLOW === */
+@media (max-width: 768px) {
+    /* Prevent horizontal scroll caused by sidebar */
+    html {
+        overflow-x: hidden;
+    }
+
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+    }
+
+    /* Ensure dropdown doesn't cause overflow */
+    .dropdown-menu {
+        max-width: calc(100vw - 80px);
+    }
+}

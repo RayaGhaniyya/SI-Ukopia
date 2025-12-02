@@ -1,15 +1,18 @@
+/* ==============================================
+   STYLE.CSS (NAVBAR & FOOTER) - RESPONSIVE
+============================================== */
 * { 
   margin: 0; 
   padding: 0; 
   box-sizing: border-box; 
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif; 
 }
+
 body { 
   background: #111; 
   color: #fff; 
 }
 
-/* Navbar */
 .navbar-custom {
     background-color: #000;
     background-position: bottom;
@@ -22,7 +25,6 @@ body {
     position: relative;
 }
 
-/* Menu tengah absolute positioning */
 .navbar-center {
     position: static !important;
 }
@@ -42,7 +44,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Animasi hover untuk nav items */
 .nav-link-animate {
     overflow: hidden;
 }
@@ -80,7 +81,6 @@ body {
     100% { opacity: 0.5; }
 }
 
-/* Styling untuk icon navbar */
 .navbar-icons {
     gap: 5px;
 }
@@ -141,22 +141,6 @@ body {
     transform: none;
 }
 
-/* Responsive navbar */
-@media (max-width: 991px) {
-    .navbar-icons {
-        margin-top: 15px;
-        justify-content: center;
-    }
-    
-    .navbar-center {
-        text-align: center;
-        position: static !important;
-        transform: none !important;
-    }
-}
-
-
-/* Footer */
 .footer {
     background-color: #111518;
     color: #fff;
@@ -236,7 +220,47 @@ body {
     margin-top: 10px;
 }
 
+/* Responsive Navbar & Footer */
+@media (max-width: 991px) {
+    .navbar-icons {
+        margin-top: 15px;
+        justify-content: center;
+    }
+    
+    .navbar-center {
+        text-align: center;
+        position: static !important;
+        transform: none !important;
+    }
+    
+    .navbar-nav {
+        align-items: center;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 10px 15px !important;
+    }
+}
+
 @media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+    
+    .ukopia-logo {
+        height: 25px;
+    }
+    
+    .navbar-nav .nav-link {
+        font-size: 0.95rem;
+        padding: 8px 12px !important;
+    }
+    
+    .navbar-icons .nav-icon {
+        font-size: 1.1rem;
+        padding: 6px 10px !important;
+    }
+    
     .footer-container {
         flex-direction: column;
         gap: 40px;
@@ -259,6 +283,24 @@ body {
 }
 
 @media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .ukopia-logo {
+        height: 22px;
+    }
+    
+    .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        padding: 7px 10px !important;
+    }
+    
+    .navbar-icons .nav-icon {
+        font-size: 1rem;
+        padding: 5px 8px !important;
+    }
+    
     .footer {
         padding: 30px 15px;
     }
@@ -276,4 +318,14 @@ body {
     .right-section {
         gap: 25px;
     }
+    
+    .footer-column h3 {
+        font-size: 16px;
+    }
+    
+    .footer-column a,
+    .footer-column p {
+        font-size: 13px;
+    }
 }
+
