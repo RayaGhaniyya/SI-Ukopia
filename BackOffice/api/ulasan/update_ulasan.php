@@ -1,12 +1,9 @@
 ﻿<?php
 header('Content-Type: application/json');
 include_once '../../config/database.php';
-
 $database = new Database();
 $db = $database->getConnection();
-
 $data = json_decode(file_get_contents("php://input"));
-
 if (
     !isset($data->id_ulasan) ||
     !isset($data->uid_akun) || // ID user yang sedang login (untuk keamanan)
@@ -17,17 +14,14 @@ if (
     echo json_encode(['status' => 'error', 'message' => 'Data tidak lengkap.']);
     exit();
 }
-
 $sql = "UPDATE ulasan_menu SET 
             rating = ?, 
             komentar = ?,
             tanggal_waktu = NOW() 
         WHERE 
             id_ulasan = ? AND uid_akun = ?"; // Cek keamanan
-
 $stmt = $db->prepare($sql);
 $stmt->bind_param("dsii", $data->rating, $data->komentar, $data->id_ulasan, $data->uid_akun);
-
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
         echo json_encode(['status' => 'success', 'message' => 'Ulasan berhasil diperbarui.']);
@@ -39,7 +33,7 @@ if ($stmt->execute()) {
     http_response_code(500);
     echo json_encode(['status' => 'error', 'message' => 'Server error: ' . $stmt->error]);
 }
-
 $stmt->close();
 $db->close();
 ?>
+

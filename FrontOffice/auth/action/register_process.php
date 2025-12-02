@@ -1,30 +1,23 @@
 ﻿<?php
 session_start();
 include("../../../Koneksi/koneksi.php");
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
 require '../../../vendor/PHPMailer/src/Exception.php';
 require '../../../vendor/PHPMailer/src/PHPMailer.php';
 require '../../../vendor/PHPMailer/src/SMTP.php';
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
     $base_url_login = "/SI-Ukopia/FrontOffice/auth/login.php"; // URL untuk error
-
     $nama = $_POST['nama'];
     $username = $_POST['username']; // [BARU] Ambil username
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-
     if (empty($nama) || empty($username) || empty($email) || empty($password)) {
         header('Location: ' . $base_url_login . '?view=register&status=error&message=Semua field wajib diisi');
         exit;
     }
-
     $stmt_check = $conn->prepare("SELECT email FROM akun_customer WHERE email = ?");
     $stmt_check->bind_param("s", $email);
     $stmt_check->execute();
@@ -34,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
     $stmt_check->close();
-
     $stmt_check_user = $conn->prepare("SELECT username FROM akun_customer WHERE username = ?");
     $stmt_check_user->bind_param("s", $username);
     $stmt_check_user->execute();
@@ -44,17 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
     $stmt_check_user->close();
-
-
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $verification_code = bin2hex(random_bytes(16));
-
     $stmt_insert = $conn->prepare(
         "INSERT INTO akun_customer (nama, username, email, password, verification_code, is_verified) 
          VALUES (?, ?, ?, ?, ?, 0)"
     );
     $stmt_insert->bind_param("sssss", $nama, $username, $email, $hashed_password, $verification_code);
-
     if ($stmt_insert->execute()) {
         $_SESSION['verification_email'] = $email;
         $mail = new PHPMailer(true);
@@ -70,9 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->addAddress($email, $nama);
             $mail->isHTML(true);
             $mail->Subject = 'Verifikasi Akun Ukopia Anda';
-
             $verification_link = "http://" . $_SERVER['HTTP_HOST'] . "/SI-Ukopia/FrontOffice/auth/verify.php?code=" . $verification_code;
-
             $mail->Body    = "Halo $nama,<br><br>
                             Terima kasih sudah mendaftar di Ukopia. <br>
                             Silakan klik link di bawah ini untuk mengaktifkan akun Anda:<br><br>
@@ -83,9 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             (Link: $verification_link)
                             <br><br>
                             Salam,<br>Tim Ukopia";
-
             $mail->send();
-
             header('Location: ../pending-verification.php');
             exit;
         } catch (Exception $e) {

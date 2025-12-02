@@ -3,35 +3,29 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
-
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Metode/";
-
 $limit = 10;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
-
 $search_term = $_GET['search'] ?? '';
 $base_url_pagin = '?';
 $where_sql = "";
 $params = [];
 $types = "";
-
 if ($search_term != '') {
     $where_sql = " WHERE nama_metode LIKE ? ";
     $params[] = "%$search_term%";
     $types .= "s";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
-
 $stmt_count = $conn->prepare("SELECT COUNT(*) as total FROM metode" . $where_sql);
 if (!empty($params)) $stmt_count->bind_param($types, ...$params);
 $stmt_count->execute();
 $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
-
 $query = "SELECT * FROM metode" . $where_sql . " ORDER BY nama_metode ASC LIMIT ? OFFSET ?";
 $stmt_data = $conn->prepare($query);
 $params[] = $limit; 
@@ -41,16 +35,13 @@ $stmt_data->bind_param($types, ...$params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-flask"></i> Data Metode</h1>
             <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
         </div>
-
         <div class="table-card">
             <div class="table-header">
                 <h2>Total: <?= $total_rows ?> Metode</h2>
@@ -59,7 +50,6 @@ $result = $stmt_data->get_result();
                     <button type="submit" class="btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
-
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -99,6 +89,6 @@ $result = $stmt_data->get_result();
         </div>
     </div>
 </div>
-
 <script src="../../assets/js/metode.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

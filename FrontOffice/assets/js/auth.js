@@ -1,5 +1,4 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    
     const slides = document.querySelectorAll(".auth-slideshow .slide");
     if (slides.length > 0) {
         let currentSlide = 0;
@@ -14,7 +13,6 @@
         showSlide(0); 
         setInterval(nextSlide, 6000); 
     }
-
     function initTogglePassword(inputId, toggleId) {
         const input = document.getElementById(inputId);
         const toggle = document.getElementById(toggleId);
@@ -32,8 +30,6 @@
     initTogglePassword('confirm_password', 'toggleConfirmPassword');
     initTogglePassword('password_new', 'togglePasswordNew');
     initTogglePassword('confirm_password_new', 'toggleConfirmNew');
-
-
     const authWrapper = document.querySelector('.auth-wrapper');
     const toggleToRegisterBtn = document.getElementById('toggleToRegister');
     const toggleToLoginBtn = document.getElementById('toggleToLogin');
@@ -47,31 +43,24 @@
             authWrapper.classList.remove('is-register-view');
         });
     }
-
     const urlParams = new URLSearchParams(window.location.search);
-    
     if (urlParams.has('status')) {
         const status = urlParams.get('status'); // 'success' atau 'error'
         const message = urlParams.get('message') || 'Terjadi kesalahan.';
-        
         if (typeof showToast === 'function') {
             showToast(message, status);
         } else {
             alert(message); // Fallback
         }
-
         const view = urlParams.get('view');
         let cleanURL = window.location.pathname + (view ? '?view=' + view : '');
         window.history.pushState(null, '', cleanURL);
     }
-
-
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password_reg').value;
             const confirmPassword = document.getElementById('confirm_password').value;
-
             if (password !== confirmPassword) {
                 e.preventDefault(); 
                 showToast('Password dan Konfirmasi tidak cocok.', 'error');
@@ -89,13 +78,11 @@
             }
         });
     }
-    
     const resetForm = document.getElementById('resetForm');
     if (resetForm) {
         resetForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password_new').value;
             const confirmPassword = document.getElementById('confirm_password_new').value;
-
             if (password !== confirmPassword) {
                 e.preventDefault(); 
                 showToast('Password baru tidak cocok.', 'error');
@@ -109,3 +96,4 @@
         });
     }
 });
+

@@ -1,12 +1,6 @@
-﻿/* ============================================
-   GALLERY.JS - UKOPIA FRONTOFFICE
-   Scroll Animation for Gallery Page
-   ============================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
   const images = document.querySelectorAll(".galery-images img");
   const texts = document.querySelectorAll(".galery-text");
-
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -20,15 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
       rootMargin: "0px 0px -50px 0px" 
     }
   );
-
   images.forEach((img) => {
     observer.observe(img);
   });
-
   texts.forEach((txt) => {
     observer.observe(txt);
   });
-
   const paginationLinks = document.querySelectorAll('.pagination a');
   paginationLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -39,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
 window.addEventListener('load', () => {
   const images = document.querySelectorAll('.galery-images img');
   images.forEach(img => {
@@ -52,3 +42,4 @@ window.addEventListener('load', () => {
     }
   });
 });
+

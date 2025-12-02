@@ -1,7 +1,6 @@
 ﻿function handleImagePreviewAlat(input, previewId, buttonId) {
     const previewContainer = document.getElementById(previewId);
     const uploadButton = document.getElementById(buttonId);
-
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -14,7 +13,6 @@
         reader.readAsDataURL(input.files[0]);
     }
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     const addForm = document.getElementById('alatAddForm');
     if (addForm) {
@@ -30,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => console.error(err));
         });
     }
-
     const updateForm = document.getElementById('alatUpdateForm');
     if (updateForm) {
         updateForm.addEventListener('submit', function(e) {
@@ -46,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 function confirmDeleteAlat(id) {
     if (confirm('Yakin hapus alat ini?')) {
         const formData = new FormData();
@@ -60,3 +56,4 @@ function confirmDeleteAlat(id) {
         .catch(err => console.error(err));
     }
 }
+

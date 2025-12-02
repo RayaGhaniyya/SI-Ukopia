@@ -5,31 +5,24 @@
         container.id = 'toast-container';
         document.body.appendChild(container);
     }
-
     let iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
     const toast = document.createElement('div');
     toast.classList.add('toast-box', type);
-    
     toast.innerHTML = `
         <i class="fa-solid ${iconClass}"></i>
         <span>${message}</span>
     `;
-
     container.appendChild(toast);
-
     setTimeout(() => {
         toast.style.animation = 'fadeOut 0.3s forwards';
         setTimeout(() => { toast.remove(); }, 300);
     }, 3000);
 }
-
 function showConfirm(message, onConfirm, title = "Konfirmasi Hapus", btnText = "Hapus") {
     const existing = document.querySelector('.confirm-overlay');
     if(existing) existing.remove();
-
     const overlay = document.createElement('div');
     overlay.className = 'confirm-overlay';
-
     overlay.innerHTML = `
         <div class="confirm-box">
             <div class="confirm-icon">
@@ -43,22 +36,18 @@ function showConfirm(message, onConfirm, title = "Konfirmasi Hapus", btnText = "
             </div>
         </div>
     `;
-
     document.body.appendChild(overlay);
-
     const btnCancel = overlay.querySelector('.btn-cancel');
     const btnConfirm = overlay.querySelector('.btn-confirm');
-
     btnCancel.addEventListener('click', () => {
         overlay.remove();
     });
-
     btnConfirm.addEventListener('click', () => {
         onConfirm(); // Jalankan aksi
         overlay.remove(); 
     });
-    
     overlay.addEventListener('click', (e) => {
         if(e.target === overlay) overlay.remove();
     });
 }
+

@@ -1,12 +1,10 @@
 ﻿<?php
 include("../../../../Koneksi/koneksi.php");
 include("../../../Component/session.php");
-
 function uploadGambar($file, $current_host)
 {
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
     $uploadUrl = 'http://' . $current_host . '/SI-Ukopia/BackOffice/assets/img/produk/';
-
     if (!is_dir($uploadDir_relative)) {
         if (!mkdir($uploadDir_relative, 0755, true)) {
             return ['success' => false, 'message' => 'Error: Gagal membuat folder assets/img/produk.'];
@@ -30,23 +28,17 @@ function uploadGambar($file, $current_host)
         return ['success' => false, 'message' => 'Error: Hanya format JPG, JPEG, PNG, & WEBP yang diizinkan.'];
     }
 }
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-
     try {
         $nama_produk = $_POST['nama_produk'];
         $id_kategori = (int)$_POST['id_kategori']; // 4 (Tools) or 5 (Approve)
         $deskripsi = $_POST['deskripsi'] ?? null;
         $link = $_POST['link'] ?? null;
-
         $origin = $_POST['origin'] ?? null;
         $altitude = $_POST['altitude'] ?? null;
         $variety = $_POST['variety'] ?? null;
         $process = $_POST['process'] ?? null;
         $notes = $_POST['notes'] ?? null;
-
         $gambar_url = '';
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $current_host = $_SERVER['HTTP_HOST'];
@@ -59,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             throw new Exception("Error: Gambar utama wajib diisi.");
         }
-
         $stmt_produk = $conn->prepare(
             "INSERT INTO produk (id_kategori, nama_produk, gambar_url, link, origin, altitude, notes, process, variety, deskripsi) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
@@ -77,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $variety,
             $deskripsi
         );
-
         if ($stmt_produk->execute()) {
             $_SESSION['message'] = "Produk (Alat/Rekomendasi) baru berhasil ditambahkan.";
             $_SESSION['message_type'] = "success";

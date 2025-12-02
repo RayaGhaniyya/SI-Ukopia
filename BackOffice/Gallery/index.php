@@ -3,20 +3,15 @@ include("../../Koneksi/koneksi.php");
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php"); // 1. INCLUDE PAGINATION
-
-
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
-
 $search_term = $_GET['search'] ?? '';
-
 $base_url_pagin = '?';
 $where_conditions = [];
 $params = [];
 $types = "";
-
 if ($search_term != '') {
     $search_like = "%" . $search_term . "%";
     $where_conditions[] = "(g.judul LIKE ? OR g.deskripsi LIKE ?)";
@@ -25,18 +20,15 @@ if ($search_term != '') {
     $types .= "ss"; // 2 string
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
-
 $where_sql = "";
 if (!empty($where_conditions)) {
     $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 }
-
 $count_query = "
     SELECT COUNT(*) as total 
     FROM galery g
     $where_sql 
 ";
-
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
     $stmt_count->bind_param($types, ...$params);
@@ -46,10 +38,7 @@ $count_result = $stmt_count->get_result();
 $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
-
-
 $order_by_sql = " ORDER BY g.id_galery DESC LIMIT ? OFFSET ?"; // Urutan asli kamu
-
 $data_query = "
     SELECT 
         g.id_galery, 
@@ -63,21 +52,17 @@ $data_query = "
     GROUP BY g.id_galery, g.judul, g.deskripsi, g.tanggal
     $order_by_sql
 ";
-
 $data_params = $params;
 $data_params[] = $limit;
 $data_params[] = $offset;
 $data_types = $types . "ii";
-
 $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
-
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-images"></i> Manajemen Galeri</h1>
@@ -85,11 +70,9 @@ $result = $stmt_data->get_result();
                 <i class="fas fa-plus"></i> Tambah
             </a>
         </div>
-
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Galeri (Total: <?= $total_rows ?> data)</h2>
-
                 <form action="index.php" method="GET" class="search-group">
                     <input
                         type="text"
@@ -97,13 +80,11 @@ $result = $stmt_data->get_result();
                         id="searchGallery"
                         placeholder="Search..."
                         value="<?= htmlspecialchars($search_term) ?>">
-
                     <button type="submit" class="btn" title="Cari">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
-
             <div class="table-responsive">
                 <table class="data-table gallery-table">
                     <thead>
@@ -118,7 +99,6 @@ $result = $stmt_data->get_result();
                     </thead>
                     <tbody>
                         <?php
-
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -169,17 +149,14 @@ $result = $stmt_data->get_result();
                     </tbody>
                 </table>
             </div>
-
             <div class="table-footer" style="padding-top: 10px;">
                 <?php
                 renderPaginator($total_pages, $current_page, $base_url_pagin);
                 ?>
             </div>
-
         </div>
     </div>
 </div>
-
 <div id="detailPopup" class="popup-overlay">
     <div class="popup-box">
         <h2><i class="fas fa-images"></i> Detail Gambar Galeri</h2>
@@ -191,6 +168,6 @@ $result = $stmt_data->get_result();
         </div>
     </div>
 </div>
-
 <script src="../assets/js/gallery.js"></script>
 <?php include("../Component/bottom.php"); ?>
+

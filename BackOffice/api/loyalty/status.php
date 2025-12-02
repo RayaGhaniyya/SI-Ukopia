@@ -4,15 +4,12 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
 $uid_akun = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
-
 if ($uid_akun <= 0) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'UID wajib diisi.']);
     exit();
 }
-
 try {
     function getClaimDate($conn, $uid, $reward_id) {
         $sql = "SELECT tanggal_dapat FROM riwayat_reward WHERE uid_customer = ? AND id_reward = ? AND status_klaim = 'Sudah Dipakai' ORDER BY tanggal_dapat DESC LIMIT 1";
@@ -23,14 +20,12 @@ try {
         $stmt->close();
         return $result['tanggal_dapat'] ?? null;
     }
-
     $point_sql = "SELECT total_poin FROM akun_customer WHERE uid = ?";
     $point_stmt = $conn->prepare($point_sql);
     $point_stmt->bind_param("i", $uid_akun);
     $point_stmt->execute();
     $total_points = $point_stmt->get_result()->fetch_assoc()['total_poin'] ?? 0;
     $point_stmt->close();
-    
     $status_data = [
         "total_points" => $total_points,
         "discount10_claim_date" => getClaimDate($conn, $uid_akun, 1), // 5 pts (ID 1)
@@ -53,17 +48,15 @@ try {
         "free_serve_90_claim_date" => null,
         "discount10_95_claim_date" => null
     ];
-    
     $response = [
         "success" => true,
         "message" => "Status loyalty berhasil diambil.",
         "data" => $status_data
     ];
-
     echo json_encode($response);
-
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 ?>
+

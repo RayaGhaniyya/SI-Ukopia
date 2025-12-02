@@ -2,11 +2,9 @@
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 ?>
-
 <link rel="stylesheet" href="../assets/css/loader.css">
 <script src="../assets/js/loader.js"></script>
 <link rel="stylesheet" href="../assets/css/homepage.css">
-
 <!-- Hero -->
 <div class="hero position-relative">
     <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -21,7 +19,6 @@ include("../Component/NavBar.php");
                 <img src="../assets/img/Hero-Homepage/heroimg3.JPG" class="d-block w-100" alt="Img 3">
             </div>
         </div>
-
         <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
@@ -29,12 +26,10 @@ include("../Component/NavBar.php");
             <span class="carousel-control-next-icon"></span>
         </button>
     </div>
-
     <div class="hero-caption">
         <h3>"From Beans To Cups"</h3>
     </div>
 </div>
-
 <!-- Gallery -->
 <div class="gallery">
     <div class="container py-6">
@@ -68,7 +63,6 @@ include("../Component/NavBar.php");
                 </a>
             </div>
         </div>
-
         <div class="row g-3 pb-5">
             <div class="col-md-3 col-sm-6">
                 <a href="../Gallery/index.php">
@@ -101,12 +95,10 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </div>
-
 <!-- Product -->
 <div class="products py-5">
     <div class="container">
         <div class="row g-4 text-center">
-
             <div class="col-md-3 col-sm-6">
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/arabica.png" alt="Arabica Beans">
@@ -116,7 +108,6 @@ include("../Component/NavBar.php");
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3 col-sm-6">
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/robusta.png" alt="Robusta Beans">
@@ -126,7 +117,6 @@ include("../Component/NavBar.php");
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3 col-sm-6">
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/merchandise.png" alt="Merchandise">
@@ -136,7 +126,6 @@ include("../Component/NavBar.php");
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3 col-sm-6">
                 <div class="product-card">
                     <img src="../assets/img/Product-Homepage/tools.png" alt="Brewing Tools">
@@ -146,11 +135,9 @@ include("../Component/NavBar.php");
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
 <!-- About Section -->
 <section class="about py-5">
     <div class="container">
@@ -180,11 +167,9 @@ include("../Component/NavBar.php");
                     </iframe>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
-
 <!-- Reservation Section -->
 <section class="reservation">
     <div class="reservation-card">
@@ -195,9 +180,8 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </section>
-
 <script src="../assets/js/homepage.js"></script>
-
 <?php
 include("../Component/Footer.php");
 ?>
+

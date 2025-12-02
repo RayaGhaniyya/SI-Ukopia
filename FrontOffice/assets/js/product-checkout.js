@@ -1,23 +1,18 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
     const payBtn = document.getElementById("pay-button");
-
     if (payBtn) {
         payBtn.addEventListener("click", async (e) => {
             e.preventDefault();
-
             const selectedAddress = document.querySelector('input[name="id_alamat"]:checked');
             const totalBayar = document.querySelector('input[name="total_bayar"]').value;
             const ongkir = document.querySelector('input[name="ongkir"]').value;
-
             if (!selectedAddress) {
                 showToast("Silakan pilih alamat pengiriman terlebih dahulu!", "error");
                 return;
             }
-
             const originalText = payBtn.innerText;
             payBtn.innerText = "Memproses...";
             payBtn.disabled = true;
-
             try {
                 const response = await fetch('place_order.php', {
                     method: 'POST',
@@ -28,9 +23,7 @@
                         total: totalBayar
                     })
                 });
-
                 const result = await response.json();
-
                 if (result.status === 'success') {
                     window.snap.pay(result.token, {
                         onSuccess: function(result){
@@ -64,3 +57,4 @@
         });
     }
 });
+

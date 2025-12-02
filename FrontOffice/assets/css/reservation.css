@@ -1,20 +1,17 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
-
 body {
     background: #111;
     color: #fff;
 }
-
 section.reservation-section {
     display: flex;
     height: 100vh;
 }
-
 .left-content {
     flex: 1;
     position: relative;
@@ -24,37 +21,31 @@ section.reservation-section {
     justify-content: center;
     padding: 3rem;
 }
-
 .left-content .overlay {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
 }
-
 .left-content .text-box {
     position: relative;
     max-width: 500px;
     z-index: 2;
 }
-
 .left-content h1 {
     font-size: 2.5rem;
     font-weight: 700;
 }
-
 .left-content h2 {
     font-size: 1.2rem;
     margin: 0.5rem 0 1rem;
     font-weight: 500;
     color: #ddd;
 }
-
 .left-content p {
     line-height: 1.6;
     font-size: 1rem;
     white-space: pre-line;
 }
-
 .right-content {
     flex: 1;
     position: relative;
@@ -63,42 +54,37 @@ section.reservation-section {
     align-items: center;
     justify-content: center;
 }
-
 .right-content .overlay {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.3);
 }
-
 .form-box {
     position: relative;
     z-index: 2;
-    padding: 2rem; /* <-- UPDATED (dari 2.5rem) */
+    padding: 2rem; 
     max-width: 580px; 
     width: 100%;
     text-align: center;
 }
-
 .form-box h2 {
     margin-bottom: 1.5rem;
-    font-size: 2.2rem; /* <-- UPDATED (dari 40px) */
+    font-size: 2.2rem; 
     font-weight: 700;
 }
-
 .input-group {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-bottom: 1.5rem;
 }
-
 .input-group input {
     width: 100%;
-    padding: 12px 14px; /* <-- UPDATED (dari 14px 15px) */
+    padding: 12px 14px; 
     border: 1px solid #ccc;
     border-radius: 10px !important;
     outline: none;
-    font-size: 1rem; /* <-- UPDATED (dari 1.05rem) */
+    font-size: 1rem; 
     background: #fff;
     color: #000;
     appearance: none;
@@ -107,61 +93,44 @@ section.reservation-section {
     display: block;
     transition: transform 0.2s ease;
 }
-
 .input-group input.focused {
     transform: scale(1.03);
 }
-
 .days {
     display: flex;
     justify-content: space-between;
     margin: 1.5rem 0; 
-    gap: 10px; /* <-- UPDATED (dari 12px) */
+    gap: 10px; 
 }
-
-/* ... (Kode CSS Lainnya di atas TETAP SAMA) ... */
-
-/* --- 1. STYLE TOMBOL HARI (FINAL) --- */
 .days button {
     flex: 1;
     padding: 0; 
-    
-    /* DEFAULT (Belum Dipilih): Putih Bersih */
     background: #ffffff; 
-    border: 1px solid #ccc; /* Border tipis abu-abu */
-    color: #333; /* Teks gelap */
-    
+    border: 1px solid #ccc; 
+    color: #333; 
     border-radius: 10px;
     font-weight: 600;
     font-size: 14px; 
     cursor: pointer;
     transition: all 0.25s ease;
-
-    /* Properti layout kotak */
     aspect-ratio: 1 / 1; 
     height: auto; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
 }
-
-/* Hover: Sedikit abu-abu muda (efek halus) */
 .days button:hover {
     background: #f9f9f9;
     border-color: #bbb;
     color: #000;
 }
-
-/* ACTIVE (Dipilih): Hitam Pekat + Border Putih Tipis */
 .days button.active {
-    background: #000000; /* Hitam total */
-    color: #ffffff;      /* Teks Putih */
-    border: 2px solid #ffffff; /* Border Putih Tipis sesuai request */
+    background: #000000; 
+    color: #ffffff;      
+    border: 2px solid #ffffff; 
     transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Shadow biar makin stand-out */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
 }
-
-/* DISABLED (Tidak Bisa Dipilih): Abu-abu redup */
 .days button:disabled {
     background: #f0f0f0;
     color: #ccc;
@@ -170,32 +139,26 @@ section.reservation-section {
     text-decoration: line-through;
     opacity: 0.8;
 }
-/* Matikan hover effect untuk disabled */
 .days button:disabled:hover {
     background: #f0f0f0;
     border-color: #e0e0e0;
     color: #ccc;
     transform: none;
 }
-
-/* ... (Kode CSS Lainnya di bawah TETAP SAMA) ... */
-
 .time-select {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px; /* <-- UPDATED (dari 20px) */
+    gap: 15px; 
 }
-
 .custom-dropdown {
     position: relative;
     flex: 1;
 }
-
 .dropdown-btn {
     width: 100%;
-    padding: 12px 14px; /* <-- UPDATED (dari 14px 15px) */
-    font-size: 1rem; /* <-- UPDATED (dari 1.05rem) */
+    padding: 12px 14px; 
+    font-size: 1rem; 
     border: 1px solid #ffffff;
     border-radius: 10px;
     background: #fff;
@@ -204,13 +167,11 @@ section.reservation-section {
     color: #000;
     transition: all 0.25s ease;
 }
-
 .dropdown-btn:hover,
 .dropdown-btn:focus {
     transform: scale(1.03);
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
 }
-
 .dropdown-list {
     position: absolute;
     left: 0;
@@ -227,19 +188,16 @@ section.reservation-section {
     overflow-x: hidden;
     animation: fadeSlide 0.25s ease;
 }
-
 @keyframes fadeSlide {
     from {
         opacity: 0;
         transform: translateY(10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
-
 .dropdown-list li {
     padding: 10px;
     cursor: pointer;
@@ -248,52 +206,42 @@ section.reservation-section {
     color: #000;
     transition: all 0.2s ease;
 }
-
 .dropdown-list li:hover {
     background: #26282C;
     color: #fff;
     transform: scale(1.05);
 }
-
 .dropdown-list li.active {
     background: #111;
     color: #fff;
     font-weight: bold;
 }
-
 .dropdown-list li.disabled {
     background-color: #eee;
     color: #aaa;
     cursor: not-allowed;
     text-decoration: line-through;
 }
-
 .dropdown-list li.disabled:hover {
     background: #eee;
     color: #aaa;
     transform: none;
 }
-
-
 .custom-dropdown.active .dropdown-list {
     display: block;
 }
-
 .time-select span {
     font-size: 1.4rem;
     font-weight: bold;
     color: #ffffff;
 }
-
 .confirm-btn {
     margin-top: 1.5rem;
-    padding: 14px; /* Sedikit lebih tebal */
+    padding: 14px; 
     border: none;
     border-radius: 10px;
-    /* DEFAULT: Hitam Pekat */
     background: #000000; 
     color: #ffffff;
-    
     font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
@@ -302,23 +250,18 @@ section.reservation-section {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-
-/* Hover: Abu Gelap (Charcoal) */
 .confirm-btn:hover {
     background: #333333;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     border: 2px solid #ffffff;
 }
-
-/* Disabled */
 .confirm-btn:disabled {
     background: #999;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
-
 .reservation-popup {
     position: fixed;
     top: 20px;
@@ -335,20 +278,17 @@ section.reservation-section {
     transition: all 0.4s ease;
     z-index: 9999;
 }
-
 .reservation-popup.show {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
 }
-
 .dropdown-btn:disabled {
     background: #eee;
     color: #aaa;
     cursor: not-allowed;
     text-decoration: line-through;
 }
-
 .dropdown-btn:disabled:hover,
 .dropdown-btn:disabled:focus {
     transform: none;

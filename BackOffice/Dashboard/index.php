@@ -1,13 +1,10 @@
-<?php
+﻿<?php
 include("../Component/session.php");
 include("../Component/head.php");
 ?>
-
 <div class="container">
     <?php include("../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
-
         <!-- Stats Cards (3 CARD AJA, HAPUS PESANAN AKTIF) -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -23,7 +20,6 @@ include("../Component/head.php");
                     dari bulan lalu
                 </div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-card-header">
                     <h3>Total Penjualan</h3>
@@ -37,7 +33,6 @@ include("../Component/head.php");
                     minggu ini
                 </div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-card-header">
                     <h3>Produk Terlaris</h3>
@@ -51,7 +46,6 @@ include("../Component/head.php");
                 </div>
             </div>
         </div>
-
         <!-- Charts -->
         <div class="charts-grid">
             <!-- Grafik Penjualan -->
@@ -65,7 +59,6 @@ include("../Component/head.php");
                 </div>
                 <div class="bar-chart" id="salesChart"></div>
             </div>
-
             <!-- Produk Terlaris -->
             <div class="chart-card">
                 <div class="chart-header">
@@ -74,7 +67,6 @@ include("../Component/head.php");
                 <div class="h-bar-chart" id="topProductsChart"></div>
             </div>
         </div>
-
         <!-- Bottom Section -->
         <div class="bottom-grid">
             <!-- Pesanan Terbaru -->
@@ -82,7 +74,6 @@ include("../Component/head.php");
                 <h2><i class="fas fa-receipt"></i> Pesanan Terbaru</h2>
                 <div class="orders-table" id="recentOrders"></div>
             </div>
-
             <!-- Peringatan Stok -->
             <div class="table-card">
                 <h2><i class="fas fa-exclamation-triangle"></i> Peringatan Stok</h2>
@@ -91,15 +82,10 @@ include("../Component/head.php");
         </div>
     </div>
 </div>
-
-
-
 <?php if (!empty($notif)): ?>
     <script>
         showNotification("<?= htmlspecialchars($notif) ?>", "<?= $type ?>");
     </script>
 <?php endif; ?>
-
-
 <script src="../assets/js/dashboard.js"></script>
 <?php include("../Component/bottom.php"); ?>

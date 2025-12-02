@@ -1,20 +1,15 @@
 ﻿<?php
 session_start();
 include("../../../Koneksi/koneksi.php");
-
 header('Content-Type: application/json');
-
 if (!isset($_SESSION['username'])) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit;
 }
-
 try {
     $response = [];
-
     $qProd = mysqli_query($conn, "SELECT COUNT(*) as total FROM produk");
     $response['totalProducts'] = mysqli_fetch_assoc($qProd)['total'];
-
     $qSales = mysqli_query($conn, "
         SELECT SUM(total_pembayaran) as total 
         FROM transaksi 
@@ -22,7 +17,6 @@ try {
     ");
     $dSales = mysqli_fetch_assoc($qSales);
     $response['totalSales'] = $dSales['total'] ?? 0;
-
     $qTop = mysqli_query($conn, "
         SELECT p.nama_produk, SUM(dt.jumlah) as terjual 
         FROM detail_transaksi dt
@@ -48,11 +42,9 @@ try {
         ORDER BY t.tanggal_pesan DESC
         LIMIT 5
     ");
-
     while ($row = mysqli_fetch_assoc($qRecent)) {
         $status = $row['status_pesanan'];
         $badgeClass = 'badge-secondary'; // Default abu-abu
-
         if ($status == 'Menunggu Pembayaran') {
             $badgeClass = 'badge-warning'; // Kuning
         } elseif ($status == 'Sudah Dibayar' || $status == 'Diproses') {
@@ -66,7 +58,6 @@ try {
         } elseif ($status == 'Pengajuan Batal') {
             $badgeClass = 'badge-danger'; // Merah
         }
-
         $recentOrders[] = [
             'id' => "#" . $row['id_transaksi'],
             'customer' => $row['customer'],
@@ -76,7 +67,6 @@ try {
         ];
     }
     $response['recentOrders'] = $recentOrders;
-
     $lowStock = [];
     $qStock = mysqli_query($conn, "
         SELECT p.nama_produk, dp.stok, s.ukuran 
@@ -95,16 +85,13 @@ try {
         ];
     }
     $response['lowStock'] = $lowStock;
-
     $chartWeek = [];
     for ($i = 6; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $label = date('D', strtotime($date));
-
         $engDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         $indDays = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
         $label = str_replace($engDays, $indDays, $label);
-
         $qChart = mysqli_query($conn, "
             SELECT COUNT(*) as total 
             FROM transaksi 
@@ -112,11 +99,9 @@ try {
             AND status_pesanan IN ('Sudah Dibayar', 'Diproses', 'Dikirim', 'Selesai')
         ");
         $val = mysqli_fetch_assoc($qChart)['total'];
-
         $chartWeek[] = ['label' => $label, 'value' => (int)$val];
     }
     $response['salesData']['week'] = $chartWeek;
-
     $chartMonth = [];
     $year = date('Y');
     for ($m = 1; $m <= 12; $m++) {
@@ -124,7 +109,6 @@ try {
         $engMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $indMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $monthName = str_replace($engMonth, $indMonth, $monthName);
-
         $qChartM = mysqli_query($conn, "
             SELECT COUNT(*) as total 
             FROM transaksi 
@@ -133,11 +117,9 @@ try {
             AND status_pesanan IN ('Sudah Dibayar', 'Diproses', 'Dikirim', 'Selesai')
         ");
         $val = mysqli_fetch_assoc($qChartM)['total'];
-
         $chartMonth[] = ['label' => $monthName, 'value' => (int)$val];
     }
     $response['salesData']['month'] = $chartMonth;
-
     $topList = [];
     $qTopList = mysqli_query($conn, "
         SELECT p.nama_produk, SUM(dt.jumlah) as sales 
@@ -154,7 +136,6 @@ try {
         $topList[] = ['name' => $row['nama_produk'], 'sales' => (int)$row['sales']];
     }
     $response['topProducts'] = $topList;
-
     echo json_encode(['status' => 'success', 'data' => $response]);
 } catch (Exception $e) {
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);

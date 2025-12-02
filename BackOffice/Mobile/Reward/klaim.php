@@ -1,9 +1,8 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php"); // Sesuaikan path
 include("../../Component/session.php");
 include("../../Component/head.php");
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
     <div class="dashboard-container">
@@ -18,7 +17,6 @@ include("../../Component/head.php");
                         placeholder="Contoh: REW-13-5-12345" required
                         style="font-size: 20px; text-align: center; letter-spacing: 2px;">
                 </div>
-    
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary btn-block">
                         <i class="fas fa-check-circle"></i> Validasi & Tukar

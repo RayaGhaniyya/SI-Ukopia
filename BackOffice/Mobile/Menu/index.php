@@ -3,11 +3,8 @@ include("../../../Koneksi/koneksi.php"); // Sesuaikan path
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php"); // 1. INCLUDE PAGINATION
-
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
-
-
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -63,10 +60,8 @@ $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-utensils"></i> Manajemen Menu</h1>
@@ -88,7 +83,6 @@ $result = $stmt_data->get_result();
         <div class="table-card">
             <div class="table-header">
                 <h2><i class="fas fa-list"></i> Data Menu (Total: <?= $total_rows ?> data)</h2>
-
                 <form action="index.php" method="GET" class="search-group">
                     <input
                         type="text"
@@ -96,14 +90,11 @@ $result = $stmt_data->get_result();
                         id="searchMenu"
                         placeholder="Search..."
                         value="<?= htmlspecialchars($search_term) ?>">
-
                     <button type="submit" class="btn" title="Cari">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
             </div>
-
-
             <div class="table-responsive">
                 <table class="data-table" id="menuTable">
                     <thead>
@@ -125,10 +116,8 @@ $result = $stmt_data->get_result();
                                 $nama_menu = htmlspecialchars($row['nama_menu']);
                                 $kategori = htmlspecialchars($row['nama_kategori']);
                                 $deskripsi = htmlspecialchars($row['deskripsi']);
-                                
                                 $gambar_filename = htmlspecialchars($row['gambar_url']);
                                 $gambar_dinamis = $BASE_IMAGE_URL . $gambar_filename;
-
                                 $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
                         ?>
                                 <tr>
@@ -173,17 +162,14 @@ $result = $stmt_data->get_result();
                     </tbody>
                 </table>
             </div>
-
             <div class="table-footer" style="padding-top: 10px;">
                 <?php
                 renderPaginator($total_pages, $current_page, $base_url_pagin);
                 ?>
             </div>
-
         </div>
     </div>
 </div>
-
 <div id="detailPopup" class="popup-overlay">
     <div class="popup-box">
         <div class="popup-header">
@@ -200,3 +186,4 @@ $result = $stmt_data->get_result();
 </div>
 <script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

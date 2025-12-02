@@ -1,20 +1,16 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="form-container">
         <h1><i class="fas fa-plus-circle"></i> Tambah Size</h1>
-
         <form id="SizeAddForm">
             <label>Ukuran</label>
             <input type="text" name="ukuran" maxlength="50" required
                 placeholder="Contoh: M, L, XL">
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
@@ -26,6 +22,5 @@ include("../../Component/head.php");
         </form>
     </div>
 </div>
-
 <script src="../../assets/js/size.js"></script>
 <?php include("../../Component/bottom.php"); ?>

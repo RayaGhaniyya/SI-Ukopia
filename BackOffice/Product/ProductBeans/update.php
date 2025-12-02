@@ -2,7 +2,6 @@
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     $_SESSION['message'] = "ID Produk tidak valid.";
     $_SESSION['message_type'] = "error";
@@ -10,12 +9,10 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     exit;
 }
 $id_produk = (int)$_GET['id'];
-
 $stmt_produk = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
 $stmt_produk->bind_param("i", $id_produk);
 $stmt_produk->execute();
 $produk_result = $stmt_produk->get_result();
-
 if ($produk_result->num_rows === 0) {
     $_SESSION['message'] = "Produk tidak ditemukan.";
     $_SESSION['message_type'] = "error";
@@ -24,22 +21,18 @@ if ($produk_result->num_rows === 0) {
 }
 $produk = $produk_result->fetch_assoc();
 $stmt_produk->close();
-
 $stmt_variants = $conn->prepare("SELECT * FROM detail_produk WHERE id_produk = ? ORDER BY id_detail_produk ASC");
 $stmt_variants->bind_param("i", $id_produk);
 $stmt_variants->execute();
 $variants_result = $stmt_variants->get_result();
 $variants = $variants_result->fetch_all(MYSQLI_ASSOC);
 $stmt_variants->close();
-
 $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori IN (1, 2)");
 $size_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM size ORDER BY ukuran ASC"), MYSQLI_ASSOC);
 $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size ORDER BY nama_grind ASC"), MYSQLI_ASSOC);
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-edit"></i> Edit Biji Kopi</h1>
@@ -47,17 +40,13 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
-
         <form class="form-container" action="action/update.php" method="POST" enctype="multipart/form-data" id="editBeanForm">
             <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
-
             <h3>Informasi Utama Produk</h3>
-
             <div class="form-row">
                 <div>
                     <label for="nama_produk">Nama Produk</label>
                     <input type="text" id="nama_produk" name="nama_produk" value="<?= htmlspecialchars($produk['nama_produk']) ?>" required>
-
                     <label for="id_kategori">Kategori Beans</label>
                     <select id="id_kategori" name="id_kategori" required>
                         <?php while ($kategori = mysqli_fetch_assoc($kategori_result)): ?>
@@ -66,12 +55,10 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                             </option>
                         <?php endwhile; ?>
                     </select>
-
                     <label>Gambar Menu (Opsional)</label>
                     <small style="color:#666; display:block; margin-bottom:8px;">
                         * Klik gambar untuk mengubah.
                     </small>
-
                     <input
                         type="file"
                         id="fileInputBeans"
@@ -79,21 +66,17 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                         accept="image/png, image/jpeg, image/webp"
                         onchange="handleImagePreview(this, 'previewImgBeans')"
                         style="display:none;">
-
                     <div onclick="document.getElementById('fileInputBeans').click()"
                         style="width: 200px; height: 200px; cursor: pointer; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-
                         <img id="previewImgBeans"
                             src="<?= htmlspecialchars(str_replace("localhost", $_SERVER['HTTP_HOST'], $produk['gambar_url'])) ?>"
                             alt="Preview"
                             style="width: 100%; height: 100%; object-fit: cover;">
-
                         <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.5); color: white; text-align: center; font-size: 12px; padding: 5px;">
                             Klik untuk Ganti
                         </div>
                     </div>
                 </div>
-
                 <div>
                     <label for="origin">Origin</label>
                     <input type="text" id="origin" name="origin" value="<?= htmlspecialchars($produk['origin']) ?>">
@@ -103,7 +86,6 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                     <input type="text" id="variety" name="variety" value="<?= htmlspecialchars($produk['variety']) ?>">
                 </div>
             </div>
-
             <label for="process">Process</label>
             <input type="text" id="process" name="process" value="<?= htmlspecialchars($produk['process']) ?>">
             <label for="notes">Tasting Notes</label>
@@ -112,7 +94,6 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
             <textarea id="deskripsi" name="deskripsi" rows="4"><?= htmlspecialchars($produk['deskripsi']) ?></textarea>
             <label for="link">Link (Opsional)</label>
             <input type="text" id="link" name="link" value="<?= htmlspecialchars($produk['link']) ?>">
-
             <div class="variant-section">
                 <div class="variant-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <h3>Varian Harga & Stok</h3>
@@ -120,7 +101,6 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                         <i class="fas fa-plus"></i> Tambah Varian Baru
                     </button>
                 </div>
-
                 <div class="variant-row" style="margin-bottom: 5px; font-weight: bold;">
                     <label>Ukuran (Size)</label>
                     <label>Gilingan (Grind Size)</label>
@@ -128,27 +108,22 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                     <label>Stok</label>
                     <label>Aksi</label>
                 </div>
-
                 <div id="variantContainer">
                     <?php foreach ($variants as $index => $variant): ?>
                         <div class="variant-row" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
                             <input type="hidden" name="varian_id[]" value="<?= $variant['id_detail_produk'] ?>">
-
                             <select name="varian_size[]" required style="flex: 1;">
                                 <?php foreach ($size_options as $option): ?>
                                     <option value="<?= $option['id_size'] ?>" <?= ($variant['id_size'] == $option['id_size']) ? 'selected' : '' ?>><?= htmlspecialchars($option['ukuran']) ?></option>
                                 <?php endforeach; ?>
                             </select>
-
                             <select name="varian_grind[]" required style="flex: 1;">
                                 <?php foreach ($grind_options as $option): ?>
                                     <option value="<?= $option['id_grind'] ?>" <?= ($variant['id_grind'] == $option['id_grind']) ? 'selected' : '' ?>><?= htmlspecialchars($option['nama_grind']) ?></option>
                                 <?php endforeach; ?>
                             </select>
-
                             <input type="number" name="varian_harga[]" value="<?= $variant['harga'] ?>" placeholder="Harga" required style="width: 120px;">
                             <input type="number" name="varian_stok[]" value="<?= $variant['stok'] ?>" placeholder="Stok" required style="width: 80px;">
-
                             <button type="button" class="btn btn-danger btn-sm" onclick="removeVariant(this, false)">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -156,9 +131,7 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
                     <?php endforeach; ?>
                 </div>
             </div>
-
             <input type="hidden" name="delete_variants" id="deleteVariantsInput" value="">
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan Perubahan
@@ -167,34 +140,28 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
         </form>
     </div>
 </div>
-
 <template id="variantTemplate">
     <div class="variant-row" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
         <input type="hidden" name="varian_id[]" value="new">
-
         <select name="varian_size[]" required style="flex: 1;">
             <option value="">-- Pilih Size --</option>
             <?php foreach ($size_options as $option): ?>
                 <option value="<?= $option['id_size'] ?>"><?= htmlspecialchars($option['ukuran']) ?></option>
             <?php endforeach; ?>
         </select>
-
         <select name="varian_grind[]" required style="flex: 1;">
             <option value="">-- Pilih Gilingan --</option>
             <?php foreach ($grind_options as $option): ?>
                 <option value="<?= $option['id_grind'] ?>"><?= htmlspecialchars($option['nama_grind']) ?></option>
             <?php endforeach; ?>
         </select>
-
         <input type="number" name="varian_harga[]" placeholder="Harga" required style="width: 120px;">
         <input type="number" name="varian_stok[]" placeholder="Stok" required style="width: 80px;">
-
         <button type="button" class="btn btn-danger btn-sm" onclick="removeVariant(this, true)">
             <i class="fas fa-trash"></i>
         </button>
     </div>
 </template>
-
 <script>
     function handleImagePreview(input, imgId) {
         if (input.files && input.files[0]) {
@@ -205,14 +172,12 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
             reader.readAsDataURL(input.files[0]);
         }
     }
-
     document.getElementById('addVariantBtn').addEventListener('click', function() {
         const container = document.getElementById('variantContainer');
         const template = document.getElementById('variantTemplate');
         const clone = template.content.cloneNode(true);
         container.appendChild(clone);
     });
-
     function removeVariant(button, isNew) {
         const row = button.closest('.variant-row');
         if (isNew) {
@@ -228,5 +193,5 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
         }
     }
 </script>
-
 <?php include("../../Component/bottom.php"); ?>
+

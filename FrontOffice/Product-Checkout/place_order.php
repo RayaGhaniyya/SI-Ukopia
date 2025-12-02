@@ -2,48 +2,35 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 session_start();
-
 include("../../Koneksi/koneksi.php");
-
 require_once '../Config/midtrans_config.php';
-
 header('Content-Type: application/json');
-
 if (!isset($_SESSION['customer_uid'])) {
     echo json_encode(['status' => 'error', 'message' => 'Sesi habis. Silakan login ulang.']);
     exit;
 }
-
 $uid = $_SESSION['customer_uid'];
 $input = json_decode(file_get_contents('php://input'), true);
-
 $id_alamat = isset($input['id_alamat']) ? intval($input['id_alamat']) : 0;
 $ongkir = isset($input['ongkir']) ? intval($input['ongkir']) : 0;
 $biaya_layanan = 2500;
-
 if ($id_alamat == 0) {
     echo json_encode(['status' => 'error', 'message' => 'Alamat pengiriman belum dipilih.']);
     exit;
 }
-
 try {
     $queryCust = mysqli_query($conn, "SELECT nama, email, username FROM akun_customer WHERE uid = '$uid'");
     if (!$queryCust) throw new Exception("Gagal mengambil data customer.");
     $custData = mysqli_fetch_assoc($queryCust);
     $email_cust = !empty($custData['email']) ? $custData['email'] : 'customer@ukopia.com';
-
     $items_beli = [];
     $subtotal = 0;
-
     if (isset($_SESSION['checkout_mode']) && $_SESSION['checkout_mode'] === 'buy_now' && isset($_SESSION['buy_now_item'])) {
         $id_detail = $_SESSION['buy_now_item']['id_detail_produk'];
         $qty = $_SESSION['buy_now_item']['qty'];
-
         $q = mysqli_query($conn, "SELECT dp.*, p.nama_produk FROM detail_produk dp JOIN produk p ON dp.id_produk = p.id_produk WHERE dp.id_detail_produk = '$id_detail'");
         $row = mysqli_fetch_assoc($q);
-
         $items_beli[] = [
             'id' => $id_detail,
             'price' => intval($row['harga']),
@@ -53,7 +40,6 @@ try {
         $subtotal += ($row['harga'] * $qty);
     } else {
         $q = mysqli_query($conn, "SELECT k.jumlah, dp.id_detail_produk, dp.harga, p.nama_produk FROM keranjang k JOIN detail_produk dp ON k.id_detail_produk = dp.id_detail_produk JOIN produk p ON dp.id_produk = p.id_produk WHERE k.uid_akun = '$uid'");
-
         while ($row = mysqli_fetch_assoc($q)) {
             $items_beli[] = [
                 'id' => $row['id_detail_produk'],
@@ -64,38 +50,29 @@ try {
             $subtotal += ($row['harga'] * $row['jumlah']);
         }
     }
-
     if ($ongkir > 0) {
         $items_beli[] = ['id' => 'SHIP', 'price' => $ongkir, 'quantity' => 1, 'name' => 'Ongkos Kirim'];
     }
     $items_beli[] = ['id' => 'SRV', 'price' => $biaya_layanan, 'quantity' => 1, 'name' => 'Biaya Layanan'];
-
     $total_bayar = $subtotal + $ongkir + $biaya_layanan;
     $midtrans_order_id = "TRX-" . time() . "-" . rand(100, 999);
-
     $conn->begin_transaction();
-
     $stmt = $conn->prepare("INSERT INTO transaksi (uid_customer, id_alamat_kirim, total_harga_barang, ongkir, total_pembayaran, status_pesanan, midtrans_order_id) VALUES (?, ?, ?, ?, ?, 'Menunggu Pembayaran', ?)");
     $stmt->bind_param("iiiiis", $uid, $id_alamat, $subtotal, $ongkir, $total_bayar, $midtrans_order_id);
     $stmt->execute();
     $id_transaksi_baru = $stmt->insert_id;
     $stmt->close();
-
     $stmt_det = $conn->prepare("INSERT INTO detail_transaksi (id_transaksi, id_detail_produk, jumlah, harga_saat_beli) VALUES (?, ?, ?, ?)");
     foreach ($items_beli as $item) {
         if ($item['id'] == 'SHIP' || $item['id'] == 'SRV') continue;
-
         $stmt_det->bind_param("iiii", $id_transaksi_baru, $item['id'], $item['quantity'], $item['price']);
         $stmt_det->execute();
-
         $conn->query("UPDATE detail_produk SET stok = stok - {$item['quantity']} WHERE id_detail_produk = {$item['id']}");
     }
     $stmt_det->close();
-
     if (!isset($_SESSION['checkout_mode'])) {
         $conn->query("DELETE FROM keranjang WHERE uid_akun = '$uid'");
     }
-
     $params = [
         'transaction_details' => [
             'order_id' => $midtrans_order_id,
@@ -107,16 +84,11 @@ try {
             'email' => $email_cust,
         ]
     ];
-
     $snapToken = \Midtrans\Snap::getSnapToken($params);
-
     $conn->query("UPDATE transaksi SET snap_token = '$snapToken' WHERE id_transaksi = '$id_transaksi_baru'");
-
     $conn->commit();
-
     unset($_SESSION['checkout_mode']);
     unset($_SESSION['buy_now_item']);
-
     echo json_encode(['status' => 'success', 'token' => $snapToken, 'order_id' => $midtrans_order_id]);
 } catch (Exception $e) {
     $conn->rollback();

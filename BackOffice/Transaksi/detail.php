@@ -1,8 +1,6 @@
 ﻿<?php
 include("../../Koneksi/koneksi.php");
-
 $id = $_GET['id'] ?? 0;
-
 $query = mysqli_query($conn, "
     SELECT t.*, 
            a.nama_penerima, a.no_telepon, a.alamat_lengkap, a.kota, a.provinsi, a.kode_pos, 
@@ -13,12 +11,10 @@ $query = mysqli_query($conn, "
     WHERE t.id_transaksi = '$id'
 ");
 $trx = mysqli_fetch_assoc($query);
-
 if (!$trx) {
     echo "<div class='p-4 text-center text-danger'>Data tidak ditemukan</div>";
     exit;
 }
-
 $items = mysqli_query($conn, "
     SELECT dt.*, p.nama_produk, s.ukuran, g.nama_grind, p.gambar_url
     FROM detail_transaksi dt
@@ -29,9 +25,7 @@ $items = mysqli_query($conn, "
     WHERE dt.id_transaksi = '$id'
 ");
 ?>
-
 <div class="detail-header-grid">
-
     <div class="info-group">
         <h6><i class="fas fa-receipt me-2"></i> Info Pesanan</h6>
         <div class="info-item"><span class="info-label">Invoice</span><span>#<?= $trx['id_transaksi'] ?></span></div>
@@ -43,7 +37,6 @@ $items = mysqli_query($conn, "
             <small class="text-muted"><?= htmlspecialchars($trx['email']) ?></small>
         </div>
     </div>
-
     <div class="info-group">
         <h6><i class="fas fa-shipping-fast me-2"></i> Pengiriman</h6>
         <div class="info-item"><span class="info-label">Penerima</span><span><strong><?= htmlspecialchars($trx['nama_penerima']) ?></strong></span></div>
@@ -60,7 +53,6 @@ $items = mysqli_query($conn, "
         <?php endif; ?>
     </div>
 </div>
-
 <h6 class="fw-bold mb-3">Rincian Barang</h6>
 <div class="table-responsive">
     <table class="trx-product-table">
@@ -92,26 +84,22 @@ $items = mysqli_query($conn, "
         </tbody>
     </table>
 </div>
-
 <div class="detail-footer">
     <div class="summary-box">
         <div class="summary-row"><span>Total Harga Barang</span><span>Rp <?= number_format($trx['total_harga_barang'], 0, ',', '.') ?></span></div>
         <div class="summary-row"><span>Ongkos Kirim</span><span>Rp <?= number_format($trx['ongkir'], 0, ',', '.') ?></span></div>
-
         <?php
         $layanan = $trx['total_pembayaran'] - ($trx['total_harga_barang'] + $trx['ongkir']);
         if ($layanan > 0):
         ?>
             <div class="summary-row"><span>Biaya Layanan</span><span>Rp <?= number_format($layanan, 0, ',', '.') ?></span></div>
         <?php endif; ?>
-
         <div class="summary-row total">
             <span>TOTAL</span>
             <span class="text-highlight">Rp <?= number_format($trx['total_pembayaran'], 0, ',', '.') ?></span>
         </div>
     </div>
 </div>
-
 <div class="form-actions">
     <?php if ($trx['status_pesanan'] == 'Sudah Dibayar'): ?>
         <button class="btn btn-primary" onclick="updateStatus(<?= $id ?>, 'Diproses')"><i class="fas fa-box"></i> Proses Pesanan</button>
@@ -120,6 +108,6 @@ $items = mysqli_query($conn, "
     <?php elseif ($trx['status_pesanan'] == 'Pengajuan Batal'): ?>
         <button class="btn btn-danger" onclick="updateStatus(<?= $id ?>, 'Batal')"><i class="fas fa-check"></i> Setujui Batal</button>
     <?php endif; ?>
-
     <button class="btn btn-secondary" onclick="closeDetailModal()">Tutup</button>
 </div>
+

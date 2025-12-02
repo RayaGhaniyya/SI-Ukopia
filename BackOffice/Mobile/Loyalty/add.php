@@ -2,18 +2,14 @@
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-
 $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
 if ($uid <= 0) { echo "<script>location.href='index.php';</script>"; exit; }
-
 $stmt = $conn->prepare("SELECT nama FROM akun_customer WHERE uid = ?");
 $stmt->bind_param("i", $uid);
 $stmt->execute();
 $customer = $stmt->get_result()->fetch_assoc();
-
 $kategori_res = mysqli_query($conn, "SELECT * FROM kategori_menu ORDER BY nama_kategori ASC");
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
     <div class="dashboard-container">
@@ -21,15 +17,12 @@ $kategori_res = mysqli_query($conn, "SELECT * FROM kategori_menu ORDER BY nama_k
             <h1><i class="fas fa-coffee"></i> Input Menu Customer</h1>
             <a href="index.php" class="btn btn-secondary">Kembali</a>
         </div>
-
         <div class="form-container" style="max-width: 600px; margin: 30px auto;">
             <div class="alert alert-info" style="text-align:center;">
                 Input untuk: <strong><?= htmlspecialchars($customer['nama']) ?></strong>
             </div>
-
             <form action="action/store.php" method="POST">
                 <input type="hidden" name="uid_akun" value="<?= $uid ?>">
-
                 <div class="form-group">
                     <label>Kategori Menu <span style="color:red">*</span></label>
                     <select name="id_kategori" id="selectKategori" class="form-control" required onchange="loadMenu(this.value)">
@@ -41,41 +34,33 @@ $kategori_res = mysqli_query($conn, "SELECT * FROM kategori_menu ORDER BY nama_k
                         <?php endwhile; ?>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Nama Menu <span style="color:red">*</span></label>
                     <select name="id_menu" id="selectMenu" class="form-control" required disabled>
                         <option value="">-- Pilih Kategori Dulu --</option>
                     </select>
                 </div>
-
                 <div class="form-group" id="groupBijiKopi" style="display:none;">
                     <label>Jenis Biji Kopi / Beans</label>
                     <input type="text" name="biji_kopi" id="inputBijiKopi" class="form-control" placeholder="Contoh: Arabica Gayo">
                 </div>
-
                 <div class="form-group">
                     <label>Tanggal</label>
                     <input type="text" value="<?= date('d F Y') ?>" class="form-control" readonly style="background-color:#eee;">
                 </div>
-
                 <div class="form-actions"><button type="submit" class="btn btn-primary btn-block">Simpan</button></div>
             </form>
         </div>
     </div>
 </div>
-
 <script>
 function loadMenu(idKategori) {
     const selectMenu = document.getElementById('selectMenu');
     const groupBijiKopi = document.getElementById('groupBijiKopi');
     const inputBijiKopi = document.getElementById('inputBijiKopi');
-    
     const selectKategori = document.getElementById('selectKategori');
     const selectedOption = selectKategori.options[selectKategori.selectedIndex];
-    
     const butuhBiji = selectedOption.getAttribute('data-biji');
-
     if (butuhBiji == '1') {
         groupBijiKopi.style.display = 'block';
         inputBijiKopi.required = true; 
@@ -84,10 +69,8 @@ function loadMenu(idKategori) {
         inputBijiKopi.required = false;
         inputBijiKopi.value = ''; 
     }
-
     selectMenu.innerHTML = '<option value="">Loading...</option>';
     selectMenu.disabled = true;
-
     if (idKategori) {
         fetch('get_menu.php?id_kategori=' + idKategori)
             .then(response => response.json())
@@ -106,3 +89,4 @@ function loadMenu(idKategori) {
 }
 </script>
 <?php include("../../Component/bottom.php"); ?>
+

@@ -1,11 +1,8 @@
 ﻿<?php
 include("../../../Koneksi/koneksi.php");
-
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
-
 $uid_customer = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
-
 if ($uid_customer <= 0) {
     echo json_encode([
         'success' => false,
@@ -13,7 +10,6 @@ if ($uid_customer <= 0) {
     ]);
     exit;
 }
-
 try {
     $query = "SELECT 
                 r.id_riwayat, 
@@ -26,12 +22,10 @@ try {
               JOIN katalog_reward k ON r.id_reward = k.id_reward
               WHERE r.uid_customer = ?
               ORDER BY r.tanggal_dapat DESC";
-
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $uid_customer);
     $stmt->execute();
     $result = $stmt->get_result();
-
     $history_list = [];
     while ($row = $result->fetch_assoc()) {
         $history_list[] = [
@@ -43,13 +37,11 @@ try {
             'kode_unik'     => $row['kode_unik'] // Kode voucher
         ];
     }
-
     echo json_encode([
         'success' => true,
         'message' => 'Data riwayat reward berhasil diambil',
         'data'    => $history_list
     ]);
-
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
@@ -57,3 +49,4 @@ try {
     ]);
 }
 ?>
+

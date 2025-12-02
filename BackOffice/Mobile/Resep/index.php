@@ -3,20 +3,16 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
-
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
-
 $search_term = $_GET['search'] ?? '';
 $base_url_pagin = '?';
 $where_conditions = [];
 $params = [];
 $types = "";
-
 $base_query = " FROM resep r JOIN akun_customer c ON r.uid_akun = c.uid ";
-
 if ($search_term != '') {
     $where_conditions[] = "(r.nama_resep LIKE ? OR c.nama LIKE ?)";
     $params[] = "%$search_term%";
@@ -24,16 +20,13 @@ if ($search_term != '') {
     $types .= "ss";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
-
 $where_sql = !empty($where_conditions) ? " WHERE " . implode(" AND ", $where_conditions) : "";
-
 $stmt_count = $conn->prepare("SELECT COUNT(*) as total " . $base_query . $where_sql);
 if (!empty($params)) $stmt_count->bind_param($types, ...$params);
 $stmt_count->execute();
 $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
-
 $stmt_data = $conn->prepare("SELECT r.*, c.nama as nama_pembuat " . $base_query . $where_sql . " ORDER BY r.tanggal DESC LIMIT ? OFFSET ?");
 $params[] = $limit; 
 $params[] = $offset; 
@@ -42,16 +35,13 @@ $stmt_data->bind_param($types, ...$params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-book"></i> Data Resep</h1>
             <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Buat Resep</a>
         </div>
-
         <div class="table-card">
             <div class="table-header">
                 <h2>Total: <?= $total_rows ?> Resep</h2>
@@ -60,7 +50,6 @@ $result = $stmt_data->get_result();
                     <button type="submit" class="btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
-
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -104,6 +93,6 @@ $result = $stmt_data->get_result();
         </div>
     </div>
 </div>
-
 <script src="../../assets/js/Mobile/resep.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

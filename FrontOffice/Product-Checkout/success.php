@@ -1,7 +1,6 @@
-<?php session_start(); ?>
+﻿<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <title>Pesanan Berhasil</title>
     <style>
@@ -11,7 +10,6 @@
             padding: 50px;
             background: #f8f8f8;
         }
-
         .card {
             background: white;
             padding: 40px;
@@ -19,11 +17,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             display: inline-block;
         }
-
         h1 {
             color: #28a745;
         }
-
         a {
             display: inline-block;
             margin-top: 20px;
@@ -35,7 +31,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="card">
         <h1>✅ Pesanan Diterima!</h1>
@@ -44,5 +39,4 @@
         <a href="../HomePage/index.php">Kembali ke Beranda</a>
     </div>
 </body>
-
 </html>
