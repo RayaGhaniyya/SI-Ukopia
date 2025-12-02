@@ -1,8 +1,6 @@
-<?php
+﻿<?php
 session_start();
 include("../../../../Koneksi/koneksi.php");
-
-// --- FUNGSI UPLOAD (Sama) ---
 function uploadGambar($file, $current_host)
 {
     $uploadDir = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -14,13 +12,10 @@ function uploadGambar($file, $current_host)
     if (move_uploaded_file($file['tmp_name'], $targetPath)) return ['success' => true, 'url' => $targetUrl];
     return ['success' => false, 'message' => 'Gagal upload.'];
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->begin_transaction();
     try {
         $current_host = $_SERVER['HTTP_HOST'];
-
-        // 1. AMBIL DATA
         $id = $_POST['id_produk'];
         $nama = $_POST['nama_produk'];
         $kategori = (int)$_POST['id_kategori'];
@@ -31,12 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $variety = $_POST['variety'] ?? '';
         $notes = $_POST['notes'] ?? '';
         $link = '';
-
-        // 2. HANDLE GAMBAR UTAMA
         $sql_img = "";
         $params = [$kategori, $nama, $deskripsi, $origin, $altitude, $variety, $process, $notes, $link];
         $types = "issssssss";
-
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $res = uploadGambar($_FILES['gambar_url'], $current_host);
             if ($res['success']) {
@@ -45,17 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $types .= "s";
             }
         }
-
         $params[] = $id;
         $types .= "i";
-
         $sql = "UPDATE produk SET id_kategori=?, nama_produk=?, deskripsi=?, origin=?, altitude=?, variety=?, process=?, notes=?, link=? $sql_img WHERE id_produk=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $stmt->close();
-
-        // 3. UPLOAD GALERI BARU
         if (isset($_FILES['galeri']) && !empty($_FILES['galeri']['name'][0])) {
             $files = $_FILES['galeri'];
             $count = count($files['name']);
@@ -72,24 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             $stmt_g->close();
         }
-
-        // 4. UPDATE VARIAN
         $stmt_upd = $conn->prepare("UPDATE detail_produk SET id_size=?, id_grind=?, harga=?, stok=? WHERE id_detail_produk=?");
         $stmt_ins = $conn->prepare("INSERT INTO detail_produk (id_produk, id_size, id_grind, harga, stok) VALUES (?, ?, ?, ?, ?)");
-
         $ids = $_POST['varian_id'];
         $sizes = $_POST['varian_size'];
         $grinds = $_POST['varian_grind'];
         $hargas = $_POST['varian_harga'];
         $stoks = $_POST['varian_stok'];
-
         for ($i = 0; $i < count($ids); $i++) {
             $v_id = $ids[$i];
             $sz = (int)$sizes[$i];
             $gr = !empty($grinds[$i]) ? (string)$grinds[$i] : NULL;
             $pr = (int)$hargas[$i];
             $st = (int)$stoks[$i];
-
             if ($v_id == 'new') {
                 $stmt_ins->bind_param("isiii", $id, $sz, $gr, $pr, $st);
                 $stmt_ins->execute();
@@ -100,8 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $stmt_upd->close();
         $stmt_ins->close();
-
-        // 5. HAPUS VARIAN
         if (!empty($_POST['delete_variants'])) {
             $del_ids = array_filter(explode(',', $_POST['delete_variants']));
             if (!empty($del_ids)) {
@@ -109,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $conn->query("DELETE FROM detail_produk WHERE id_detail_produk IN ($str_ids)");
             }
         }
-
         $conn->commit();
         $_SESSION['message'] = "Produk berhasil diperbarui!";
         $_SESSION['message_type'] = "success";
@@ -121,3 +101,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: ../update.php?id=' . $_POST['id_produk']);
     }
 }
+

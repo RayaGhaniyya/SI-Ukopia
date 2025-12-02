@@ -1,22 +1,16 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
-
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header('Location: ../auth/login.php');
     exit;
 }
-
 $customer_uid = $_SESSION['customer_uid'];
 $customer = null;
-
-// 2. Ambil Data Customer
 $stmt = $conn->prepare("SELECT nama, username, email FROM akun_customer WHERE uid = ?");
 $stmt->bind_param("i", $customer_uid);
 $stmt->execute();
 $result = $stmt->get_result();
-
 if ($result->num_rows === 1) {
     $customer = $result->fetch_assoc();
 } else {
@@ -26,18 +20,14 @@ if ($result->num_rows === 1) {
 }
 $stmt->close();
 $conn->close();
-
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 ?>
-
 <link rel="stylesheet" href="../assets/css/toast.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../assets/css/profile.css?v=<?php echo filemtime('../assets/css/profile.css'); ?>">
 <link rel="stylesheet" href="../assets/css/loader.css">
-
 <script src="../assets/js/loader.js"></script>
-
 <div class="profile-body">
     <div class="profile-title-header">
         <div class="container">
@@ -47,9 +37,7 @@ include("../Component/NavBar.php");
             </a>
         </div>
     </div>
-
     <div class="container profile-content-container">
-
         <div class="profile-card-modern">
             <div class="card-header-modern">
                 <div class="profile-avatar-modern"><i class="fas fa-user"></i></div>
@@ -74,9 +62,7 @@ include("../Component/NavBar.php");
                     </div>
                 </form>
             </div>
-
             <hr class="section-divider">
-
             <div class="card-section">
                 <h5 class="section-title mb-3">Pengaturan Akun & Keamanan</h5>
                 <ul class="list-group list-group-flush">
@@ -113,7 +99,6 @@ include("../Component/NavBar.php");
                         <button id="logoutBtn" class="btn btn-outline-danger btn-sm">Keluar</button>
                     </li>
                 </ul>
-
                 <div class="collapse" id="collapseAlamat">
                     <div class="address-content-wrapper">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -129,7 +114,6 @@ include("../Component/NavBar.php");
                 </div>
             </div>
         </div>
-
         <div class="profile-card-modern">
             <div class="card-section text-center py-5">
                 <div class="mb-3">
@@ -137,16 +121,13 @@ include("../Component/NavBar.php");
                 </div>
                 <h4 class="mb-2">Pesanan Saya</h4>
                 <p class="text-muted mb-4">Lihat status pesanan, lacak pengiriman, dan riwayat belanja Anda.</p>
-
                 <a href="../Orders/index.php?source=profile" class="btn btn-dark px-4 py-2">
                     Lihat Semua Pesanan <i class="fas fa-arrow-right ms-2"></i>
                 </a>
             </div>
         </div>
-
     </div>
 </div>
-
 <div class="modal fade" id="emailModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -169,7 +150,6 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="passwordModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -197,7 +177,6 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="addressModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -223,7 +202,6 @@ include("../Component/NavBar.php");
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/js/toast.js"></script>
 <script src="../assets/js/profile.js?v=<?php echo filemtime('../assets/js/profile.js'); ?>"></script>
@@ -241,3 +219,4 @@ include("../Component/NavBar.php");
         }
     }
 </script>
+

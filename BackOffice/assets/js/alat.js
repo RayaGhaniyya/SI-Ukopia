@@ -1,7 +1,6 @@
-function handleImagePreviewAlat(input, previewId, buttonId) {
+﻿function handleImagePreviewAlat(input, previewId, buttonId) {
     const previewContainer = document.getElementById(previewId);
     const uploadButton = document.getElementById(buttonId);
-
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -14,9 +13,7 @@ function handleImagePreviewAlat(input, previewId, buttonId) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle Add
     const addForm = document.getElementById('alatAddForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
@@ -31,8 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => console.error(err));
         });
     }
-
-    // Handle Update
     const updateForm = document.getElementById('alatUpdateForm');
     if (updateForm) {
         updateForm.addEventListener('submit', function(e) {
@@ -48,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
 function confirmDeleteAlat(id) {
     if (confirm('Yakin hapus alat ini?')) {
         const formData = new FormData();
@@ -62,3 +56,4 @@ function confirmDeleteAlat(id) {
         .catch(err => console.error(err));
     }
 }
+

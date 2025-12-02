@@ -1,27 +1,9 @@
-/*
- * CSS KHUSUS UNTUK FORM MERCHANDISE
- * (productbeans.css harus di-load SEBELUM file ini)
- */
-
-/* * Override style 5 kolom dari productbeans.css
- * menjadi 4 kolom (Size, Harga, Stok, Aksi)
-*/
-.variant-row.merch-variant {
+﻿.variant-row.merch-variant {
     grid-template-columns: 2fr 1fr 1fr 0.5fr;
 }
-
-/* Sembunyikan kolom 'Grind Size' yang tidak perlu */
 .variant-row.merch-variant .col-grind {
     display: none;
 }
-
-/* ... (Kode CSS sebelumnya biarkan saja) ... */
-
-/* =========================================
-   STYLE DETAIL POPUP GALERI (CLEAN)
-   ========================================= */
-
-/* Pastikan Overlay Gelap & Di Atas */
 .popup-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -36,17 +18,14 @@
     visibility: hidden;
     transition: all 0.3s ease;
 }
-
 .popup-overlay.show {
     opacity: 1;
     visibility: visible;
 }
-
-/* Kartu Popup */
 .popup-card {
     background-color: #ffffff;
     width: 90%;
-    max-width: 700px; /* Lebar Maksimal */
+    max-width: 700px; 
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -54,14 +33,11 @@
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
-    max-height: 85vh; /* Agar tidak melebihi tinggi layar */
+    max-height: 85vh; 
 }
-
 .popup-overlay.show .popup-card {
     transform: translateY(0);
 }
-
-/* Header Popup */
 .popup-header {
     display: flex;
     justify-content: space-between;
@@ -70,14 +46,12 @@
     padding-bottom: 15px;
     margin-bottom: 20px;
 }
-
 .popup-header h3 {
     margin: 0;
     font-size: 1.2rem;
     font-weight: 700;
     color: #333;
 }
-
 .popup-close {
     background: none;
     border: none;
@@ -88,27 +62,20 @@
     transition: color 0.2s;
 }
 .popup-close:hover { color: #000; }
-
-/* Body Popup & Grid Galeri */
 .popup-body {
     flex: 1;
-    overflow-y: auto; /* Scroll jika konten panjang */
-    padding-right: 5px; /* Ruang untuk scrollbar */
+    overflow-y: auto; 
+    padding-right: 5px; 
 }
-
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
     padding: 5px;
 }
-
-/* Scrollbar Cantik untuk Popup */
 .popup-body::-webkit-scrollbar { width: 6px; }
 .popup-body::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 .popup-body::-webkit-scrollbar-track { background: #f9f9f9; }
-
-/* Item Gambar (Generated via JS) */
 .gallery-item-wrapper {
     position: relative;
     border-radius: 8px;
@@ -122,15 +89,12 @@
     transform: scale(1.03);
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
-
 .gallery-image {
     width: 100%;
-    height: 190px; /* Tinggi Fix */
+    height: 190px; 
     object-fit: cover;
     display: block;
 }
-
-/* Footer Popup */
 .popup-footer {
     text-align: right;
     margin-top: 20px;

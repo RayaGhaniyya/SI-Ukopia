@@ -1,26 +1,21 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
-
 $db_connection = $conn;
 $id_produk = isset($_GET['id']) ? $_GET['id'] : 0;
-
 $queryProduk = mysqli_query($db_connection, "SELECT * FROM produk WHERE id_produk = '$id_produk'");
 $produk = mysqli_fetch_assoc($queryProduk);
-
 if (!$produk) {
     echo "<script>alert('Produk tidak ditemukan!'); window.history.back();</script>";
     exit;
 }
-
 $queryGaleri = mysqli_query($db_connection, "SELECT gambar_url FROM produk_galeri WHERE id_produk = '$id_produk'");
 $gallery_images = [];
 $gallery_images[] = str_replace("localhost", $_SERVER['HTTP_HOST'], $produk['gambar_url']);
 while ($row = mysqli_fetch_assoc($queryGaleri)) {
     $gallery_images[] = str_replace("localhost", $_SERVER['HTTP_HOST'], $row['gambar_url']);
 }
-
 $queryDetail = mysqli_query($db_connection, "
     SELECT dp.*, s.ukuran, g.nama_grind 
     FROM detail_produk dp
@@ -29,7 +24,6 @@ $queryDetail = mysqli_query($db_connection, "
     WHERE dp.id_produk = '$id_produk'
     ORDER BY s.id_size ASC
 ");
-
 $variasi = [];
 while ($row = mysqli_fetch_assoc($queryDetail)) {
     $variasi[] = $row;
@@ -37,10 +31,8 @@ while ($row = mysqli_fetch_assoc($queryDetail)) {
 $jsonVariasi = json_encode($variasi);
 $jsonGambar = json_encode($gallery_images);
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +42,6 @@ $jsonGambar = json_encode($gallery_images);
     <link rel="stylesheet" href="../assets/css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
     <main class="product-detail-section">
         <div class="product-layout">
@@ -58,7 +49,6 @@ $jsonGambar = json_encode($gallery_images);
                 <button class="back-button" onclick="window.location.href='../Product/merchandise.php'">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-
                 <div class="gallery-wrapper">
                     <div class="main-image-box">
                         <?php if (count($gallery_images) > 1): ?>
@@ -67,7 +57,6 @@ $jsonGambar = json_encode($gallery_images);
                         <?php endif; ?>
                         <img id="mainImage" src="<?= $gallery_images[0] ?>" alt="<?= $produk['nama_produk'] ?>">
                     </div>
-
                     <?php if (count($gallery_images) > 1): ?>
                         <div class="thumbnail-container">
                             <?php foreach ($gallery_images as $index => $imgUrl): ?>
@@ -79,14 +68,12 @@ $jsonGambar = json_encode($gallery_images);
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="right-panel">
                 <div class="content-wrapper">
                     <div class="product-info">
                         <h1 class="product-title"><?= $produk['nama_produk'] ?></h1>
                         <p class="product-price" id="display-price">Rp 0</p>
                         <p style="margin-top:10px; line-height:1.6; color:#555;"><?= nl2br($produk['deskripsi']) ?></p>
-
                         <div class="product-options">
                             <h4>Size</h4>
                             <div id="size-options">
@@ -98,7 +85,6 @@ $jsonGambar = json_encode($gallery_images);
                                 <?php endforeach; ?>
                             </div>
                         </div>
-
                         <div class="product-quantity">
                             <h4>Quantity</h4>
                             <button class="minus">−</button>
@@ -106,7 +92,6 @@ $jsonGambar = json_encode($gallery_images);
                             <button class="plus">+</button>
                         </div>
                         <p class="stock">Stock: <span id="stock-display">0</span></p>
-
                         <div class="product-buttons">
                             <button class="add">Add to Cart</button>
                             <button class="buy">Buy It Now</button>
@@ -123,14 +108,12 @@ $jsonGambar = json_encode($gallery_images);
             </div>
         </div>
     </main>
-
     <script src="../assets/js/loader.js"></script>
     <script src="../assets/js/toast.js"></script>
     <script>
         const productData = <?= $jsonVariasi ?>;
         const galleryImages = <?= $jsonGambar ?>;
         let currentIdx = 0;
-
         function updateGallery() {
             const mainImg = document.getElementById('mainImage');
             const thumbs = document.querySelectorAll('.thumb-item');
@@ -142,14 +125,12 @@ $jsonGambar = json_encode($gallery_images);
             thumbs.forEach(t => t.classList.remove('active'));
             if (thumbs[currentIdx]) thumbs[currentIdx].classList.add('active');
         }
-
         function changeSlide(step) {
             currentIdx += step;
             if (currentIdx >= galleryImages.length) currentIdx = 0;
             if (currentIdx < 0) currentIdx = galleryImages.length - 1;
             updateGallery();
         }
-
         function goToSlide(index) {
             currentIdx = index;
             updateGallery();
@@ -157,5 +138,4 @@ $jsonGambar = json_encode($gallery_images);
     </script>
     <script src="../assets/js/product-detail.js"></script>
 </body>
-
 </html>

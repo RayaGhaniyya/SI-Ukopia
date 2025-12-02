@@ -1,25 +1,19 @@
-<?php
-// [UBAH] Path koneksi sesuai lokasi folder
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="form-container">
         <!-- [UBAH] Icon dan title form -->
         <h1><i class="fas fa-plus-circle"></i> Tambah Kategori</h1>
-
         <!-- [UBAH] Form ID untuk JS -->
         <form id="kategoriAddForm">
             <!-- [UBAH] Label dan name input sesuai field DB -->
             <label>Nama Kategori</label>
             <input type="text" name="nama_kategori" maxlength="100" required
                 placeholder="Masukkan nama kategori">
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
@@ -32,6 +26,6 @@ include("../../Component/head.php");
         </form>
     </div>
 </div>
-
 <script src="../../assets/js/kategori.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

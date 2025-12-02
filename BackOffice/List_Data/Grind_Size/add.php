@@ -1,24 +1,19 @@
-<?php
-// [UBAH] Path koneksi sesuai lokasi folder
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="form-container">
         <!-- [UBAH] Icon dan title form -->
         <h1><i class="fas fa-plus-circle"></i> Tambah Grind Size</h1>
-
         <!-- [UBAH] Form ID untuk JS -->
         <form id="GrindSizeAddForm">
             <!-- [UBAH] Label dan name input sesuai field DB -->
             <label>Grind Size</label>
             <input type="text" name="nama_grind" maxlength="100" required
                 placeholder="Masukkan Grind Size">
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
@@ -31,6 +26,6 @@ include("../../Component/head.php");
         </form>
     </div>
 </div>
-
 <script src="../../assets/js/grind.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

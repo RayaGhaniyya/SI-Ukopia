@@ -1,6 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // --- (1) LOGIKA SLIDESHOW (SAMA) ---
+﻿document.addEventListener("DOMContentLoaded", () => {
     const slides = document.querySelectorAll(".auth-slideshow .slide");
     if (slides.length > 0) {
         let currentSlide = 0;
@@ -15,8 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         showSlide(0); 
         setInterval(nextSlide, 6000); 
     }
-
-    // --- (2) LOGIKA SHOW/HIDE PASSWORD (SAMA) ---
     function initTogglePassword(inputId, toggleId) {
         const input = document.getElementById(inputId);
         const toggle = document.getElementById(toggleId);
@@ -34,9 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initTogglePassword('confirm_password', 'toggleConfirmPassword');
     initTogglePassword('password_new', 'togglePasswordNew');
     initTogglePassword('confirm_password_new', 'toggleConfirmNew');
-
-
-    // --- (3) LOGIKA SLIDING FORMS (SAMA) ---
     const authWrapper = document.querySelector('.auth-wrapper');
     const toggleToRegisterBtn = document.getElementById('toggleToRegister');
     const toggleToLoginBtn = document.getElementById('toggleToLogin');
@@ -50,36 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
             authWrapper.classList.remove('is-register-view');
         });
     }
-
-    // --- (4) LOGIKA NOTIFIKASI DARI URL (UPDATE PAKE TOAST) ---
     const urlParams = new URLSearchParams(window.location.search);
-    
     if (urlParams.has('status')) {
         const status = urlParams.get('status'); // 'success' atau 'error'
         const message = urlParams.get('message') || 'Terjadi kesalahan.';
-        
-        // Panggil showToast (dari file toast.js)
-        // Pastikan type-nya sesuai dengan css toast ('success' / 'error')
         if (typeof showToast === 'function') {
             showToast(message, status);
         } else {
             alert(message); // Fallback
         }
-
-        // Hapus parameter URL agar bersih
         const view = urlParams.get('view');
         let cleanURL = window.location.pathname + (view ? '?view=' + view : '');
         window.history.pushState(null, '', cleanURL);
     }
-
-
-    // --- (5) LOGIKA VALIDASI FORM REGISTER (UPDATE PAKE TOAST) ---
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password_reg').value;
             const confirmPassword = document.getElementById('confirm_password').value;
-
             if (password !== confirmPassword) {
                 e.preventDefault(); 
                 showToast('Password dan Konfirmasi tidak cocok.', 'error');
@@ -95,17 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast('Password harus ada huruf besar (A-Z).', 'error');
                 return;
             }
-            // (Opsional: Tambah validasi huruf kecil jika perlu)
         });
     }
-    
-    // --- (6) VALIDASI FORM RESET PASSWORD (UPDATE PAKE TOAST) ---
     const resetForm = document.getElementById('resetForm');
     if (resetForm) {
         resetForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password_new').value;
             const confirmPassword = document.getElementById('confirm_password_new').value;
-
             if (password !== confirmPassword) {
                 e.preventDefault(); 
                 showToast('Password baru tidak cocok.', 'error');
@@ -119,3 +96,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+

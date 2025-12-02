@@ -1,17 +1,12 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
 include("../Component/Loader.php");
-
-// Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header("Location: ../auth/login.php");
     exit;
 }
-
 $uid = $_SESSION['customer_uid'];
-
-// Query Ambil Data Keranjang + Detail Produk + Gambar + Ukuran + Grind + STOK
 $queryCart = mysqli_query($conn, "
     SELECT k.id_keranjang, k.jumlah, 
            p.nama_produk, p.gambar_url, 
@@ -25,26 +20,19 @@ $queryCart = mysqli_query($conn, "
     ORDER BY k.tanggal_dibuat DESC
 ");
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cart - Ukopia</title>
-
     <link rel="stylesheet" href="../assets/css/loader.css">
     <link rel="stylesheet" href="../assets/css/product-cart.css">
     <link rel="stylesheet" href="../assets/css/toast.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
-
     <script src="../assets/js/loader.js"></script>
-
     <main class="cart-section">
         <div class="cart-header">
             <a href="../Product/filter.php" class="back-btn">
@@ -52,7 +40,6 @@ $queryCart = mysqli_query($conn, "
             </a>
             Your Cart
         </div>
-
         <?php if (mysqli_num_rows($queryCart) > 0): ?>
             <table class="cart-table">
                 <thead>
@@ -70,11 +57,9 @@ $queryCart = mysqli_query($conn, "
                             data-id="<?= $item['id_keranjang'] ?>"
                             data-price="<?= $item['harga'] ?>"
                             data-stock="<?= $item['stok'] ?>">
-
                             <td>
                                 <div class="product-info">
                                     <input type="checkbox" class="custom-checkbox item-check" checked>
-
                                     <div class="product-img">
                                         <img src="<?= $item['gambar_url'] ?>" alt="<?= $item['nama_produk'] ?>">
                                     </div>
@@ -104,7 +89,6 @@ $queryCart = mysqli_query($conn, "
                     <?php endwhile; ?>
                 </tbody>
             </table>
-
             <div class="cart-summary">
                 <div class="summary-left">
                     <input type="checkbox" id="select-all" class="custom-checkbox" checked>
@@ -117,7 +101,6 @@ $queryCart = mysqli_query($conn, "
                     <button class="checkout-btn" id="btn-checkout">Check out</button>
                 </div>
             </div>
-
         <?php else: ?>
             <div class="empty-cart">
                 <i class="fa-solid fa-basket-shopping"></i>
@@ -126,12 +109,9 @@ $queryCart = mysqli_query($conn, "
                 <a href="../Product/filter.php" class="shop-btn">Belanja Sekarang</a>
             </div>
         <?php endif; ?>
-
     </main>
-
     <script src="../assets/js/toast.js"></script>
     <script src="../assets/js/product-cart.js"></script>
-
 </body>
-
 </html>
+

@@ -1,13 +1,8 @@
-// Variable global untuk menyimpan data dashboard
-let dashboardData = {};
-
-// FUNGSI FETCH DATA DARI DATABASE (REAL-TIME)
+﻿let dashboardData = {};
 async function fetchDashboardData() {
     try {
-        // Path ke file PHP action yang baru dibuat
         const response = await fetch('action/get_dashboard_data.php');
         const result = await response.json();
-
         if (result.status === 'success') {
             dashboardData = result.data;
             console.log('Data fetched:', dashboardData);
@@ -19,69 +14,49 @@ async function fetchDashboardData() {
         console.error('Terjadi kesalahan:', error);
     }
 }
-
-// Fungsi untuk animasi counter (Angka naik pelan-pelan)
 function animateCounter(id, target, isCurrency = false) {
     const element = document.getElementById(id);
     if (!element) return;
-    
     const duration = 1500;
     const start = 0;
-    // Jika target 0, langsung tampilkan 0
     if(target === 0) {
         element.textContent = isCurrency ? "Rp 0" : "0";
         return;
     }
-
     const increment = target / (duration / 16);
     let current = start;
-
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
             current = target;
             clearInterval(timer);
         }
-        
-        // Format angka (Pemisah Ribuan)
         let formatted = Math.floor(current).toLocaleString('id-ID');
         if (isCurrency) formatted = "Rp " + formatted;
-        
         element.textContent = formatted;
     }, 16);
 }
-
-// Render Stats Cards (Total Produk & Omzet)
 function renderStats() {
     animateCounter('totalProducts', dashboardData.totalProducts);
     animateCounter('totalSales', dashboardData.totalSales, true); // True = Format Rupiah
-    
     const topProductElement = document.getElementById('topProduct');
     if (topProductElement) {
         topProductElement.textContent = dashboardData.topProduct;
     }
 }
-
-// Render Sales Chart (Grafik Batang)
 function updateSalesChart() {
     const period = document.getElementById('salesPeriod').value;
     const data = period === 'week' ? dashboardData.salesData.week : dashboardData.salesData.month;
-    
     const chartElement = document.getElementById('salesChart');
     if (!chartElement) return;
-
     if (!data || data.length === 0) {
         chartElement.innerHTML = '<p class="text-center text-muted">Belum ada data penjualan</p>';
         return;
     }
-    
     const maxValue = Math.max(...data.map(item => item.value)) || 1; // Hindari bagi 0
-    
     const chartHTML = data.map(item => {
         const height = (item.value / maxValue) * 100;
-        // Tinggi minimal 5% biar bar tetap kelihatan walau nilainya kecil
         const displayHeight = height < 5 && item.value > 0 ? 5 : height; 
-        
         return `
             <div class="bar" style="height: ${displayHeight}%" title="${item.value} Pesanan">
                 <span class="bar-value">${item.value}</span>
@@ -89,22 +64,16 @@ function updateSalesChart() {
             </div>
         `;
     }).join('');
-    
     chartElement.innerHTML = chartHTML;
 }
-
-// Render Top Products (Bar Horizontal)
 function renderTopProducts() {
     const chartElement = document.getElementById('topProductsChart');
     if (!chartElement) return;
-
     if (!dashboardData.topProducts || dashboardData.topProducts.length === 0) {
         chartElement.innerHTML = '<p class="text-center text-muted py-4">Belum ada penjualan</p>';
         return;
     }
-    
     const maxValue = Math.max(...dashboardData.topProducts.map(item => item.sales)) || 1;
-    
     const chartHTML = dashboardData.topProducts.map(item => {
         const width = (item.sales / maxValue) * 100;
         return `
@@ -118,16 +87,11 @@ function renderTopProducts() {
             </div>
         `;
     }).join('');
-    
     chartElement.innerHTML = chartHTML;
 }
-
-// Render Recent Orders (DATA ASLI DARI DB)
 function renderRecentOrders() {
     const ordersElement = document.getElementById('recentOrders');
     if (!ordersElement) return;
-
-    // Cek jika data kosong
     if (!dashboardData.recentOrders || dashboardData.recentOrders.length === 0) {
         ordersElement.innerHTML = `
             <div class="empty-state p-4 text-center text-muted">
@@ -136,16 +100,12 @@ function renderRecentOrders() {
             </div>`;
         return;
     }
-    
-    // Render Loop Data
     const ordersHTML = dashboardData.recentOrders.map(order => {
-        // Tentukan icon berdasarkan teks status
         let icon = 'clock';
         if(order.statusText === 'Selesai') icon = 'check-circle';
         else if(order.statusText === 'Dikirim') icon = 'truck';
         else if(order.statusText === 'Diproses' || order.statusText === 'Sudah Dibayar') icon = 'box';
         else if(order.statusText === 'Batal' || order.statusText === 'Kadaluarsa') icon = 'times-circle';
-
         return `
         <div class="order-item">
             <div class="order-info">
@@ -164,15 +124,11 @@ function renderRecentOrders() {
         </div>
     `;
     }).join('');
-    
     ordersElement.innerHTML = ordersHTML;
 }
-
-// Render Stock Alerts (Stok Menipis)
 function renderStockAlerts() {
     const alertsElement = document.getElementById('stockAlerts');
     if (!alertsElement) return;
-
     if (!dashboardData.lowStock || dashboardData.lowStock.length === 0) {
         alertsElement.innerHTML = `
             <div class="text-center p-4" style="color:#28a745;">
@@ -181,18 +137,14 @@ function renderStockAlerts() {
             </div>`;
         return;
     }
-    
     const alertsHTML = dashboardData.lowStock.map(item => `
         <div class="alert-item">
             <h4><i class="fas fa-exclamation-circle"></i> ${item.name}</h4>
             <p>Stok tersisa: <span>${item.stock} ${item.unit}</span></p>
         </div>
     `).join('');
-    
     alertsElement.innerHTML = alertsHTML;
 }
-
-// Initialize Dashboard
 function initDashboard() {
     renderStats();
     updateSalesChart();
@@ -200,10 +152,9 @@ function initDashboard() {
     renderRecentOrders();
     renderStockAlerts();
 }
-
-// LOAD DATA SAAT HALAMAN READY
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', fetchDashboardData);
 } else {
     fetchDashboardData();
 }
+

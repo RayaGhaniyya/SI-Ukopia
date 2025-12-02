@@ -1,9 +1,7 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-
-// (Logika PHP kamu SAMA PERSIS, tidak diubah)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     $_SESSION['message'] = "ID Produk tidak valid.";
     $_SESSION['message_type'] = "error";
@@ -23,13 +21,9 @@ if ($produk_result->num_rows === 0) {
 }
 $produk = $produk_result->fetch_assoc();
 $stmt_produk->close();
-
-// Query ini sudah benar (4, 6)
 $kategori_query = "SELECT * FROM kategori WHERE id_kategori IN (4, 6)";
 $kategori_result = mysqli_query($conn, $kategori_query);
-// --- AKHIR LOGIKA PHP ---
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
     <div class="dashboard-container">
@@ -39,11 +33,9 @@ $kategori_result = mysqli_query($conn, $kategori_query);
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
-
         <form class="form-container" action="action/update.php" method="POST" enctype="multipart/form-data" id="editToolForm">
             <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
             <h3>Informasi Utama Produk</h3>
-
             <div class="form-row">
                 <div>
                     <label for="nama_produk">Nama Produk</label>
@@ -61,7 +53,6 @@ $kategori_result = mysqli_query($conn, $kategori_query);
                     </select>
                 </div>
             </div>
-
             <label>Gambar Menu (Opsional)</label>
             <small style="color:#666; display:block; margin-bottom:8px;">
                 * Klik gambar untuk mengubah. Kosongkan jika tidak ingin mengubah.
@@ -73,7 +64,6 @@ $kategori_result = mysqli_query($conn, $kategori_query);
                 accept="image/png, image/jpeg, image/webp"
                 onchange="handleImagePreview(this, 'imagePreviewTools')"
                 style="display:none;">
-
             <div id="imagePreviewTools"
                 class="image-preview-single"
                 onclick="document.getElementById('fileInputTools').click()"
@@ -82,10 +72,8 @@ $kategori_result = mysqli_query($conn, $kategori_query);
             </div>
             <label for="link">Link Eksternal (Tokopedia/Shopee/dll)</label>
             <input type="text" id="link" name="link" value="<?= htmlspecialchars($produk['link']) ?>" placeholder="https://..." required>
-
             <label for="deskripsi">Deskripsi Singkat Produk</label>
             <textarea id="deskripsi" name="deskripsi" rows="4"><?= htmlspecialchars($produk['deskripsi']) ?></textarea>
-
             <input type="hidden" name="origin" value="">
             <input type="hidden" name="altitude" value="">
             <input type="hidden" name="variety" value="">
@@ -93,7 +81,6 @@ $kategori_result = mysqli_query($conn, $kategori_query);
             <input type="hidden" name="notes" value="">
             <input type="hidden" name="varian_id[]" value="">
             <input type="hidden" name="delete_variants" value="">
-
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan
@@ -103,3 +90,4 @@ $kategori_result = mysqli_query($conn, $kategori_query);
     </div>
 </div>
 <?php include("../../Component/bottom.php"); ?>
+

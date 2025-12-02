@@ -1,20 +1,14 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id_reservasi']) && isset($_POST['status'])) {
-
         $id_reservasi = $_POST['id_reservasi'];
         $new_status = $_POST['status'];
-
         if ($new_status == 'Confirmed' || $new_status == 'Cancelled') {
-
             $stmt = $conn->prepare("UPDATE reservasi SET status = ? WHERE id_reservasi = ?");
             $stmt->bind_param("si", $new_status, $id_reservasi);
-
             if ($stmt->execute()) {
-                // UPDATED: Ganti ke session 'message'
                 $_SESSION['message'] = "Status reservasi berhasil diperbarui.";
                 $_SESSION['message_type'] = "success";
             } else {
@@ -31,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['message_type'] = "error";
     }
 }
-
-// Redirect kembali ke halaman index
 header('Location: ../index.php');
 exit;
+

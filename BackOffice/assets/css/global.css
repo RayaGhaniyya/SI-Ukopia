@@ -1,10 +1,4 @@
-/* ============================================
-   GLOBAL.CSS - UKOPIA BACKOFFICE
-   Update untuk kompatibilitas dengan sidebar baru
-   ============================================ */
-
-/* === GLOBAL STYLING === */
-body {
+﻿body {
   margin: 0;
   font-family: "Poppins", sans-serif;
   background-color: #F4F4F4;
@@ -13,20 +7,13 @@ body {
   padding: 30px 15px 30px 260px;
   transition: padding-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 body.sidebar-collapsed {
   padding-left: 90px;
 }
-
-/* Utility classes */
 .container {
   max-width: 1400px;
   margin: 0 auto;
 }
-
-/* ============================================
-   BUTTONS - Universal
-   ============================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -41,12 +28,10 @@ body.sidebar-collapsed {
   text-decoration: none;
   color: #fff;
 }
-
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
 .btn-primary {
   background: #3b82f6;
 }
@@ -54,42 +39,36 @@ body.sidebar-collapsed {
   background: #2563eb;
   transform: translateY(-1px);
 }
-
 .btn-secondary {
   background: #6b7280;
 }
 .btn-secondary:hover:not(:disabled) {
   background: #4b5563;
 }
-
 .btn-success {
   background: #10b981;
 }
 .btn-success:hover:not(:disabled) {
   background: #059669;
 }
-
 .btn-warning {
   background: #f59e0b;
 }
 .btn-warning:hover:not(:disabled) {
   background: #d97706;
 }
-
 .btn-danger {
   background: #ef4444;
 }
 .btn-danger:hover:not(:disabled) {
   background: #dc2626;
 }
-
 .btn-info {
   background: #06b6d4;
 }
 .btn-info:hover:not(:disabled) {
   background: #0891b2;
 }
-
 .btn-cancel {
   background: #9ca3af;
   color: #fff;
@@ -97,22 +76,14 @@ body.sidebar-collapsed {
 .btn-cancel:hover {
   background: #6b7280;
 }
-
-/* Small button variant */
 .btn-sm {
   padding: 6px 10px;
   font-size: 12px;
 }
-
-/* Large button variant */
 .btn-lg {
   padding: 12px 24px;
   font-size: 16px;
 }
-
-/* ============================================
-   FORM COMPONENTS - Universal
-   ============================================ */
 .form-container {
   background: #fff;
   border-radius: 16px;
@@ -120,7 +91,6 @@ body.sidebar-collapsed {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   margin-top: 40px;
 }
-
 .form-container h1 {
   font-size: 1.6rem;
   color: #222;
@@ -129,14 +99,12 @@ body.sidebar-collapsed {
   align-items: center;
   gap: 10px;
 }
-
 .form-container label {
   font-weight: 500;
   color: #444;
   display: block;
   margin-top: 15px;
 }
-
 .form-container input[type="text"],
 .form-container input[type="email"],
 .form-container input[type="number"],
@@ -156,7 +124,6 @@ body.sidebar-collapsed {
   font-family: inherit;
   transition: 0.2s ease;
 }
-
 .form-container input:focus,
 .form-container select:focus,
 .form-container textarea:focus {
@@ -164,63 +131,48 @@ body.sidebar-collapsed {
   outline: none;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
-
-/* Modern Select Styling */
 .form-container select {
   appearance: none;
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 14px center;
   background-size: 16px;
   cursor: pointer;
 }
-
 .form-container select:hover {
   border-color: #3b82f6;
 }
-
 .form-container select option {
   padding: 10px;
   font-size: 14px;
   background: white;
   color: #333;
 }
-
 .form-container select option:hover,
 .form-container select option:focus {
   background-color: #f0f9ff;
 }
-
 .form-container select:disabled {
   background-color: #f3f4f6;
   cursor: not-allowed;
   opacity: 0.7;
 }
-
 .form-container textarea {
   resize: vertical;
   min-height: 80px;
 }
-
-/* Form Row Layout */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
-
 .form-actions {
   display: flex;
   gap: 12px;
   margin-top: 25px;
   flex-wrap: wrap;
 }
-
-/* ============================================
-   IMAGE PREVIEW - Universal
-   ============================================ */
 .image-preview-container {
   margin-top: 15px;
 }
-
 .image-preview-single {
   aspect-ratio: 1 / 1;
   width: 200px;
@@ -236,24 +188,20 @@ body.sidebar-collapsed {
   transition: border-color 0.3s;
   position: relative;
 }
-
 .image-preview-single:hover {
   border-color: #3b82f6;
 }
-
 .image-preview-single img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .image-preview-single span {
   color: #888;
   font-size: 14px;
   padding: 20px;
   text-align: center;
 }
-
 .image-preview-single::after {
   content: 'Ubah Gambar';
   font-family: inherit;
@@ -273,19 +221,15 @@ body.sidebar-collapsed {
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-
 .image-preview-single:hover::after {
   opacity: 1;
 }
-
-/* Multiple Image Preview Grid */
 .image-preview-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 10px;
 }
-
 .image-preview-grid img {
   width: 200px;
   height: 200px;
@@ -295,16 +239,9 @@ body.sidebar-collapsed {
   border: 2px solid #f0f0f0;
   transition: transform 0.2s;
 }
-
 .image-preview-grid img:hover {
   transform: scale(1.05);
 }
-
-/* ============================================
-   TABLE COMPONENTS - Universal
-   ============================================ */
-
-/* Table Card Wrapper */
 .table-card {
   background: #fff;
   border-radius: 16px;
@@ -312,8 +249,6 @@ body.sidebar-collapsed {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   margin-top: 40px;
 }
-
-/* Table Header dengan Search */
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -322,7 +257,6 @@ body.sidebar-collapsed {
   gap: 15px;
   flex-wrap: wrap;
 }
-
 .table-header h2 {
   color: #111;
   font-size: 1.2rem;
@@ -331,7 +265,6 @@ body.sidebar-collapsed {
   gap: 8px;
   margin: 0;
 }
-
 .table-header input[type="text"],
 .table-header input[type="search"] {
   padding: 8px 12px;
@@ -341,20 +274,15 @@ body.sidebar-collapsed {
   width: 220px;
   transition: 0.2s;
 }
-
 .table-header input:focus {
   border-color: #3b82f6;
   outline: none;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
-
-/* Table Responsive Wrapper */
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
-
-/* Universal Data Table */
 .data-table {
   justify-content: center;
   width: 100%;
@@ -362,12 +290,10 @@ body.sidebar-collapsed {
   font-size: 14px;
   min-width: 700px;
 }
-
 .data-table thead {
   background: #f1f5f9;
   color: #111;
 }
-
 .data-table th {
   padding: 12px 14px;
   border-bottom: 1px solid #e5e7eb;
@@ -375,33 +301,25 @@ body.sidebar-collapsed {
   font-weight: 600;
   white-space: nowrap;
 }
-
 .data-table td {
   padding: 12px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: center;
 }
-
 .data-table tbody tr {
   transition: background 0.2s;
 }
-
 .data-table tbody tr:hover {
   background: #f9fafb;
 }
-
 .data-table tbody tr:last-child td {
   border-bottom: none;
 }
-
-/* Table action buttons */
 .data-table td .btn {
   padding: 6px 10px;
   font-size: 12px;
   margin: 2px;
 }
-
-/* Table images */
 .data-table img {
   width: 80px;
   height: 60px;
@@ -409,31 +327,21 @@ body.sidebar-collapsed {
   object-fit: cover;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
-/* ============================================
-   EMPTY STATE - Universal
-   ============================================ */
 .empty-state {
   text-align: center;
   padding: 40px 20px;
   color: #6b7280;
 }
-
 .empty-state i {
   font-size: 3rem;
   color: #d1d5db;
   margin-bottom: 10px;
   display: block;
 }
-
 .empty-state p {
   margin: 10px 0 0;
   font-size: 14px;
 }
-
-/* ============================================
-   DASHBOARD HEADER - Universal
-   ============================================ */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -442,7 +350,6 @@ body.sidebar-collapsed {
   gap: 15px;
   flex-wrap: wrap;
 }
-
 .dashboard-header h1 {
   font-size: 1.8rem;
   color: #111;
@@ -451,14 +358,9 @@ body.sidebar-collapsed {
   gap: 10px;
   margin: 0;
 }
-
 .dashboard-container {
   padding-bottom: 50px;
 }
-
-/* ============================================
-   NOTIFICATION SYSTEM
-   ============================================ */
 .notification {
   position: fixed;
   top: 20px;
@@ -473,30 +375,25 @@ body.sidebar-collapsed {
   max-width: 400px;
   min-width: 300px;
 }
-
 .notification.show {
   opacity: 1;
   transform: translateX(0);
 }
-
 .notification-content {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .notification-icon {
   font-size: 20px;
   font-weight: bold;
   flex-shrink: 0;
 }
-
 .notification-message {
   flex: 1;
   font-size: 14px;
   line-height: 1.5;
 }
-
 .notification-close {
   width: 24px;
   height: 24px;
@@ -512,34 +409,25 @@ body.sidebar-collapsed {
   justify-content: center;
   flex-shrink: 0;
 }
-
 .notification-close:hover {
   background: rgba(255, 255, 255, 0.3);
 }
-
 .notification-success {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
 }
-
 .notification-error {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
 }
-
 .notification-info {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
 }
-
 .notification-warning {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: white;
 }
-
-/* ============================================
-   LOADER OVERLAY
-   ============================================ */
 .loader-overlay {
   position: fixed;
   top: 0;
@@ -553,11 +441,9 @@ body.sidebar-collapsed {
   z-index: 99998;
   backdrop-filter: blur(4px);
 }
-
 .loader-content {
   text-align: center;
 }
-
 .loader-spinner {
   width: 50px;
   height: 50px;
@@ -567,22 +453,16 @@ body.sidebar-collapsed {
   animation: spin 0.8s linear infinite;
   margin: 0 auto 16px;
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
 .loader-text {
   color: white;
   font-size: 14px;
   font-weight: 500;
   margin: 0;
 }
-
-/* ============================================
-   POPUP OVERLAY - Universal
-   ============================================ */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -599,13 +479,11 @@ body.sidebar-collapsed {
   opacity: 0;
   transition: all 0.3s ease;
 }
-
 .popup-overlay.show {
   display: flex;
   opacity: 1;
   pointer-events: all;
 }
-
 .popup-box {
   background: #fff;
   color: #333;
@@ -618,7 +496,6 @@ body.sidebar-collapsed {
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   animation: popupSlideIn 0.3s ease;
 }
-
 @keyframes popupSlideIn {
   from {
     transform: translateY(-20px) scale(0.95);
@@ -629,7 +506,6 @@ body.sidebar-collapsed {
     opacity: 1;
   }
 }
-
 .popup-box h2 {
   margin-top: 0;
   margin-bottom: 20px;
@@ -638,8 +514,6 @@ body.sidebar-collapsed {
   align-items: center;
   gap: 8px;
 }
-
-/* Popup Header */
 .popup-header {
   display: flex;
   justify-content: space-between;
@@ -648,14 +522,12 @@ body.sidebar-collapsed {
   padding-bottom: 15px;
   border-bottom: 2px solid #e5e7eb;
 }
-
 .popup-header h2 {
   font-size: 1.4rem;
   color: #111;
   margin: 0;
   flex: 1;
 }
-
 .popup-close-btn {
   background: #f3f4f6;
   border: none;
@@ -671,26 +543,20 @@ body.sidebar-collapsed {
   font-size: 20px;
   flex-shrink: 0;
 }
-
 .popup-close-btn:hover {
   background: #e5e7eb;
   color: #111;
   transform: rotate(90deg);
 }
-
-/* Popup Content */
 .popup-content {
   padding: 5px 0;
 }
-
-/* Detail Info Rows */
 .detail-info {
   background: #f9fafb;
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
 }
-
 .detail-info-row {
   display: grid;
   grid-template-columns: 130px 1fr;
@@ -698,31 +564,23 @@ body.sidebar-collapsed {
   padding: 10px 0;
   border-bottom: 1px solid #e5e7eb;
 }
-
 .detail-info-row:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
-
 .detail-label {
   font-weight: 600;
   color: #374151;
   font-size: 14px;
 }
-
 .detail-value {
   color: #6b7280;
   font-size: 14px;
   line-height: 1.6;
 }
-
 .detail-value.description {
   white-space: pre-wrap;
 }
-
-/* ============================================
-   BADGE & LABEL - Universal
-   ============================================ */
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -730,152 +588,117 @@ body.sidebar-collapsed {
   font-size: 12px;
   font-weight: 500;
 }
-
 .badge-primary {
   background: #e0f2fe;
   color: #0369a1;
 }
-
 .badge-success {
   background: #d1fae5;
   color: #065f46;
 }
-
 .badge-warning {
   background: #fef3c7;
   color: #92400e;
 }
-
 .badge-danger {
   background: #fee2e2;
   color: #991b1b;
 }
-
 .badge-info {
   background: #dbeafe;
   color: #1e40af;
 }
-
-/* ============================================
-   RESPONSIVE - Global
-   ============================================ */
 @media (max-width: 768px) {
   body {
     padding: 20px 10px 20px 90px;
   }
-
   body.sidebar-collapsed {
     padding-left: 90px;
   }
-
   .form-row {
     grid-template-columns: 1fr;
   }
-
   .table-header {
     flex-direction: column;
     align-items: stretch;
   }
-
   .table-header input {
     width: 100%;
   }
-
   .form-container,
   .table-card {
     padding: 20px;
   }
-
   .data-table {
     min-width: 600px;
   }
-
   .data-table th,
   .data-table td {
     font-size: 13px;
     padding: 10px 8px;
   }
-
   .btn {
     padding: 6px 12px;
     font-size: 13px;
   }
-
   .dashboard-header {
     flex-direction: column;
     align-items: stretch;
   }
-
   .dashboard-header h1 {
     font-size: 1.5rem;
   }
-
   .form-actions {
     flex-direction: column;
   }
-
   .form-actions .btn {
     width: 100%;
     justify-content: center;
   }
-
   .image-preview-single {
     width: 150px;
   }
-
   .popup-box {
     width: 95%;
     padding: 20px;
   }
-
   .popup-header h2 {
     font-size: 1.2rem;
   }
-
   .detail-info-row {
     grid-template-columns: 1fr;
     gap: 5px;
   }
-
   .detail-label {
     font-weight: 700;
     color: #111;
   }
 }
-
 @media (max-width: 480px) {
   body {
     padding: 15px 10px 15px 90px;
   }
-
   body.sidebar-collapsed {
     padding-left: 90px;
   }
-
   .form-container,
   .table-card {
     padding: 15px;
   }
-
   .form-container h1 {
     font-size: 1.3rem;
   }
-
   .dashboard-header h1 {
     font-size: 1.3rem;
   }
-
   .popup-header {
     flex-direction: column;
     gap: 10px;
   }
-
   .popup-close-btn {
     align-self: flex-end;
   }
 }
-
-/* === PAGINATION STYLE (GLOBAL) === */
 .pagination {
     display: flex;
     justify-content: center;
@@ -883,7 +706,6 @@ body.sidebar-collapsed {
     margin-top: 25px;
     gap: 6px;
 }
-
 .pagination a,
 .pagination span {
     display: inline-block;
@@ -894,99 +716,70 @@ body.sidebar-collapsed {
     font-weight: 600;
     transition: all 0.2s ease;
 }
-
 .pagination a {
     background: #fff;
-    color: #3b82f6; /* Biru */
+    color: #3b82f6; 
     border: 1px solid #e0e0e0;
 }
-
 .pagination a:hover {
     background: #f0f9ff;
     border-color: #3b82f6;
     transform: translateY(-1px);
 }
-
-/* Tombol Aktif (Halaman Sekarang) */
 .pagination span.active {
     background: #3b82f6;
     color: #fff;
     border: 1px solid #3b82f6;
 }
-
-/* Tombol Disabled (Prev/Next) */
 .pagination span.disabled {
     background: #f4f4f4;
     color: #aaa;
     border: 1px solid #e0e0e0;
 }
-
 .pagination span.dots {
     background: none;
     border: none;
     color: #aaa;
     padding: 8px 0;
 }
-
-/* === GLOBAL SEARCH GROUP (NEW) === */
-/* Wrapper untuk search bar dan tombol */
 .search-group {
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 320px; /* Atur lebar maksimal search bar di sini */
+    max-width: 320px; 
 }
-
-/* Style untuk <input> di dalam .search-group */
 .search-group input[type="text"] {
-    flex: 1; /* Biar inputnya memenuhi sisa ruang */
+    flex: 1; 
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #ccc;
     font-size: 14px;
     outline: none;
     transition: 0.2s ease;
-    
-    /* Bulat di kiri, rata di kanan */
     border-radius: 10px 0 0 10px;
-    border-right: none; /* Hapus border kanan agar menyatu */
+    border-right: none; 
 }
-
-/* Style <input> saat di-klik */
 .search-group input[type="text"]:focus {
-    border-color: #3b82f6; /* Tetap pakai highlight biru saat fokus */
+    border-color: #3b82f6; 
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    z-index: 1; /* Bawa ke depan */
+    z-index: 1; 
 }
-
-/* Style untuk <button> di dalam .search-group */
 .search-group .btn {
     padding: 8px 12px;
-    font-size: 14px; /* Samakan dengan input */
-    
-    /* * Ini PENTING:
-     * Meng-override style .btn-primary (biru) 
-     * Menjadi style "putih" yang kamu minta
-    */
+    font-size: 14px; 
     background: #fff;
-    color: #333; /* Warna icon jadi hitam/abu */
+    color: #333; 
     border: 1px solid #ccc;
-    
-    /* Bulat di kanan, rata di kiri */
     border-radius: 0 10px 10px 0; 
-    
     cursor: pointer;
     transition: 0.2s ease;
-    
-    /* Hapus efek bawaan .btn */
     transform: none;
     box-shadow: none;
 }
-
-/* Hover untuk tombol "putih" */
 .search-group .btn:hover {
-    background: #f4f4f4; /* Jadi abu-abu sedikit */
+    background: #f4f4f4; 
     color: #000;
     transform: none;
-    z-index: 2; /* Bawa ke depan saat hover */
+    z-index: 2; 
 }
+

@@ -1,18 +1,12 @@
-<?php
+﻿<?php
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
-
-// Pastikan method POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit(json_encode(['success' => false, 'message' => 'Method not allowed']));
 }
-
-// Ambil Data & Validasi
 $uid_akun = intval($_POST['uid_akun'] ?? 0);
 $id_metode = intval($_POST['id_metode'] ?? 0);
 $nama_resep = trim($_POST['nama_resep'] ?? '');
-
-// Ambil Angka (Default 0 jika kosong)
 $jumlah_kopi = intval($_POST['jumlah_kopi'] ?? 0);
 $jumlah_air = intval($_POST['jumlah_air'] ?? 0);
 $suhu = intval($_POST['suhu'] ?? 0);
@@ -22,10 +16,7 @@ $berat = intval($_POST['berat_minuman'] ?? 0);
 $tds = intval($_POST['tds'] ?? 0);
 $deskripsi = trim($_POST['deskripsi'] ?? '');
 $tanggal = date('Y-m-d');
-
 $alat_selected = isset($_POST['alat']) ? $_POST['alat'] : [];
-
-// Validasi Wajib
 if ($uid_akun <= 0) {
     exit(json_encode(['success' => false, 'message' => 'Pemilik Resep wajib dipilih!']));
 }
@@ -35,16 +26,9 @@ if ($id_metode <= 0) {
 if (empty($nama_resep)) {
     exit(json_encode(['success' => false, 'message' => 'Nama Resep wajib diisi!']));
 }
-
-// Mulai Transaksi
 $conn->begin_transaction();
-
 try {
-    // Insert Resep
     $stmt = $conn->prepare("INSERT INTO resep (uid_akun, nama_resep, ukuran_gilingan, jumlah_air, suhu, jumlah_kopi, deskripsi, waktu_ekstraksi, berat_minuman, tds, tanggal, id_metode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
-    // issssssiidsi -> urutan tipe data
-    // uid(i), nama(s), giling(s), air(i), suhu(i), kopi(i), desk(s), waktu(i), berat(i), tds(i), tgl(s), metode(i)
     $stmt->bind_param("issiiisiidsi", 
         $uid_akun, 
         $nama_resep, 
@@ -59,14 +43,11 @@ try {
         $tanggal, 
         $id_metode
     );
-    
     if (!$stmt->execute()) {
         throw new Exception("Gagal menyimpan data resep: " . $stmt->error);
     }
     $id_resep = $conn->insert_id;
     $stmt->close();
-
-    // Insert Alat
     if (!empty($alat_selected)) {
         $stmt_detail = $conn->prepare("INSERT INTO resep_detail_alat (id_resep, id_alat) VALUES (?, ?)");
         foreach ($alat_selected as $ida) {
@@ -78,13 +59,12 @@ try {
         }
         $stmt_detail->close();
     }
-
     $conn->commit();
     echo json_encode(['success' => true, 'message' => 'Resep berhasil dibuat!']);
-
 } catch (Exception $e) {
     $conn->rollback();
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 $conn->close();
 ?>
+

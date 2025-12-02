@@ -1,8 +1,4 @@
-/* =================================
-   LOGIKA HALAMAN PROFIL (BERSIH)
-   ================================= */
-
-function initTogglePassword(inputId, toggleId) {
+﻿function initTogglePassword(inputId, toggleId) {
     const input = document.getElementById(inputId);
     const toggle = document.getElementById(toggleId);
     if (input && toggle) {
@@ -14,18 +10,13 @@ function initTogglePassword(inputId, toggleId) {
         });
     }
 }
-
 document.addEventListener("DOMContentLoaded", () => {
-    
     initTogglePassword('oldPassword', 'toggleOldPassword');
     initTogglePassword('newPassword', 'toggleNewPassword');
     initTogglePassword('confirmNewPassword', 'toggleConfirmNewPassword');
-
-    // --- 1. EDIT DATA DIRI ---
     const editBtn = document.getElementById("editProfileBtn");
     const namaInput = document.getElementById("namaLengkap");
     const usernameInput = document.getElementById("username");
-
     if (editBtn) {
         editBtn.addEventListener("click", () => {
             const isEditing = editBtn.textContent.trim() === "Edit";
@@ -37,13 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
     async function submitProfileForm() {
         const formData = new FormData();
         formData.append('nama', namaInput.value);
         formData.append('username', usernameInput.value);
         editBtn.disabled = true; editBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
         try {
             const response = await fetch('action/update_profile.php', { method: 'POST', body: formData });
             const result = await response.json();
@@ -57,12 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) { showToast('Terjadi kesalahan jaringan.', 'error'); } 
         finally { editBtn.disabled = false; if (editBtn.textContent.includes('spinner')) editBtn.textContent = "Simpan"; }
     }
-
-    // --- 2. GANTI EMAIL ---
     const step1Form = document.getElementById("emailStep1Form");
     const step2Form = document.getElementById("emailStep2Form");
     const btnBatalEmail = document.getElementById("btnBatalEmail");
-
     if (step1Form) {
         step1Form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -73,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const domainPart = emailValue.split('@')[1];
             const typos = {'gma.com':'gmail.com', 'gmai.com':'gmail.com', 'yaho.com':'yahoo.com'};
             if (typos[domainPart]) { showToast(`Typo terdeteksi! Maksud Anda @${typos[domainPart]}?`, 'error'); emailInput.focus(); return; }
-
             const btn = step1Form.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.disabled = true; btn.textContent = 'Mengirim Kode...';
@@ -90,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
             finally { btn.disabled = false; btn.textContent = originalText; }
         });
     }
-
     if (step2Form) {
         step2Form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -110,12 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     if (btnBatalEmail) { btnBatalEmail.addEventListener('click', () => { step2Form.style.display = 'none'; step1Form.style.display = 'block'; }); }
-
-    // --- 3. GANTI PASSWORD ---
     const passStep1 = document.getElementById("passStep1Form");
     const passStep2 = document.getElementById("passStep2Form");
     const btnBatalPass = document.getElementById("btnBatalPass");
-
     if (passStep1) {
         passStep1.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -125,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (newPass.length < 8) { showToast('Password minimal 8 karakter.', 'error'); return; }
             if (!/[A-Z]/.test(newPass)) { showToast('Wajib ada Huruf Besar (A-Z).', 'error'); return; }
             if (!/[a-z]/.test(newPass)) { showToast('Wajib ada Huruf Kecil (a-z).', 'error'); return; }
-
             const btn = passStep1.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.disabled = true; btn.textContent = 'Memproses...';
@@ -141,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
             finally { btn.disabled = false; btn.textContent = originalText; }
         });
     }
-
     if (passStep2) {
         passStep2.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -162,8 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     if (btnBatalPass) { btnBatalPass.addEventListener('click', () => { passStep2.style.display = 'none'; passStep1.style.display = 'block'; }); }
-    
-    // --- 4. ALAMAT ---
     const alamatForm = document.getElementById("alamatChangeForm");
     if (alamatForm) {
        alamatForm.addEventListener("submit", async (e) => { 
@@ -171,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const btn = alamatForm.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.disabled = true; btn.textContent = 'Menyimpan...';
-
             const formData = new FormData(alamatForm);
             try {
                 const response = await fetch('action/manage_alamat.php', { method: 'POST', body: formData });
@@ -187,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
             finally { btn.disabled = false; btn.textContent = originalText; }
        });
     }
-
     const alamatContainer = document.getElementById('daftarAlamatContainer');
     async function loadAlamatList() {
         if (!alamatContainer) return;
@@ -218,15 +193,12 @@ document.addEventListener("DOMContentLoaded", () => {
             } else { alamatContainer.innerHTML = `<p class="text-danger">${result.message}</p>`; }
         } catch (error) { alamatContainer.innerHTML = '<p class="text-danger">Gagal memuat alamat.</p>'; }
     }
-
     const collapseAlamat = document.getElementById('collapseAlamat');
     if (collapseAlamat) {
         collapseAlamat.addEventListener('shown.bs.collapse', function () {
             loadAlamatList();
         });
     }
-
-    // --- 6. LOGOUT ---
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn){
         logoutBtn.addEventListener('click', (e) => {
@@ -235,8 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
-// GLOBAL FUNCTIONS
 function hapusAlamat(id) {
     showConfirm('Yakin ingin menghapus alamat ini?', async () => {
         const formData = new FormData();
@@ -253,7 +223,6 @@ function hapusAlamat(id) {
         } catch (error) { showToast('Gagal menghapus alamat.', 'error'); }
     });
 }
-
 function openAddAddressModal() {
     const form = document.getElementById('alamatChangeForm');
     form.reset(); 
@@ -263,13 +232,11 @@ function openAddAddressModal() {
     const modal = new bootstrap.Modal(document.getElementById('addressModal'));
     modal.show();
 }
-
 async function editAlamat(id) {
     const modalEl = document.getElementById('addressModal');
     const modal = new bootstrap.Modal(modalEl);
     document.getElementById('addressModalTitle').textContent = "Edit Alamat";
     document.getElementById('btnSimpanAlamat').textContent = "Update Alamat";
-    
     try {
         const response = await fetch(`action/get_alamat_detail.php?id=${id}`);
         const result = await response.json();
@@ -288,3 +255,4 @@ async function editAlamat(id) {
         } else { showToast(result.message, 'error'); }
     } catch (error) { showToast("Gagal mengambil data alamat.", 'error'); }
 }
+

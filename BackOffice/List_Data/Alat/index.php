@@ -1,41 +1,23 @@
-<?php
+﻿<?php
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 include("../../Component/pagination.php");
-
-// URL Gambar
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Alat/";
-
-// --- 1. AMBIL DATA KATEGORI UNTUK DROPDOWN FILTER ---
 $sql_kategori = mysqli_query($conn, "SELECT * FROM kategori_alat ORDER BY nama_kategori_alat ASC");
-
-// --- LOGIKA DATA ---
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
 $offset = ($current_page - 1) * $limit;
-
-// Ambil Parameter Input
 $search_term = $_GET['search'] ?? '';
 $kategori_filter = $_GET['kategori_filter'] ?? ''; // Filter Kategori
-
 $base_url_pagin = '?';
 $where_conditions = [];
 $params = [];
 $types = "";
-
-// --- 2. SETTING DEFAULT URUTAN (TETAP URUT KATEGORI AGAR RAPI) ---
-// Kita hapus pilihan sortir user, tapi backend tetap mengurutkan by Kategori agar grouping jalan
 $order_sql = "k.nama_kategori_alat ASC, a.nama_alat ASC";
-
-// Base Query
 $base_query = " FROM alat a JOIN kategori_alat k ON a.id_kategori_alat = k.id_kategori_alat ";
-
-// --- 3. LOGIKA FILTERING (WHERE) ---
-
-// Filter Pencarian Teks
 if ($search_term != '') {
     $where_conditions[] = "(a.nama_alat LIKE ? OR k.nama_kategori_alat LIKE ?)";
     $params[] = "%$search_term%";
@@ -43,59 +25,42 @@ if ($search_term != '') {
     $types .= "ss";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
 }
-
-// Filter Kategori (Dropdown)
 if ($kategori_filter != '') {
     $where_conditions[] = "a.id_kategori_alat = ?";
     $params[] = $kategori_filter;
     $types .= "i";
     $base_url_pagin .= 'kategori_filter=' . urlencode($kategori_filter) . '&';
 }
-
-// Gabungkan semua kondisi WHERE
 $where_sql = !empty($where_conditions) ? " WHERE " . implode(" AND ", $where_conditions) : "";
-
-// Count Total
 $stmt_count = $conn->prepare("SELECT COUNT(*) as total " . $base_query . $where_sql);
 if (!empty($params)) $stmt_count->bind_param($types, ...$params);
 $stmt_count->execute();
 $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
-
-// Get Data
 $query_final = "SELECT a.id_alat, a.nama_alat, a.gambar, k.nama_kategori_alat " . $base_query . $where_sql . " ORDER BY " . $order_sql . " LIMIT ? OFFSET ?";
 $stmt_data = $conn->prepare($query_final);
-
-// Bind params (tambah limit & offset)
 $params[] = $limit; 
 $params[] = $offset; 
 $types .= "ii";
-
 $stmt_data->bind_param($types, ...$params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
 ?>
-
 <div class="container">
     <?php include("../../Component/sidebar.php"); ?>
-
     <div class="dashboard-container">
         <div class="dashboard-header">
             <h1><i class="fas fa-tools"></i> Data Alat</h1>
             <a href="add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
         </div>
-
         <div class="table-card">
             <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <h2>Total: <?= $total_rows ?> Alat</h2>
-                
                 <form method="GET" class="search-group" style="display: flex; gap: 8px; align-items: center;">
-                    
                     <select name="kategori_filter" class="form-control" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; min-width: 180px;" onchange="this.form.submit()">
                         <option value="">-- Semua Kategori --</option>
                         <?php 
-                        // Reset pointer data kategori agar bisa di-loop
                         if(mysqli_num_rows($sql_kategori) > 0) {
                             mysqli_data_seek($sql_kategori, 0);
                             while($kat = mysqli_fetch_assoc($sql_kategori)): 
@@ -108,14 +73,12 @@ $result = $stmt_data->get_result();
                         }
                         ?>
                     </select>
-
                     <div style="display: flex;">
-                        <input type="text" name="search" placeholder="Cari nama alat..." value="<?= htmlspecialchars($search_term) ?>" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; border-right: none;">
+                        <input type="text" name="search" placeholder="Search.." value="<?= htmlspecialchars($search_term) ?>" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; border-right: none;">
                         <button type="submit" class="btn" style="border-radius: 0 4px 4px 0;"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
             </div>
-
             <div class="table-responsive">
                 <table class="data-table">
                     <thead>
@@ -131,11 +94,8 @@ $result = $stmt_data->get_result();
                         <?php if ($result->num_rows > 0): 
                             $no = $offset + 1;
                             $current_kategori = null;
-
                             while ($row = $result->fetch_assoc()):
                                 $img_url = $BASE_IMAGE_URL . htmlspecialchars($row['gambar']);
-
-                                // Grouping Visual: Tampilkan Header Kategori jika berubah
                                 if ($row['nama_kategori_alat'] != $current_kategori) {
                                     $current_kategori = $row['nama_kategori_alat'];
                                     ?>
@@ -170,11 +130,10 @@ $result = $stmt_data->get_result();
                     </tbody>
                 </table>
             </div>
-            
             <div class="table-footer"><?php renderPaginator($total_pages, $current_page, $base_url_pagin); ?></div>
         </div>
     </div>
 </div>
-
 <script src="../../assets/js/alat.js"></script>
 <?php include("../../Component/bottom.php"); ?>
+

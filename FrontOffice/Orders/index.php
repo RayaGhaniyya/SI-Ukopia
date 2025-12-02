@@ -1,73 +1,49 @@
-<?php
+﻿<?php
 session_start();
 include("../../Koneksi/koneksi.php");
-
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header('Location: ../auth/login.php');
     exit;
 }
-
 $customer_uid = $_SESSION['customer_uid'];
-
-// ============================================================
-// LOGIKA 0: AUTO-CANCEL (LAZY UPDATE) - 10 MENIT
-// ============================================================
 $timeout_minutes = 10; // Batas waktu 10 menit
-
-// Cari transaksi yang 'Menunggu Pembayaran' dan sudah lewat 10 menit
 $cekExpired = mysqli_query($conn, "
     SELECT id_transaksi FROM transaksi 
     WHERE status_pesanan = 'Menunggu Pembayaran' 
     AND tanggal_pesan < (NOW() - INTERVAL $timeout_minutes MINUTE)
     AND uid_customer = '$customer_uid'
 ");
-
 while ($rowExp = mysqli_fetch_assoc($cekExpired)) {
     $id_trx_exp = $rowExp['id_transaksi'];
-
-    // A. Kembalikan Stok Barang
     $qDetail = mysqli_query($conn, "SELECT id_detail_produk, jumlah FROM detail_transaksi WHERE id_transaksi = '$id_trx_exp'");
     while ($item = mysqli_fetch_assoc($qDetail)) {
         $conn->query("UPDATE detail_produk SET stok = stok + {$item['jumlah']} WHERE id_detail_produk = {$item['id_detail_produk']}");
     }
-
-    // B. Ubah Status jadi 'Kadaluarsa'
     $conn->query("UPDATE transaksi SET status_pesanan = 'Kadaluarsa' WHERE id_transaksi = '$id_trx_exp'");
 }
-// ============================================================
-
-
-// 2. Ambil Semua Transaksi (Setelah di-update)
 $queryTrx = mysqli_query($conn, "
     SELECT t.*, 
            (SELECT p.gambar_url FROM detail_transaksi dt 
             JOIN detail_produk dp ON dt.id_detail_produk = dp.id_detail_produk 
             JOIN produk p ON dp.id_produk = p.id_produk 
             WHERE dt.id_transaksi = t.id_transaksi LIMIT 1) as gambar_produk,
-           
            (SELECT p.nama_produk FROM detail_transaksi dt 
             JOIN detail_produk dp ON dt.id_detail_produk = dp.id_detail_produk 
             JOIN produk p ON dp.id_produk = p.id_produk 
             WHERE dt.id_transaksi = t.id_transaksi LIMIT 1) as nama_produk_utama,
-           
            (SELECT COUNT(*) - 1 FROM detail_transaksi dt 
             WHERE dt.id_transaksi = t.id_transaksi) as sisa_item
     FROM transaksi t
     WHERE t.uid_customer = '$customer_uid'
     ORDER BY t.tanggal_pesan DESC
 ");
-
-// 3. Pisahkan ke 5 Kategori
 $orders_unpaid = [];
 $orders_process = [];
 $orders_shipping = [];
 $orders_completed = [];
 $orders_failed = [];
-
 while ($trx = mysqli_fetch_assoc($queryTrx)) {
     $s = $trx['status_pesanan'];
-
     if ($s == 'Menunggu Pembayaran') {
         $orders_unpaid[] = $trx;
     } elseif ($s == 'Sudah Dibayar' || $s == 'Diproses') {
@@ -77,48 +53,35 @@ while ($trx = mysqli_fetch_assoc($queryTrx)) {
     } elseif ($s == 'Selesai') {
         $orders_completed[] = $trx;
     } else {
-        // Batal, Kadaluarsa, Pengajuan Batal
         $orders_failed[] = $trx;
     }
 }
-
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
-
-// Fungsi Helper Render Item HTML
 function renderTransactionItem($trx)
 {
     global $timeout_minutes; // Ambil variabel durasi
-
     $statusClass = 'badge-secondary';
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') $statusClass = 'badge-warning text-dark';
     elseif ($trx['status_pesanan'] == 'Sudah Dibayar' || $trx['status_pesanan'] == 'Diproses') $statusClass = 'badge-info text-dark';
     elseif ($trx['status_pesanan'] == 'Dikirim') $statusClass = 'badge-primary';
     elseif ($trx['status_pesanan'] == 'Selesai') $statusClass = 'badge-success';
     elseif (strpos($trx['status_pesanan'], 'Batal') !== false || $trx['status_pesanan'] == 'Kadaluarsa') $statusClass = 'badge-danger';
-
     $gambar_mentah = $trx['gambar_produk'] ?? '';
     $img = str_replace("localhost", $_SERVER['HTTP_HOST'], $gambar_mentah);
     if (empty($img)) $img = "../assets/img/default-product.png";
-
     $date = date('d M Y, H:i', strtotime($trx['tanggal_pesan']));
-
-    // Hitung Deadline (Waktu Pesan + 10 Menit)
     $deadline = date('Y-m-d H:i:s', strtotime($trx['tanggal_pesan'] . " +$timeout_minutes minutes"));
-
     echo '<div class="transaction-item">';
     echo '<div class="trx-header">';
     echo '<div>';
     echo '<span class="trx-date"><i class="far fa-calendar-alt"></i> ' . $date . '</span>';
-
-    // Tampilkan Countdown hanya jika status Menunggu Pembayaran
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') {
         echo '<span class="badge bg-danger ms-2 countdown-timer" data-deadline="' . $deadline . '">Menghitung...</span>';
     }
     echo '</div>';
     echo '<span class="trx-status ' . $statusClass . '">' . $trx['status_pesanan'] . '</span>';
     echo '</div>';
-
     echo '<div class="trx-body">';
     echo '<div class="trx-img"><img src="' . $img . '" alt="Produk"></div>';
     echo '<div class="trx-info">';
@@ -127,9 +90,7 @@ function renderTransactionItem($trx)
     echo '<p class="trx-total">Total: Rp ' . number_format($trx['total_pembayaran'], 0, ',', '.') . '</p>';
     echo '</div>';
     echo '</div>';
-
     echo '<div class="trx-footer">';
-    // Tombol Aksi Dinamis
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') {
         echo '<button class="btn btn-outline-danger btn-sm me-2" onclick="cancelOrder(' . $trx['id_transaksi'] . ')">Batalkan</button>';
         echo '<button class="btn btn-dark btn-sm btn-pay-now" onclick="payNow(\'' . $trx['snap_token'] . '\')">Bayar Sekarang</button>';
@@ -143,25 +104,19 @@ function renderTransactionItem($trx)
     echo '</div>';
 }
 ?>
-
 <link rel="stylesheet" href="../assets/css/toast.css">
 <link rel="stylesheet" href="../assets/css/orders.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="../assets/css/loader.css">
-
 <script type="text/javascript"
     src="https://app.sandbox.midtrans.com/snap/snap.js"
     data-client-key="SB-Mid-client-XXXXXXXXXXXXXXXXXXXX"></script>
-
 <script src="../assets/js/loader.js"></script>
-
 <div class="profile-body" style="min-height: 100vh; background-color: #f4f7f6;">
-
     <div class="orders-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="profile-title" style="font-size: 1.8rem;">Pesanan Saya</h1>
-
                 <?php
                 $source = isset($_GET['source']) ? $_GET['source'] : '';
                 if ($source == 'profile') {
@@ -174,16 +129,13 @@ function renderTransactionItem($trx)
                     $back_icon = 'fa-arrow-left';
                 }
                 ?>
-
                 <a href="<?= $back_link ?>" class="btn-back-home">
                     <i class="fas <?= $back_icon ?>"></i> <?= $back_text ?>
                 </a>
             </div>
         </div>
     </div>
-
     <div class="container profile-content-container">
-
         <ul class="nav nav-tabs" id="orderTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="unpaid-tab" data-bs-toggle="tab" data-bs-target="#unpaid" type="button">
@@ -211,9 +163,7 @@ function renderTransactionItem($trx)
                 </button>
             </li>
         </ul>
-
         <div class="tab-content" id="orderTabsContent">
-
             <div class="tab-pane fade show active" id="unpaid" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_unpaid) > 0): ?>
@@ -223,7 +173,6 @@ function renderTransactionItem($trx)
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="tab-pane fade" id="process" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_process) > 0): ?>
@@ -233,7 +182,6 @@ function renderTransactionItem($trx)
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="tab-pane fade" id="shipping" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_shipping) > 0): ?>
@@ -243,7 +191,6 @@ function renderTransactionItem($trx)
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="tab-pane fade" id="completed" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_completed) > 0): ?>
@@ -253,7 +200,6 @@ function renderTransactionItem($trx)
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="tab-pane fade" id="failed" role="tabpanel">
                 <div class="transaction-list">
                     <?php if (count($orders_failed) > 0): ?>
@@ -263,11 +209,9 @@ function renderTransactionItem($trx)
                     <?php endif; ?>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="trxDetailModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -283,11 +227,9 @@ function renderTransactionItem($trx)
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../assets/js/toast.js"></script>
 <script src="../assets/js/orders.js"></script>
-
 </body>
-
 </html>
+
