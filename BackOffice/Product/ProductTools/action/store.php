@@ -90,12 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt_produk->execute()) {
             $_SESSION['message'] = "Produk (Alat/Rekomendasi) baru berhasil ditambahkan.";
             $_SESSION['message_type'] = "success";
+            $stmt_produk->close();
             header('Location: ../index.php');
             exit;
         } else {
             throw new Exception("Gagal menyimpan ke database: " . $stmt_produk->error);
         }
-        $stmt_produk->close();
     } catch (Exception $e) {
         
         $_SESSION['message'] = "Gagal menyimpan produk: " . $e->getMessage();

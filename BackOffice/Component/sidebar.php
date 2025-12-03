@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/SI-Ukopia/BackOffice/assets/css/sidebar.css">
+<link rel="stylesheet" href="/SI-Ukopia/BackOffice/assets/css/Responsive/sidebar-responsive.css">
 
 <div class="sidebar" id="sidebar">
     <div class="logo-section">
