@@ -130,7 +130,7 @@ $view_register = (isset($_GET['view']) && $_GET['view'] == 'register');
 
                     <div class="form-group">
                         <label for="login_identifier">Email atau Username</label>
-                        <input type="text" id="login_identifier" name="login_identifier" placeholder="Email auat Username" required>
+                        <input type="text" id="login_identifier" name="login_identifier" placeholder="Email atau Username" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>

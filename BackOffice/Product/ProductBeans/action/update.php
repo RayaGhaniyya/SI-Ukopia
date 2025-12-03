@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include("../../../../Koneksi/koneksi.php");
 
 
@@ -7,12 +8,24 @@ function uploadGambar($file, $current_host)
 {
     $uploadDir = dirname(__DIR__, 3) . '/assets/img/produk/';
     $uploadUrl = 'http://' . $current_host . '/SI-Ukopia/BackOffice/assets/img/produk/';
-    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
     $fileName = uniqid('produk_') . '_' . basename($file['name']);
     $targetPath = $uploadDir . $fileName;
     $targetUrl = $uploadUrl . $fileName;
-    if (move_uploaded_file($file['tmp_name'], $targetPath)) return ['success' => true, 'url' => $targetUrl];
-    return ['success' => false, 'message' => 'Gagal upload.'];
+
+    $fileType = pathinfo($targetPath, PATHINFO_EXTENSION);
+    $allowTypes = array('jpg', 'png', 'jpeg', 'webp');
+
+    if (in_array(strtolower($fileType), $allowTypes)) {
+        if ($file['size'] > 5000000) return ['success' => false, 'message' => 'Error: Max 5MB.'];
+        if (move_uploaded_file($file['tmp_name'], $targetPath)) return ['success' => true, 'url' => $targetUrl];
+        return ['success' => false, 'message' => 'Gagal upload file.'];
+    }
+    return ['success' => false, 'message' => 'Format file salah.'];
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -20,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $current_host = $_SERVER['HTTP_HOST'];
 
-        
+
         $id = $_POST['id_produk'];
         $nama = $_POST['nama_produk'];
         $kategori = (int)$_POST['id_kategori'];
@@ -32,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notes = $_POST['notes'] ?? '';
         $link = '';
 
-        
+
         $sql_img = "";
         $params = [$kategori, $nama, $deskripsi, $origin, $altitude, $variety, $process, $notes, $link];
         $types = "issssssss";
@@ -40,14 +53,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $res = uploadGambar($_FILES['gambar_url'], $current_host);
             if ($res['success']) {
+
+                $qOld = $conn->query("SELECT gambar_url FROM produk WHERE id_produk = '$id'");
+                $dOld = $qOld->fetch_assoc();
+                if ($dOld && !empty($dOld['gambar_url'])) {
+                    $oldName = basename($dOld['gambar_url']);
+                    $oldPath = dirname(__DIR__, 3) . '/assets/img/produk/' . $oldName;
+                    if (file_exists($oldPath)) unlink($oldPath);
+                }
+
                 $sql_img = ", gambar_url = ?";
                 $params[] = $res['url'];
                 $types .= "s";
             }
         }
 
+
         $params[] = $id;
         $types .= "i";
+
 
         $sql = "UPDATE produk SET id_kategori=?, nama_produk=?, deskripsi=?, origin=?, altitude=?, variety=?, process=?, notes=?, link=? $sql_img WHERE id_produk=?";
         $stmt = $conn->prepare($sql);
@@ -55,14 +79,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $stmt->close();
 
-        
+
         if (isset($_FILES['galeri']) && !empty($_FILES['galeri']['name'][0])) {
             $files = $_FILES['galeri'];
             $count = count($files['name']);
             $stmt_g = $conn->prepare("INSERT INTO produk_galeri (id_produk, gambar_url) VALUES (?, ?)");
+
             for ($i = 0; $i < $count; $i++) {
                 if ($files['error'][$i] == 0) {
-                    $f = ['name' => $files['name'][$i], 'type' => $files['type'][$i], 'tmp_name' => $files['tmp_name'][$i], 'error' => $files['error'][$i], 'size' => $files['size'][$i]];
+                    $f = [
+                        'name' => $files['name'][$i],
+                        'type' => $files['type'][$i],
+                        'tmp_name' => $files['tmp_name'][$i],
+                        'error' => $files['error'][$i],
+                        'size' => $files['size'][$i]
+                    ];
                     $res = uploadGambar($f, $current_host);
                     if ($res['success']) {
                         $stmt_g->bind_param("is", $id, $res['url']);
@@ -73,35 +104,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_g->close();
         }
 
-        
-        $stmt_upd = $conn->prepare("UPDATE detail_produk SET id_size=?, id_grind=?, harga=?, stok=? WHERE id_detail_produk=?");
-        $stmt_ins = $conn->prepare("INSERT INTO detail_produk (id_produk, id_size, id_grind, harga, stok) VALUES (?, ?, ?, ?, ?)");
 
-        $ids = $_POST['varian_id'];
-        $sizes = $_POST['varian_size'];
-        $grinds = $_POST['varian_grind'];
-        $hargas = $_POST['varian_harga'];
-        $stoks = $_POST['varian_stok'];
+        if (isset($_POST['varian_id'])) {
+            $ids = $_POST['varian_id'];
+            $sizes = $_POST['varian_size'];
+            $grinds = $_POST['varian_grind'];
+            $hargas = $_POST['varian_harga'];
+            $stoks = $_POST['varian_stok'];
 
-        for ($i = 0; $i < count($ids); $i++) {
-            $v_id = $ids[$i];
-            $sz = (int)$sizes[$i];
-            $gr = !empty($grinds[$i]) ? (string)$grinds[$i] : NULL;
-            $pr = (int)$hargas[$i];
-            $st = (int)$stoks[$i];
+            $stmt_upd = $conn->prepare("UPDATE detail_produk SET id_size=?, id_grind=?, harga=?, stok=? WHERE id_detail_produk=?");
+            $stmt_ins = $conn->prepare("INSERT INTO detail_produk (id_produk, id_size, id_grind, harga, stok) VALUES (?, ?, ?, ?, ?)");
 
-            if ($v_id == 'new') {
-                $stmt_ins->bind_param("isiii", $id, $sz, $gr, $pr, $st);
-                $stmt_ins->execute();
-            } else {
-                $stmt_upd->bind_param("isiii", $sz, $gr, $pr, $st, $v_id);
-                $stmt_upd->execute();
+            for ($i = 0; $i < count($ids); $i++) {
+                $v_id = $ids[$i];
+                $sz = (int)$sizes[$i];
+
+
+
+                $gr = (!empty($grinds[$i]) && $grinds[$i] !== '') ? (string)$grinds[$i] : NULL;
+
+                $pr = (int)$hargas[$i];
+                $st = (int)$stoks[$i];
+
+                if ($v_id == 'new') {
+
+
+
+
+                    $stmt_ins->bind_param("iisii", $id, $sz, $gr, $pr, $st);
+                    $stmt_ins->execute();
+                } else {
+
+
+
+                    $stmt_upd->bind_param("isiii", $sz, $gr, $pr, $st, $v_id);
+                    $stmt_upd->execute();
+                }
             }
+            $stmt_upd->close();
+            $stmt_ins->close();
         }
-        $stmt_upd->close();
-        $stmt_ins->close();
 
-        
+
         if (!empty($_POST['delete_variants'])) {
             $del_ids = array_filter(explode(',', $_POST['delete_variants']));
             if (!empty($del_ids)) {
@@ -114,10 +158,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['message'] = "Produk berhasil diperbarui!";
         $_SESSION['message_type'] = "success";
         header('Location: ../index.php');
+        exit;
     } catch (Exception $e) {
         $conn->rollback();
         $_SESSION['message'] = "Gagal update: " . $e->getMessage();
         $_SESSION['message_type'] = "error";
         header('Location: ../update.php?id=' . $_POST['id_produk']);
+        exit;
     }
 }

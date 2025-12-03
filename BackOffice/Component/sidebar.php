@@ -63,25 +63,25 @@
             </a>
             <ul class="dropdown-menu" id="mobileDropdown">
                 <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Alat/index.php">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Alat/index.php">
                         <i class="fas fa-toolbox"></i>
                         <span>Alat</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Grind_Size/index.php">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Grind_Size/index.php">
                         <i class="fas fa-grip-horizontal"></i>
                         <span>Grind Size</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Size/index.php">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Size/index.php">
                         <i class="fas fa-ruler-combined"></i>
                         <span>Size</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Metode/index.php">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Metode/index.php">
                         <i class="fas fa-flask"></i>
                         <span>Metode</span>
                     </a>
@@ -99,7 +99,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/si-ukopia/BackOffice/List_Data/Kategori_Alat/index.php">
+                    <a href="/SI-Ukopia/BackOffice/List_Data/Kategori_Alat/index.php">
                         <i class="fas fa-tools"></i>
                         <span>Kategori Alat</span>
                     </a>

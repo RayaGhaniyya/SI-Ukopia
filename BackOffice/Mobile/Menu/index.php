@@ -152,9 +152,6 @@ $result = $stmt_data->get_result();
                                     <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
                                     <td><?= $deskripsi_short ?></td>
                                     <td>
-                                        <button class="btn btn-info btn-sm" onclick="showDetailMenu(<?= $row['id_menu'] ?>)" title="Lihat Detail">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
                                         <a href="update.php?id=<?= $row['id_menu'] ?>" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -196,19 +193,5 @@ $result = $stmt_data->get_result();
     </div>
 </div>
 
-<div id="detailPopup" class="popup-overlay">
-    <div class="popup-box">
-        <div class="popup-header">
-            <h2><i class="fas fa-utensils"></i> Detail Menu</h2>
-            <button class="popup-close-btn" onclick="closeMenuPopup()">×</button>
-        </div>
-        <div class="popup-content"></div>
-        <div style="margin-top: 20px; text-align: right;">
-            <button class="btn btn-cancel" onclick="closeMenuPopup()">
-                <i class="fas fa-times"></i> Tutup
-            </button>
-        </div>
-    </div>
-</div>
 <script src="../../assets/js/Mobile/menu.js"></script>
 <?php include("../../Component/bottom.php"); ?>

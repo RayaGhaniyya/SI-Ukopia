@@ -1,6 +1,3 @@
-/* 
-   HOMEPAGE.CSS - RESPONSIVE
- */
 * { 
   margin: 0; 
   padding: 0; 
@@ -11,10 +8,15 @@
 body { 
   background: #111; 
   color: #fff; 
+  overflow-x: hidden;
+  width: 100%;
 }
+
 .hero {
+  margin-top: 55px;
   position: relative;
   height: 100vh;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -42,12 +44,13 @@ body {
   text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
   font-weight: 700;
   opacity: 0;
+  width: 80%;
 }
 
 .hero-caption h3 {
   font-size: 2.2rem;
   line-height: 1.1;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .carousel-control-prev, .carousel-control-next {
@@ -234,109 +237,71 @@ body {
 }
 
 @media (max-width: 1024px) {
-  .hero-caption h3 {
-    font-size: 2rem;
-  }
-  
-  .gallery-item img {
-    height: 220px;
-  }
-  
-  .product-card {
-    height: 280px;
-  }
-  
-  .product-card img {
-    height: 180px;
-  }
-  
-  .reservation-card {
-    height: 450px;
-  }
+  .hero-caption h3 { font-size: 2rem; }
+  .gallery-item img { height: 220px; }
+  .product-card { height: 280px; }
+  .product-card img { height: 180px; }
+  .reservation-card { height: 450px; }
 }
 
 @media (max-width: 768px) {
   .hero {
-    height: 70vh;
-    min-height: 500px;
+    width: 100%;
+    height: auto !important; 
+    min-height: unset !important;
+    aspect-ratio: 16 / 9 !important; 
+  }
+
+  .hero img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+  }
+
+  .hero-caption {
+    width: 95%;
+    padding: 0 5px;
   }
   
   .hero-caption h3 {
-    font-size: 1.6rem;
-    white-space: normal;
-    padding: 0 20px;
+    font-size: 1rem !important;
+    line-height: 1.2;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    margin-bottom: 0;
+  }
+
+  .gallery .row, .products .row { 
+    display: flex; 
+    flex-wrap: wrap; 
+    margin-right: -5px; 
+    margin-left: -5px; 
   }
   
-  .carousel-control-prev, .carousel-control-next {
-    width: 8%;
+  .gallery .col-md-3, .products .col-md-3, 
+  .gallery .col-lg-3, .products .col-lg-3, 
+  .gallery .col-6, .products .col-6 { 
+    width: 50% !important; 
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0 5px;
+    margin-bottom: 10px;
   }
   
-  .gallery-item img {
-    height: 200px;
-  }
+  .gallery-item img { height: 160px !important; }
+  .product-card { height: 260px !important; }
+  .product-card img { height: 150px !important; }
   
-  .product-card {
-    height: 260px;
-  }
-  
-  .product-card img {
-    height: 160px;
-  }
-  
-  .about-title {
-    font-size: 1.6rem;
-  }
-  
-  .about-text {
-    font-size: 0.9rem;
-  }
-  
-  .reservation-card {
-    height: 400px;
-  }
+  .about-title { font-size: 1.5rem; }
+  .about-text { font-size: 0.9rem; }
+  .reservation-card { height: 400px; }
+  .carousel-control-prev, .carousel-control-next { width: 10%; }
 }
 
 @media (max-width: 480px) {
-  .hero {
-    height: 60vh;
-    min-height: 400px;
-  }
-  
-  .hero-caption h3 {
-    font-size: 1.3rem;
-  }
-  
-  .gallery-item img {
-    height: 180px;
-  }
-  
-  .product-card {
-    height: 240px;
-  }
-  
-  .product-card img {
-    height: 140px;
-  }
-  
-  .btn-view {
-    padding: 6px 14px;
-    font-size: 0.85rem;
-  }
-  
-  .about-title {
-    font-size: 1.4rem;
-  }
-  
-  .about-text {
-    font-size: 0.85rem;
-  }
-  
-  .reservation-card {
-    height: 350px;
-  }
-  
-  .btn-reserve {
-    padding: 9px 16px;
-    font-size: 0.9rem;
-  }
+  .hero { aspect-ratio: 16 / 9; }
+  .hero-caption h3 { font-size: 0.9rem !important; }
+  .gallery-item img { height: 140px !important; }
+  .product-card { height: 240px !important; }
+  .product-card img { height: 130px !important; }
+  .btn-view { padding: 5px 10px; font-size: 0.8rem; }
 }
