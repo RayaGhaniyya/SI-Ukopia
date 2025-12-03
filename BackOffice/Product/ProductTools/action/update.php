@@ -121,14 +121,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 unlink($old_file_path);
             }
 
+            $stmt_produk->close();
             $_SESSION['message'] = "Produk (Alat/Rekomendasi) berhasil diperbarui.";
             $_SESSION['message_type'] = "success";
             header('Location: ../index.php?cache=' . time());
             exit;
         } else {
+            $stmt_produk->close();
             throw new Exception("Gagal update database: " . $stmt_produk->error);
         }
-        $stmt_produk->close();
     } catch (Exception $e) {
         $_SESSION['message'] = "Gagal memperbarui produk: " . $e->getMessage();
         $_SESSION['message_type'] = "error";
