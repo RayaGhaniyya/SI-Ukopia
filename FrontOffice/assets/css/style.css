@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    STYLE.CSS (NAVBAR & FOOTER) - RESPONSIVE
 ============================================== */
 * { 
@@ -220,7 +220,6 @@ body {
     margin-top: 10px;
 }
 
-/* Responsive Navbar & Footer */
 @media (max-width: 991px) {
     .navbar-icons {
         margin-top: 15px;

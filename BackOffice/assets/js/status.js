@@ -1,17 +1,7 @@
-/* ============================================
-   STATUS JS - UKOPIA BACKOFFICE
-   
-   Dependencies dari global.js:
-   - showNotification()
-   - showLoading() / hideLoading()
-   - initFormAutoSave()
-   - loadSavedFormData()
-   - initTableSearch()
-   ============================================ */
 
-// ===== INITIALIZATION =====
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Form Add
+  
   const addForm = document.getElementById("StatusAddForm");
   if (addForm) {
     addForm.addEventListener("submit", (e) =>
@@ -20,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(addForm);
   }
 
-  // Form Update
+  
   const updateForm = document.getElementById("StatusUpdateForm");
   if (updateForm) {
     updateForm.addEventListener("submit", (e) =>
@@ -29,11 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
     initFormAutoSave(updateForm);
   }
 
-  // Load saved form data
+  
   loadSavedFormData();
 });
 
-// ===== FORM SUBMIT HANDLER =====
+
 async function handleStatusSubmit(e, url, successMessage) {
   e.preventDefault();
   
@@ -86,7 +76,7 @@ async function handleStatusSubmit(e, url, successMessage) {
   }
 }
 
-// ===== DELETE HANDLER =====
+
 async function confirmDelete(id) {
   if (!id) {
     showNotification("ID Status tidak valid", "error");

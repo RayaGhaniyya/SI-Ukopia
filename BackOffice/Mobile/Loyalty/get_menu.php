@@ -1,14 +1,14 @@
 <?php
-// COBA GANTI JADI SATU TITIK DULU (../)
+
 include("../../../Koneksi/koneksi.php"); 
 
-// Atau sesuaikan dengan file add.php kamu (yang pakai ../../../)
-// Kalau add.php pakai ../../../ berarti path koneksi kamu sangat jauh di luar folder BackOffice?
-// Pastikan path ini valid. Cek error_log PHP jika ragu.
+
+
+
 
 $id_kategori = isset($_GET['id_kategori']) ? intval($_GET['id_kategori']) : 0;
 
-// Header JSON wajib ditaruh di awal sebelum ada output lain
+
 header('Content-Type: application/json');
 
 if ($id_kategori > 0) {
@@ -23,7 +23,7 @@ if ($id_kategori > 0) {
         }
         echo json_encode($menus);
     } else {
-        // Kirim array kosong jika gagal execute
+        
         echo json_encode([]);
     }
 } else {

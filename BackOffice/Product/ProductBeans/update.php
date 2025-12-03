@@ -3,7 +3,7 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// --- 1. Validasi ID ---
+
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     $_SESSION['message'] = "ID Produk tidak valid.";
     $_SESSION['message_type'] = "error";
@@ -12,7 +12,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 $id_produk = (int)$_GET['id'];
 
-// --- 2. Ambil Data Produk ---
+
 $stmt_produk = $conn->prepare("SELECT * FROM produk WHERE id_produk = ?");
 $stmt_produk->bind_param("i", $id_produk);
 $stmt_produk->execute();
@@ -27,7 +27,7 @@ if ($produk_result->num_rows === 0) {
 $produk = $produk_result->fetch_assoc();
 $stmt_produk->close();
 
-// --- 3. Ambil Data Varian ---
+
 $stmt_variants = $conn->prepare("SELECT * FROM detail_produk WHERE id_produk = ? ORDER BY id_detail_produk ASC");
 $stmt_variants->bind_param("i", $id_produk);
 $stmt_variants->execute();
@@ -35,7 +35,7 @@ $variants_result = $stmt_variants->get_result();
 $variants = $variants_result->fetch_all(MYSQLI_ASSOC);
 $stmt_variants->close();
 
-// --- 4. Data Dropdown ---
+
 $kategori_result = mysqli_query($conn, "SELECT * FROM kategori WHERE id_kategori IN (1, 2)");
 $size_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM size ORDER BY ukuran ASC"), MYSQLI_ASSOC);
 $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size ORDER BY nama_grind ASC"), MYSQLI_ASSOC);
@@ -200,19 +200,19 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
 </template>
 
 <script>
-    // 1. FUNGSI PREVIEW GAMBAR
+    
     function handleImagePreview(input, imgId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Cari elemen IMG berdasarkan ID dan ubah src-nya
+                
                 document.getElementById(imgId).src = e.target.result;
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // 2. LOGIKA TAMBAH VARIAN
+    
     document.getElementById('addVariantBtn').addEventListener('click', function() {
         const container = document.getElementById('variantContainer');
         const template = document.getElementById('variantTemplate');
@@ -220,7 +220,7 @@ $grind_options = mysqli_fetch_all(mysqli_query($conn, "SELECT * FROM grind_size 
         container.appendChild(clone);
     });
 
-    // 3. LOGIKA HAPUS VARIAN
+    
     function removeVariant(button, isNew) {
         const row = button.closest('.variant-row');
         if (isNew) {

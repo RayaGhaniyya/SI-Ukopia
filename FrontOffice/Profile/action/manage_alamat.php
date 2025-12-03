@@ -8,9 +8,7 @@ if (!isset($_SESSION['customer_uid'])) {
     exit;
 }
 $uid = $_SESSION['customer_uid'];
-
-// Ambil Data
-$id_alamat = isset($_POST['id_alamat']) ? intval($_POST['id_alamat']) : 0; // ID untuk Edit (0 = Baru)
+$id_alamat = isset($_POST['id_alamat']) ? intval($_POST['id_alamat']) : 0;
 $label = $_POST['label_alamat'] ?? '';
 $penerima = $_POST['nama_penerima'] ?? '';
 $telp = $_POST['no_telepon'] ?? '';
@@ -27,18 +25,15 @@ if (empty($label) || empty($penerima) || empty($telp) || empty($detail)) {
 
 $conn->begin_transaction();
 try {
-    // 1. Jika diset Utama, reset alamat lain jadi 0
     if ($is_utama == 1) {
         $conn->query("UPDATE alamat_customer SET is_utama = 0 WHERE uid_customer = '$uid'");
     }
 
     if ($id_alamat > 0) {
-        // --- MODE UPDATE (UBAH) ---
         $stmt = $conn->prepare("UPDATE alamat_customer SET label_alamat=?, nama_penerima=?, no_telepon=?, alamat_lengkap=?, kota=?, provinsi=?, kode_pos=?, is_utama=? WHERE id_alamat=? AND uid_customer=?");
         $stmt->bind_param("sssssssiii", $label, $penerima, $telp, $detail, $kota, $provinsi, $kodepos, $is_utama, $id_alamat, $uid);
         $msg = "Alamat berhasil diperbarui!";
     } else {
-        // --- MODE INSERT (TAMBAH) ---
         $stmt = $conn->prepare("INSERT INTO alamat_customer (uid_customer, label_alamat, nama_penerima, no_telepon, alamat_lengkap, kota, provinsi, kode_pos, is_utama) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("isssssssi", $uid, $label, $penerima, $telp, $detail, $kota, $provinsi, $kodepos, $is_utama);
         $msg = "Alamat baru berhasil disimpan!";

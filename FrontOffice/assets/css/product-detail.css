@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    PRODUCT-DETAIL.CSS - RESPONSIVE
 ============================================== */
 
@@ -390,7 +390,6 @@ main.product-detail-section {
 
 .login-alert a { color: #000; font-weight: 600; text-decoration: underline; }
 
-/* Responsive Product Detail */
 @media (max-width: 1024px) {
     .left-panel {
         width: 45%;

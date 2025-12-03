@@ -35,7 +35,7 @@ while ($row = mysqli_fetch_assoc($queryDetail)) {
     $variasi[] = $row;
 }
 $jsonVariasi = json_encode($variasi);
-$jsonGambar = json_encode($gallery_images); // Kirim array gambar ke JS
+$jsonGambar = json_encode($gallery_images); 
 ?>
 
 <!DOCTYPE html>

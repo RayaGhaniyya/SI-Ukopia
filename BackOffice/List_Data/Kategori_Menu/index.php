@@ -1,11 +1,11 @@
 <?php
-// Path koneksi TIDAK DIUBAH
+
 include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
-include("../../Component/pagination.php"); // 1. INCLUDE PAGINATION
+include("../../Component/pagination.php"); 
 
-// --- LOGIKA PAGINATION & SEARCH ---
+
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -18,10 +18,10 @@ $where_conditions = [];
 $params = [];
 $types = "";
 
-// 2. SESUAIKAN KOLOM SEARCH
+
 if ($search_term != '') {
     $search_like = "%" . $search_term . "%";
-    $where_conditions[] = "(nama_kategori LIKE ?)"; // Cari di 'nama_kategori'
+    $where_conditions[] = "(nama_kategori LIKE ?)"; 
     $params[] = $search_like;
     $types .= "s";
     $base_url_pagin .= 'search=' . urlencode($search_term) . '&';
@@ -32,7 +32,7 @@ if (!empty($where_conditions)) {
     $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 }
 
-// 3. QUERY TOTAL DATA
+
 $count_query = "SELECT COUNT(*) as total FROM kategori_menu" . $where_sql;
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
@@ -44,8 +44,8 @@ $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// 4. QUERY AMBIL DATA
-$order_by_sql = " ORDER BY id_kategori_menu DESC LIMIT ? OFFSET ?"; // Order by asli
+
+$order_by_sql = " ORDER BY id_kategori_menu DESC LIMIT ? OFFSET ?"; 
 $data_query = "SELECT id_kategori_menu, nama_kategori, biji FROM kategori_menu" . $where_sql . $order_by_sql;
 
 $data_params = $params;
@@ -57,7 +57,7 @@ $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
-// --- LOGIKA SELESAI ---
+
 ?>
 
 <div class="container">
@@ -100,7 +100,7 @@ $result = $stmt_data->get_result();
                         if ($result && mysqli_num_rows($result) > 0) {
                             $no = $offset + 1;
                             while ($row = mysqli_fetch_assoc($result)) {
-                                // Logika Label
+                                
                                 $statusBiji = ($row['biji'] == 1) 
                                     ? '<span class="badge badge-success" style="background:#28a745; color:white; padding:3px 8px; border-radius:4px;">Ya</span>' 
                                     : '<span class="badge badge-secondary" style="background:#6c757d; color:white; padding:3px 8px; border-radius:4px;">Tidak</span>';

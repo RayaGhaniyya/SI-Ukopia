@@ -1,33 +1,26 @@
 <?php
-// Pastikan koneksi dan ID Produk tersedia dari parent
 if (!isset($db_connection) || !isset($id_produk)) {
     return;
 }
 
-// Inisialisasi Variabel User Review (Default Kosong)
 $userReview = null;
 $isEditing = false;
 $ratingValue = 0;
 $komentarValue = "";
 
-// Cek apakah user sedang login?
 if (isset($_SESSION['customer_uid'])) {
     $uid_akun = $_SESSION['customer_uid'];
 
-    // Cek di database apakah user ini sudah pernah review produk ini?
     $checkReview = mysqli_query($db_connection, "SELECT * FROM ulasan_produk WHERE id_produk = '$id_produk' AND uid_akun = '$uid_akun'");
 
     if (mysqli_num_rows($checkReview) > 0) {
         $userReview = mysqli_fetch_assoc($checkReview);
-        $isEditing = true; // Tandai bahwa ini mode EDIT
+        $isEditing = true;
         $ratingValue = $userReview['rating'];
         $komentarValue = $userReview['komentar'];
     }
 }
 
-/* ==========================================================
-   LOGIKA 1: PROSES INSERT (ULASAN BARU)
-   ========================================================== */
 if (isset($_POST['kirim_ulasan'])) {
     if (!isset($_SESSION['customer_uid'])) {
         echo "<script>window.location.href='../auth/login.php';</script>";
@@ -40,14 +33,12 @@ if (isset($_POST['kirim_ulasan'])) {
     $tanggal = date('Y-m-d H:i:s');
 
     if ($rating == 0 || empty($komentar)) {
-        // Error Validation (Tampil langsung karena page reload)
         echo "<script>document.addEventListener('DOMContentLoaded', () => showToast('Mohon isi rating bintang dan komentar!', 'error'));</script>";
     } else {
         $queryInsert = "INSERT INTO ulasan_produk (id_produk, uid_akun, rating, komentar, tanggal) 
                         VALUES ('$id_produk', '$uid_akun', '$rating', '$komentar', '$tanggal')";
 
         if (mysqli_query($db_connection, $queryInsert)) {
-            // Sukses (Simpan pesan ke Storage lalu Redirect)
             echo "<script>
                 localStorage.setItem('toast_msg', 'Terima kasih! Ulasan berhasil dikirim.');
                 localStorage.setItem('toast_type', 'success');
@@ -60,9 +51,6 @@ if (isset($_POST['kirim_ulasan'])) {
     }
 }
 
-/* ==========================================================
-   LOGIKA 2: PROSES UPDATE (EDIT ULASAN)
-   ========================================================== */
 if (isset($_POST['update_ulasan'])) {
     if (!isset($_SESSION['customer_uid'])) {
         echo "<script>window.location.href='../auth/login.php';</script>";
@@ -70,7 +58,7 @@ if (isset($_POST['update_ulasan'])) {
     }
 
     $uid_akun = $_SESSION['customer_uid'];
-    $id_ulasan = intval($_POST['id_ulasan']); // Ambil ID ulasan yang mau diedit
+    $id_ulasan = intval($_POST['id_ulasan']);
     $rating = intval($_POST['rating']);
     $komentar = mysqli_real_escape_string($db_connection, $_POST['komentar']);
     $tanggal = date('Y-m-d H:i:s');
@@ -78,12 +66,10 @@ if (isset($_POST['update_ulasan'])) {
     if ($rating == 0 || empty($komentar)) {
         echo "<script>document.addEventListener('DOMContentLoaded', () => showToast('Mohon isi rating bintang dan komentar!', 'error'));</script>";
     } else {
-        // Query UPDATE
         $queryUpdate = "UPDATE ulasan_produk SET rating = '$rating', komentar = '$komentar', tanggal = '$tanggal' 
                         WHERE id_ulasan = '$id_ulasan' AND uid_akun = '$uid_akun'";
 
         if (mysqli_query($db_connection, $queryUpdate)) {
-            // Sukses Update
             echo "<script>
                 localStorage.setItem('toast_msg', 'Ulasan berhasil diperbarui!');
                 localStorage.setItem('toast_type', 'success');
@@ -96,9 +82,6 @@ if (isset($_POST['update_ulasan'])) {
     }
 }
 
-/* ==========================================================
-   LOGIKA 3: AMBIL DATA GLOBAL (LIST REVIEW & RATA-RATA)
-   ========================================================== */
 $queryUlasan = mysqli_query($db_connection, "
     SELECT u.*, a.nama 
     FROM ulasan_produk u 

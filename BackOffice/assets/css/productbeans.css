@@ -19,7 +19,7 @@
 
 .variant-row {
     display: grid;
-    /* 4 kolom: Size, Grind, Harga, Stok + 1 kolom Tombol Hapus */
+    
     grid-template-columns: 1.5fr 1.5fr 1fr 1fr 0.5fr;
     gap: 10px;
     margin-bottom: 10px;
@@ -31,9 +31,9 @@
     font-size: 13px;
 }
 
-/* Style untuk varian yang akan dihapus di update.php */
+
 .variant-row.deleting {
     opacity: 0.5;
     background: #fff0f0;
-    pointer-events: none; /* Nonaktifkan input di dalamnya */
+    pointer-events: none; 
 }

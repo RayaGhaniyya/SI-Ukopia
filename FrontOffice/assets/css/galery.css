@@ -1,6 +1,6 @@
-/* ==============================================
+/* 
    GALERY.CSS - RESPONSIVE
-============================================== */
+ */
 * { 
     margin: 0; 
     padding: 0; 
@@ -191,7 +191,6 @@ body {
     color: #999;
 }
 
-/* Responsive Galery */
 @media (max-width: 1024px) {
     .galery-section {
         padding: 50px 0;

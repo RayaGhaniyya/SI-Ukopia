@@ -5,7 +5,7 @@ include("../../Component/head.php");
 include("../../Component/pagination.php");
 $current_host = $_SERVER['HTTP_HOST'];
 
-// --- LOGIKA PAGINATION & SEARCH ---
+
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -16,7 +16,7 @@ $base_url_pagin = '?';
 $params = [];
 $types = "";
 
-// Filter Kategori Merchandise (ID 3)
+
 $where_conditions = ["p.id_kategori = 3"];
 
 if ($search_term != '') {
@@ -30,7 +30,7 @@ if ($search_term != '') {
 
 $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 
-// Hitung Total
+
 $count_query = "SELECT COUNT(DISTINCT p.id_produk) as total FROM produk p $where_sql";
 $stmt_count = $conn->prepare($count_query);
 if (!empty($params)) {
@@ -41,7 +41,7 @@ $total_rows = $stmt_count->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// Ambil Data + Group Concat Galeri
+
 $order_by_sql = " ORDER BY p.id_produk DESC LIMIT ? OFFSET ?";
 $data_query = "
     SELECT 
@@ -113,7 +113,7 @@ $result = $stmt_data->get_result();
                             while ($row = mysqli_fetch_assoc($result)):
                                 $gambar_utama = str_replace("localhost", $current_host, $row['gambar_url']);
 
-                                // Siapkan data JSON untuk galeri
+                                
                                 $gallery_array = [];
                                 if (!empty($row['list_galeri'])) {
                                     $raw_urls = explode(',', $row['list_galeri']);
@@ -121,7 +121,7 @@ $result = $stmt_data->get_result();
                                         $gallery_array[] = str_replace("localhost", $current_host, $url);
                                     }
                                 }
-                                // Encode ke JSON agar bisa dibaca JS
+                                
                                 $gallery_json = htmlspecialchars(json_encode($gallery_array), ENT_QUOTES, 'UTF-8');
                                 $jumlah_foto = count($gallery_array);
                         ?>
@@ -184,20 +184,20 @@ $result = $stmt_data->get_result();
     function openGalleryModal(title, images) {
         document.getElementById('galleryTitle').textContent = "Galeri: " + title;
         const container = document.getElementById('galleryGrid');
-        container.innerHTML = ''; // Bersihkan isi lama
+        container.innerHTML = ''; 
 
         if (images.length > 0) {
             images.forEach(src => {
-                // Wrapper dengan Class CSS
+                
                 const wrapper = document.createElement('div');
                 wrapper.className = 'gallery-item-wrapper';
 
-                // Gambar dengan Class CSS
+                
                 const img = document.createElement('img');
                 img.className = 'gallery-image';
                 img.src = src;
 
-                // Klik untuk buka tab baru
+                
                 wrapper.onclick = () => window.open(src, '_blank');
 
                 wrapper.appendChild(img);

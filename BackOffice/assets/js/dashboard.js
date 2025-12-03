@@ -1,17 +1,17 @@
-// Variable global untuk menyimpan data dashboard
+
 let dashboardData = {};
 
-// FUNGSI FETCH DATA DARI DATABASE (REAL-TIME)
+
 async function fetchDashboardData() {
     try {
-        // Path ke file PHP action yang baru dibuat
+        
         const response = await fetch('action/get_dashboard_data.php');
         const result = await response.json();
 
         if (result.status === 'success') {
             dashboardData = result.data;
             console.log('Data fetched:', dashboardData);
-            initDashboard(); // Render tampilan setelah data didapat
+            initDashboard(); 
         } else {
             console.error('Gagal memuat data:', result.message);
         }
@@ -20,14 +20,14 @@ async function fetchDashboardData() {
     }
 }
 
-// Fungsi untuk animasi counter (Angka naik pelan-pelan)
+
 function animateCounter(id, target, isCurrency = false) {
     const element = document.getElementById(id);
     if (!element) return;
     
     const duration = 1500;
     const start = 0;
-    // Jika target 0, langsung tampilkan 0
+    
     if(target === 0) {
         element.textContent = isCurrency ? "Rp 0" : "0";
         return;
@@ -43,7 +43,7 @@ function animateCounter(id, target, isCurrency = false) {
             clearInterval(timer);
         }
         
-        // Format angka (Pemisah Ribuan)
+        
         let formatted = Math.floor(current).toLocaleString('id-ID');
         if (isCurrency) formatted = "Rp " + formatted;
         
@@ -51,10 +51,10 @@ function animateCounter(id, target, isCurrency = false) {
     }, 16);
 }
 
-// Render Stats Cards (Total Produk & Omzet)
+
 function renderStats() {
     animateCounter('totalProducts', dashboardData.totalProducts);
-    animateCounter('totalSales', dashboardData.totalSales, true); // True = Format Rupiah
+    animateCounter('totalSales', dashboardData.totalSales, true); 
     
     const topProductElement = document.getElementById('topProduct');
     if (topProductElement) {
@@ -62,7 +62,7 @@ function renderStats() {
     }
 }
 
-// Render Sales Chart (Grafik Batang)
+
 function updateSalesChart() {
     const period = document.getElementById('salesPeriod').value;
     const data = period === 'week' ? dashboardData.salesData.week : dashboardData.salesData.month;
@@ -75,11 +75,11 @@ function updateSalesChart() {
         return;
     }
     
-    const maxValue = Math.max(...data.map(item => item.value)) || 1; // Hindari bagi 0
+    const maxValue = Math.max(...data.map(item => item.value)) || 1; 
     
     const chartHTML = data.map(item => {
         const height = (item.value / maxValue) * 100;
-        // Tinggi minimal 5% biar bar tetap kelihatan walau nilainya kecil
+        
         const displayHeight = height < 5 && item.value > 0 ? 5 : height; 
         
         return `
@@ -93,7 +93,7 @@ function updateSalesChart() {
     chartElement.innerHTML = chartHTML;
 }
 
-// Render Top Products (Bar Horizontal)
+
 function renderTopProducts() {
     const chartElement = document.getElementById('topProductsChart');
     if (!chartElement) return;
@@ -122,12 +122,12 @@ function renderTopProducts() {
     chartElement.innerHTML = chartHTML;
 }
 
-// Render Recent Orders (DATA ASLI DARI DB)
+
 function renderRecentOrders() {
     const ordersElement = document.getElementById('recentOrders');
     if (!ordersElement) return;
 
-    // Cek jika data kosong
+    
     if (!dashboardData.recentOrders || dashboardData.recentOrders.length === 0) {
         ordersElement.innerHTML = `
             <div class="empty-state p-4 text-center text-muted">
@@ -137,9 +137,9 @@ function renderRecentOrders() {
         return;
     }
     
-    // Render Loop Data
+    
     const ordersHTML = dashboardData.recentOrders.map(order => {
-        // Tentukan icon berdasarkan teks status
+        
         let icon = 'clock';
         if(order.statusText === 'Selesai') icon = 'check-circle';
         else if(order.statusText === 'Dikirim') icon = 'truck';
@@ -168,7 +168,7 @@ function renderRecentOrders() {
     ordersElement.innerHTML = ordersHTML;
 }
 
-// Render Stock Alerts (Stok Menipis)
+
 function renderStockAlerts() {
     const alertsElement = document.getElementById('stockAlerts');
     if (!alertsElement) return;
@@ -192,7 +192,7 @@ function renderStockAlerts() {
     alertsElement.innerHTML = alertsHTML;
 }
 
-// Initialize Dashboard
+
 function initDashboard() {
     renderStats();
     updateSalesChart();
@@ -201,7 +201,7 @@ function initDashboard() {
     renderStockAlerts();
 }
 
-// LOAD DATA SAAT HALAMAN READY
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', fetchDashboardData);
 } else {

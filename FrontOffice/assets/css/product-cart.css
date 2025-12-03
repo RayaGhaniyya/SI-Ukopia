@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    PRODUCT-CART.CSS - RESPONSIVE
 ============================================== */
 * { 
@@ -294,7 +294,6 @@ body {
     background: #333;
 }
 
-/* Responsive Cart */
 @media (max-width: 1024px) {
     .cart-header {
         padding: 20px 40px;

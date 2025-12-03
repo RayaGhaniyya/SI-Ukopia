@@ -19,9 +19,9 @@ try {
 
     if (!$result) throw new Exception("Data tidak ditemukan!");
 
-    // Cek ketergantungan di resep (Optional, jika constraint DB belum restrict)
-    // $check_resep = $conn->query("SELECT id_resep FROM resep WHERE id_metode = $id");
-    // if($check_resep->num_rows > 0) throw new Exception("Metode ini sedang dipakai di Resep!");
+    
+    
+    
 
     $stmt = $conn->prepare("DELETE FROM metode WHERE id_metode = ?");
     $stmt->bind_param("i", $id);

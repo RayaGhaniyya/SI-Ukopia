@@ -3,12 +3,12 @@ include("../../../Koneksi/koneksi.php");
 include("../../Component/session.php");
 include("../../Component/head.php");
 
-// 1. Ambil data untuk Dropdown Size
+
 $size_query = "SELECT * FROM size ORDER BY ukuran ASC";
 $size_result = mysqli_query($conn, $size_query);
 $size_options = mysqli_fetch_all($size_result, MYSQLI_ASSOC);
 
-// ID Kategori Merchandise (sesuai DB)
+
 $id_kategori_merch = 3;
 ?>
 

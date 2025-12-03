@@ -16,7 +16,7 @@ function handleImagePreview(input, previewId, buttonId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle Add
+    
     const addForm = document.getElementById('metodeAddForm');
     if (addForm) {
         addForm.addEventListener('submit', function(e) {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle Update
+    
     const updateForm = document.getElementById('metodeUpdateForm');
     if (updateForm) {
         updateForm.addEventListener('submit', function(e) {

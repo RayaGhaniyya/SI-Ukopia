@@ -1,48 +1,41 @@
-/* ============================================
-   RESPONSIVE DASHBOARD - UKOPIA BACKOFFICE
-   Breakpoints Standar:
-   - Desktop: > 1024px
-   - Tablet: 768px - 1024px
-   - Mobile: < 768px
-   ============================================ */
 
-/* === TABLET (768px - 1024px) === */
+
 @media (max-width: 1024px) {
     .dashboard-container {
         padding: 25px;
     }
 
-    /* Charts jadi 1 kolom */
+    
     .charts-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
 
-    /* Bottom grid jadi 1 kolom */
+    
     .bottom-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
 
-    /* Stats grid tetap 2 kolom di tablet */
+    
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
 
-    /* Adjust bar chart height */
+    
     .bar-chart {
         height: 240px;
     }
 
-    /* Adjust horizontal bar */
+    
     .h-bar-label {
         min-width: 120px;
         font-size: 12px;
     }
 }
 
-/* === MOBILE (< 768px) === */
+
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 15px;
@@ -60,14 +53,14 @@
         font-size: 1.4rem;
     }
 
-    /* Stats grid jadi 1 kolom */
+    
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 12px;
         margin-bottom: 20px;
     }
 
-    /* Adjust stat card */
+    
     .stat-card {
         padding: 20px;
     }
@@ -82,7 +75,7 @@
         font-size: 20px;
     }
 
-    /* Charts */
+    
     .chart-card {
         padding: 20px;
     }
@@ -102,7 +95,7 @@
         max-width: none;
     }
 
-    /* Bar chart mobile */
+    
     .bar-chart {
         height: 200px;
         gap: 8px;
@@ -112,7 +105,7 @@
         font-size: 11px;
     }
 
-    /* Horizontal bar mobile */
+    
     .h-bar-chart {
         gap: 12px;
     }
@@ -131,7 +124,7 @@
         padding: 0 8px;
     }
 
-    /* Table card */
+    
     .table-card {
         padding: 20px;
     }
@@ -140,7 +133,7 @@
         font-size: 16px;
     }
 
-    /* Order item mobile */
+    
     .order-item {
         flex-direction: column;
         align-items: flex-start;
@@ -172,7 +165,7 @@
         padding: 5px 12px;
     }
 
-    /* Alert item mobile */
+    
     .alert-item {
         padding: 14px;
     }
@@ -186,7 +179,7 @@
     }
 }
 
-/* === SMALL MOBILE (< 480px) === */
+
 @media (max-width: 480px) {
     .dashboard-container {
         padding: 12px;

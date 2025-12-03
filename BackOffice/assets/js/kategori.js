@@ -1,43 +1,33 @@
-/* ============================================
-    KATEGORI.JS - UKOPIA BACKOFFICE (OPTIMIZED)
-    [UBAH] Ganti nama file dan fungsi sesuai modul
-    
-    Dependencies dari global.js:
-    - showNotification()
-    - showLoading() / hideLoading()
-    - initFormAutoSave()
-    - loadSavedFormData()
-    // initTableSearch() SUDAH DIHAPUS
-    ============================================ */
 
-// ===== INITIALIZATION =====
+
+
 document.addEventListener("DOMContentLoaded", () => {
-  // [UBAH] Form Add - ID form sesuai HTML
+  
   const addForm = document.getElementById("kategoriAddForm");
   if (addForm) {
     addForm.addEventListener("submit", (e) =>
-      // [UBAH] URL action dan success message
+      
       handleKategoriSubmit(e, "action/store.php", "Kategori berhasil ditambahkan!")
     );
-    initFormAutoSave(addForm); // ✅ Dari global.js
+    initFormAutoSave(addForm); 
   }
 
-  // [UBAH] Form Update - ID form sesuai HTML
+  
   const updateForm = document.getElementById("kategoriUpdateForm");
   if (updateForm) {
     updateForm.addEventListener("submit", (e) =>
-      // [UBAH] URL action dan success message
+      
       handleKategoriSubmit(e, "action/update.php", "Kategori berhasil diperbarui!")
     );
-    initFormAutoSave(updateForm); // ✅ Dari global.js
+    initFormAutoSave(updateForm); 
   }
 
-  // Load saved form data
-  loadSavedFormData(); // ✅ Dari global.js
+  
+  loadSavedFormData(); 
 });
 
-// ===== FORM SUBMIT HANDLER (Simple Version) =====
-// [UBAH] Nama fungsi bisa disesuaikan (contoh: handleKategoriSubmit, handleProductSubmit)
+
+
 async function handleKategoriSubmit(e, url, successMessage) {
   e.preventDefault();
   
@@ -46,14 +36,14 @@ async function handleKategoriSubmit(e, url, successMessage) {
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalBtnHTML = submitBtn?.innerHTML;
   
-  // Disable button
+  
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
   }
 
-  // [UBAH] Loading message
-  showLoading("Menyimpan data kategori..."); // ✅ Dari global.js
+  
+  showLoading("Menyimpan data kategori..."); 
 
   try {
     const res = await fetch(url, { method: "POST", body: formData });
@@ -61,34 +51,34 @@ async function handleKategoriSubmit(e, url, successMessage) {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const result = await res.json();
-    hideLoading(); // ✅ Dari global.js
+    hideLoading(); 
 
     if (result.success) {
-      showNotification(successMessage, "success"); // ✅ Dari global.js
+      showNotification(successMessage, "success"); 
       
-      // Clear localStorage untuk form ini
+      
       const inputs = form.querySelectorAll('input[type="text"], textarea, select');
       inputs.forEach(input => {
         localStorage.removeItem(`${form.id}_${input.name}`);
       });
       
-      // [UBAH] Redirect ke halaman index
+      
       setTimeout(() => window.location.href = "index.php", 1200);
     } else {
-      showNotification(result.message || "Gagal menyimpan data", "error"); // ✅ Dari global.js
+      showNotification(result.message || "Gagal menyimpan data", "error"); 
       
-      // Re-enable button
+      
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnHTML;
       }
     }
   } catch (error) {
-    hideLoading(); // ✅ Dari global.js
+    hideLoading(); 
     console.error("Error:", error);
-    showNotification("Terjadi kesalahan! " + error.message, "error"); // ✅ Dari global.js
+    showNotification("Terjadi kesalahan! " + error.message, "error"); 
     
-    // Re-enable button
+    
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnHTML;
@@ -96,21 +86,21 @@ async function handleKategoriSubmit(e, url, successMessage) {
   }
 }
 
-// ===== DELETE HANDLER =====
-// [UBAH] Confirmation message dan loading message sesuai modul
+
+
 async function confirmDelete(id) {
   if (!id) {
-    showNotification("ID kategori tidak valid", "error"); // ✅ Dari global.js
+    showNotification("ID kategori tidak valid", "error"); 
     return;
   }
 
-  // [UBAH] Confirmation text sesuai modul
+  
   if (!confirm("⚠️ Yakin ingin menghapus kategori ini?\n\nData yang dihapus tidak dapat dikembalikan!")) {
     return;
   }
 
-  // [UBAH] Loading message
-  showLoading("Menghapus kategori..."); // ✅ Dari global.js
+  
+  showLoading("Menghapus kategori..."); 
 
   try {
     const res = await fetch("action/delete.php", {
@@ -122,18 +112,18 @@ async function confirmDelete(id) {
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const result = await res.json();
-    hideLoading(); // ✅ Dari global.js
+    hideLoading(); 
 
     if (result.success) {
-      // [UBAH] Success message
-      showNotification("Kategori berhasil dihapus!", "success"); // ✅ Dari global.js
+      
+      showNotification("Kategori berhasil dihapus!", "success"); 
       setTimeout(() => window.location.reload(), 1000);
     } else {
-      showNotification(result.message || "Gagal menghapus kategori", "error"); // ✅ Dari global.js
+      showNotification(result.message || "Gagal menghapus kategori", "error"); 
     }
   } catch (error) {
-    hideLoading(); // ✅ Dari global.js
+    hideLoading(); 
     console.error("Error:", error);
-    showNotification("Terjadi kesalahan saat menghapus data", "error"); // ✅ Dari global.js
+    showNotification("Terjadi kesalahan saat menghapus data", "error"); 
   }
 }

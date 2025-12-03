@@ -12,23 +12,20 @@ require '../../../vendor/PHPMailer/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $base_url_login = "/SI-Ukopia/FrontOffice/auth/login.php"; // URL untuk error
+    $base_url_login = "/SI-Ukopia/FrontOffice/auth/login.php"; 
 
     $nama = $_POST['nama'];
-    $username = $_POST['username']; // [BARU] Ambil username
+    $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // ...
     if (empty($nama) || empty($username) || empty($email) || empty($password)) {
-        // BENAR: Tanda kutip ( ' ) ditutup sebelum titik ( . )
+        
         header('Location: ' . $base_url_login . '?view=register&status=error&message=Semua field wajib diisi');
         exit;
     }
-    // ...
 
-    // Cek apakah email sudah terdaftar (SAMA)
     $stmt_check = $conn->prepare("SELECT email FROM akun_customer WHERE email = ?");
     $stmt_check->bind_param("s", $email);
     $stmt_check->execute();
@@ -39,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt_check->close();
 
-    // [BARU] Cek apakah username sudah terdaftar
     $stmt_check_user = $conn->prepare("SELECT username FROM akun_customer WHERE username = ?");
     $stmt_check_user->bind_param("s", $username);
     $stmt_check_user->execute();
@@ -51,23 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt_check_user->close();
 
 
-    // (Hash password & Buat kode - SAMA)
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $verification_code = bin2hex(random_bytes(16));
 
-    // [UPDATE] Query INSERT ditambahkan kolom 'username'
     $stmt_insert = $conn->prepare(
         "INSERT INTO akun_customer (nama, username, email, password, verification_code, is_verified) 
          VALUES (?, ?, ?, ?, ?, 0)"
     );
-    // [UPDATE] bind_param diubah dari "ssss" menjadi "sssss"
     $stmt_insert->bind_param("sssss", $nama, $username, $email, $hashed_password, $verification_code);
 
     if ($stmt_insert->execute()) {
         $_SESSION['verification_email'] = $email;
         $mail = new PHPMailer(true);
         try {
-            // (Konfigurasi SMTP SAMA)
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;

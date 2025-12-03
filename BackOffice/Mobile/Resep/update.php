@@ -5,7 +5,7 @@ include("../../Component/head.php");
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// 1. Ambil Data Resep
+
 $stmt = $conn->prepare("SELECT * FROM resep WHERE id_resep = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -17,17 +17,17 @@ if (!$data) {
     exit;
 }
 
-// 2. Ambil Alat yang SUDAH DIPILIH
+
 $selected_alat = [];
 $res_detail = $conn->query("SELECT id_alat FROM resep_detail_alat WHERE id_resep = $id");
 while($row = $res_detail->fetch_assoc()){
     $selected_alat[] = $row['id_alat'];
 }
 
-// 3. Data Master
+
 $customers = mysqli_query($conn, "SELECT uid, nama FROM akun_customer ORDER BY nama ASC");
 $alats = mysqli_query($conn, "SELECT id_alat, nama_alat FROM alat ORDER BY nama_alat ASC");
-// [BARU] Ambil Data Metode
+
 $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER BY nama_metode ASC");
 ?>
 

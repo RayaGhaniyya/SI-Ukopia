@@ -1,15 +1,15 @@
 <?php
-// Path koneksi ini sudah benar
+
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
-// Validasi method
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Method tidak valid']);
     exit;
 }
 
-// Validasi input
+
 $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
 if ($id <= 0) {
@@ -17,18 +17,11 @@ if ($id <= 0) {
     exit;
 }
 
-//
-// VVVVV--- PERBAIKAN DI SINI ---VVVVV
-//
-// [UBAH] Konfigurasi upload directory
-// Path dari 'action/' adalah: ../ (naik ke folder 'Menu') ../ (naik ke folder 'Mobile') /Uploads/Menu/
+
 $UPLOAD_DIR = '../../Uploads/Menu/';
-//
-// ^^^^^--- SELESAI PERBAIKAN ---^^^^^
-//
 
 try {
-    // Cek apakah data exists
+    
     $stmt_check = $conn->prepare("SELECT id_menu FROM menu WHERE id_menu = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
@@ -39,7 +32,7 @@ try {
     }
     $stmt_check->close();
 
-    // Ambil gambar untuk dihapus dari server
+    
     $stmt_image = $conn->prepare("SELECT gambar_url FROM menu WHERE id_menu = ?");
     $stmt_image->bind_param("i", $id);
     $stmt_image->execute();
@@ -51,8 +44,8 @@ try {
     }
     $stmt_image->close();
 
-    // Hapus data menu dari database
-    // (Kita asumsikan 'ulasan_menu' punya ON DELETE CASCADE, jadi tidak perlu transaksi)
+    
+    
     $stmt_delete = $conn->prepare("DELETE FROM menu WHERE id_menu = ?");
     $stmt_delete->bind_param("i", $id);
 
@@ -61,10 +54,10 @@ try {
     }
     $stmt_delete->close();
 
-    // Hapus file gambar dari server (setelah berhasil hapus dari DB)
+    
     $imageDeleted = false;
     if ($imageUrl) {
-        // Extract filename dari URL
+        
         $fileName = basename($imageUrl);
         $filePath = $UPLOAD_DIR . $fileName;
 
@@ -75,7 +68,7 @@ try {
         }
     }
 
-    // Success message
+    
     echo json_encode([
         'success' => true,
         'message' => 'Menu berhasil dihapus!',

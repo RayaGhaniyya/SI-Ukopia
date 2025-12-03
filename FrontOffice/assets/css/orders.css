@@ -1,6 +1,6 @@
-/* ==============================================
+/* 
    ORDERS.CSS - RESPONSIVE
-============================================== */
+ */
 * { 
   margin: 0; 
   padding: 0; 
@@ -190,7 +190,6 @@ body {
 .badge-danger  { background: #f8d7da; color: #842029; }
 .badge-secondary { background: #e2e3e5; color: #383d41; }
 
-/* Responsive Orders */
 @media (max-width: 768px) {
     .orders-header {
         padding: 15px 0;

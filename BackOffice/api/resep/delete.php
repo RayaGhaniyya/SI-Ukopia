@@ -1,22 +1,18 @@
 <?php
-// Sesuaikan path koneksi
 include("../../../Koneksi/koneksi.php");
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 
-// 1. Cek Method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method Not Allowed']);
     exit;
 }
 
-// 2. Ambil Data JSON
 $json = file_get_contents("php://input");
 $data = json_decode($json, true);
 
-// 3. Validasi ID Resep
 if (empty($data['id_resep'])) {
     echo json_encode(['success' => false, 'message' => 'ID Resep wajib diisi!']);
     exit;
@@ -25,8 +21,6 @@ if (empty($data['id_resep'])) {
 $id_resep = intval($data['id_resep']);
 $uid_akun = isset($data['uid_akun']) ? intval($data['uid_akun']) : 0;
 
-// (Opsional) Validasi Kepemilikan: Cek apakah resep ini benar milik user tersebut?
-// Ini penting untuk keamanan agar user A tidak menghapus resep User B.
 if ($uid_akun > 0) {
     $cek_milik = $conn->prepare("SELECT id_resep FROM resep WHERE id_resep = ? AND uid_akun = ?");
     $cek_milik->bind_param("ii", $id_resep, $uid_akun);
@@ -41,7 +35,6 @@ if ($uid_akun > 0) {
 }
 
 try {
-    // 4. Proses Delete
     $query = "DELETE FROM resep WHERE id_resep = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $id_resep);

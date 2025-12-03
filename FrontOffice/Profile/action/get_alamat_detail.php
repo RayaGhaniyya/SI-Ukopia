@@ -15,8 +15,6 @@ if ($id_alamat == 0) {
     echo json_encode(['success' => false, 'message' => 'ID Alamat tidak valid.']);
     exit;
 }
-
-// Ambil data alamat spesifik milik user ini
 $stmt = $conn->prepare("SELECT * FROM alamat_customer WHERE id_alamat = ? AND uid_customer = ?");
 $stmt->bind_param("ii", $id_alamat, $uid);
 $stmt->execute();

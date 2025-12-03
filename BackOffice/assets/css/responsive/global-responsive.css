@@ -3,7 +3,7 @@
    Update untuk global.css
    ============================================ */
 
-/* === TABLET (768px - 1024px) === */
+
 @media (max-width: 1024px) {
     body {
         padding: 25px 15px 25px 260px;
@@ -13,7 +13,7 @@
         padding-left: 90px;
     }
 
-    /* Form Container */
+    
     .form-container {
         padding: 25px;
         margin-top: 30px;
@@ -23,18 +23,18 @@
         font-size: 1.4rem;
     }
 
-    /* Table Card */
+    
     .table-card {
         padding: 20px;
         margin-top: 30px;
     }
 
-    /* Form Row - tetap 2 kolom di tablet */
+    
     .form-row {
         gap: 15px;
     }
 
-    /* Data Table */
+    
     .data-table {
         min-width: 650px;
     }
@@ -45,13 +45,13 @@
         font-size: 13px;
     }
 
-    /* Dashboard Header */
+    
     .dashboard-header h1 {
         font-size: 1.6rem;
     }
 }
 
-/* === MOBILE (< 768px) === */
+
 @media (max-width: 768px) {
     body {
         padding: 20px 10px 20px 90px;
@@ -61,12 +61,12 @@
         padding-left: 90px;
     }
 
-    /* Container */
+    
     .container {
         padding: 0 10px;
     }
 
-    /* Form Container */
+    
     .form-container {
         padding: 20px;
         border-radius: 12px;
@@ -78,7 +78,7 @@
         margin-bottom: 20px;
     }
 
-    /* Form Row jadi 1 kolom */
+    
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
@@ -102,7 +102,7 @@
         padding: 10px 12px;
     }
 
-    /* Form Actions - stack vertikal */
+    
     .form-actions {
         flex-direction: column;
         gap: 10px;
@@ -114,7 +114,7 @@
         justify-content: center;
     }
 
-    /* Buttons */
+    
     .btn {
         padding: 8px 14px;
         font-size: 13px;
@@ -130,7 +130,7 @@
         font-size: 15px;
     }
 
-    /* Image Preview */
+    
     .image-preview-single {
         width: 160px;
     }
@@ -140,14 +140,14 @@
         height: 150px;
     }
 
-    /* Table Card */
+    
     .table-card {
         padding: 15px;
         border-radius: 12px;
         margin-top: 20px;
     }
 
-    /* Table Header */
+    
     .table-header {
         flex-direction: column;
         align-items: stretch;
@@ -165,13 +165,13 @@
         max-width: none;
     }
 
-    /* Search Group */
+    
     .search-group {
         width: 100%;
         max-width: none;
     }
 
-    /* Table Responsive */
+    
     .table-responsive {
         margin: 0 -15px;
         padding: 0 15px;
@@ -198,7 +198,7 @@
         margin: 2px;
     }
 
-    /* Dashboard Header */
+    
     .dashboard-header {
         flex-direction: column;
         align-items: stretch;
@@ -210,7 +210,7 @@
         font-size: 1.4rem;
     }
 
-    /* Popup Overlay */
+    
     .popup-overlay {
         padding: 10px;
     }
@@ -242,7 +242,7 @@
         font-size: 18px;
     }
 
-    /* Detail Info */
+    
     .detail-info {
         padding: 12px;
     }
@@ -263,13 +263,13 @@
         font-size: 13px;
     }
 
-    /* Badge */
+    
     .badge {
         font-size: 11px;
         padding: 3px 8px;
     }
 
-    /* Empty State */
+    
     .empty-state {
         padding: 30px 15px;
     }
@@ -282,7 +282,7 @@
         font-size: 13px;
     }
 
-    /* Notification */
+    
     .notification {
         top: 10px;
         right: 10px;
@@ -300,7 +300,7 @@
         font-size: 18px;
     }
 
-    /* Pagination */
+    
     .pagination {
         flex-wrap: wrap;
         gap: 4px;
@@ -314,7 +314,7 @@
     }
 }
 
-/* === SMALL MOBILE (< 480px) === */
+
 @media (max-width: 480px) {
     body {
         padding: 15px 8px 15px 90px;
@@ -365,7 +365,7 @@
         height: 130px;
     }
 
-    /* Smaller buttons on very small screens */
+    
     .btn {
         padding: 7px 12px;
         font-size: 12px;
@@ -387,7 +387,7 @@
     }
 }
 
-/* === LANDSCAPE MODE UNTUK MOBILE === */
+
 @media (max-height: 500px) and (orientation: landscape) {
     .popup-box {
         max-height: 95vh;

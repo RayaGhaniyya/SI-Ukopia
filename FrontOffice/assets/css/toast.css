@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    TOAST.CSS - RESPONSIVE
 ============================================== */
 
@@ -157,7 +157,6 @@
     to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Responsive Toast */
 @media (max-width: 768px) {
     #toast-container {
         top: 20px;

@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    PRODUCT-CHECKOUT.CSS - RESPONSIVE
 ============================================== */
 
@@ -302,7 +302,6 @@ body {
     border-radius: 3px; 
 }
 
-/* Responsive Checkout */
 @media (max-width: 1024px) {
     .checkout-left {
         width: 50%;

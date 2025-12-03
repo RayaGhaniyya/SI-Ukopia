@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Path 2x ../ (dari auth/ -> FrontOffice/ -> SI-Ukopia/ -> Koneksi/)
 include("../../Koneksi/koneksi.php");
 
 $message = "";
@@ -15,8 +14,7 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
 
     if ($result->num_rows === 1) {
         $stmt_update = $conn->prepare(
-            "UPDATE akun_customer SET is_verified = 1, verification_code = NULL 
-             WHERE verification_code = ?"
+            "UPDATE akun_customer SET is_verified = 1, verification_code = NULL WHERE verification_code = ?"
         );
         $stmt_update->bind_param("s", $verification_code);
 

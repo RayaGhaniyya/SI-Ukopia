@@ -11,7 +11,7 @@ $stmt->bind_param("i", $uid);
 $stmt->execute();
 $customer = $stmt->get_result()->fetch_assoc();
 
-// [PENTING] Ambil juga kolom 'biji' dari kategori_menu
+
 $kategori_res = mysqli_query($conn, "SELECT * FROM kategori_menu ORDER BY nama_kategori ASC");
 ?>
 
@@ -75,7 +75,7 @@ function loadMenu(idKategori) {
     const selectKategori = document.getElementById('selectKategori');
     const selectedOption = selectKategori.options[selectKategori.selectedIndex];
     
-    // [LOGIKA BARU] Cek atribut data-biji (1 = butuh biji, 0 = tidak)
+    
     const butuhBiji = selectedOption.getAttribute('data-biji');
 
     if (butuhBiji == '1') {

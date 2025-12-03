@@ -1,5 +1,5 @@
 <?php
-// action/update.php - Update Alat dengan Shared Image Support
+
 include("../../../../Koneksi/koneksi.php");
 include("../../helper_img.php");
 
@@ -10,14 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Ambil data
+
 $id_alat = intval($_POST['id_alat'] ?? 0);
 $nama_alat = trim($_POST['nama_alat'] ?? '');
 $id_kategori = intval($_POST['id_kategori'] ?? 0);
-$image_option = $_POST['image_option'] ?? 'keep'; // 'keep', 'existing', 'new'
+$image_option = $_POST['image_option'] ?? 'keep'; 
 $old_image = $_POST['old_image'] ?? '';
 
-// Validasi
+
 if ($id_alat <= 0) {
     echo json_encode(['success' => false, 'message' => 'ID Alat tidak valid!']);
     exit;
@@ -34,12 +34,12 @@ if ($id_kategori <= 0) {
 }
 
 $UPLOAD_DIR = '../../Uploads/Alat/';
-$gambarFinal = $old_image; // Default: gunakan gambar lama
+$gambarFinal = $old_image; 
 $needDeleteOld = false;
 $newFileName = null;
 
 try {
-    // Cek data exists
+    
     $stmt_check = $conn->prepare("SELECT id_alat, gambar FROM alat WHERE id_alat = ?");
     $stmt_check->bind_param("i", $id_alat);
     $stmt_check->execute();
@@ -52,13 +52,13 @@ try {
     $oldData = $result_check->fetch_assoc();
     $stmt_check->close();
 
-    // Proses gambar berdasarkan opsi
+    
     if ($image_option === 'keep') {
-        // Tidak ada perubahan gambar
+        
         $gambarFinal = $oldData['gambar'];
         
     } else if ($image_option === 'existing') {
-        // Gunakan gambar yang sudah ada
+        
         $existing_image = trim($_POST['existing_image'] ?? '');
         
         if (empty($existing_image)) {
@@ -71,11 +71,11 @@ try {
         
         $gambarFinal = $existing_image;
         
-        // Cek apakah gambar lama masih digunakan alat lain
+        
         $needDeleteOld = shouldDeleteImage($conn, $oldData['gambar'], $id_alat);
         
     } else if ($image_option === 'new') {
-        // Upload gambar baru
+        
         if (!isset($_FILES['gambar']) || $_FILES['gambar']['error'] !== UPLOAD_ERR_OK) {
             throw new Exception('Upload gambar baru atau pilih opsi lain!');
         }
@@ -92,11 +92,11 @@ try {
 
         $gambarFinal = $newFileName;
         
-        // Cek apakah gambar lama masih digunakan alat lain
+        
         $needDeleteOld = shouldDeleteImage($conn, $oldData['gambar'], $id_alat);
     }
 
-    // Cek duplikasi nama (kecuali diri sendiri)
+    
     $stmt_dup = $conn->prepare("SELECT id_alat FROM alat WHERE nama_alat = ? AND id_kategori_alat = ? AND id_alat != ?");
     $stmt_dup->bind_param("sii", $nama_alat, $id_kategori, $id_alat);
     $stmt_dup->execute();
@@ -104,7 +104,7 @@ try {
     if ($stmt_dup->get_result()->num_rows > 0) {
         $stmt_dup->close();
         
-        // Rollback: hapus gambar baru jika ada
+        
         if ($newFileName && file_exists($UPLOAD_DIR . $newFileName)) {
             @unlink($UPLOAD_DIR . $newFileName);
         }
@@ -113,7 +113,7 @@ try {
     }
     $stmt_dup->close();
 
-    // Update data
+    
     $stmt = $conn->prepare("UPDATE alat SET nama_alat = ?, id_kategori_alat = ?, gambar = ? WHERE id_alat = ?");
     $stmt->bind_param("sisi", $nama_alat, $id_kategori, $gambarFinal, $id_alat);
 
@@ -124,7 +124,7 @@ try {
     $stmt->close();
     $conn->close();
 
-    // Hapus gambar lama jika sudah tidak digunakan
+    
     if ($needDeleteOld && !empty($oldData['gambar'])) {
         $oldFilePath = $UPLOAD_DIR . $oldData['gambar'];
         if (file_exists($oldFilePath)) {
@@ -139,7 +139,7 @@ try {
     ]);
 
 } catch (Exception $e) {
-    // Rollback: hapus gambar baru jika database gagal
+    
     if ($newFileName && file_exists($UPLOAD_DIR . $newFileName)) {
         @unlink($UPLOAD_DIR . $newFileName);
     }
@@ -165,7 +165,7 @@ function shouldDeleteImage($conn, $imageName, $excludeId) {
     $result = $stmt->get_result()->fetch_assoc();
     $stmt->close();
     
-    // Jika count = 0, berarti gambar tidak digunakan lagi
+    
     return ($result['count'] == 0);
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 include("../../../../Koneksi/koneksi.php");
-include("../../helper_img.php"); // Pakai helper yg sama (pastikan path benar)
+include("../../helper_img.php"); 
 
 header('Content-Type: application/json');
 
@@ -16,7 +16,7 @@ if (empty($nama)) {
     exit;
 }
 
-// Validasi Gambar (Disarankan SVG/PNG)
+
 if (!isset($_FILES['gambar']) || $_FILES['gambar']['error'] !== UPLOAD_ERR_OK) {
     echo json_encode(['success' => false, 'message' => 'Icon Metode wajib diupload!']);
     exit;
@@ -28,8 +28,8 @@ if (!is_dir($UPLOAD_DIR)) mkdir($UPLOAD_DIR, 0755, true);
 $newFileName = null;
 
 try {
-    // Untuk SVG tidak perlu dikompres/resize pakai helper JPG/PNG biasa
-    // Jadi kita handle manual uploadnya agar SVG aman
+    
+    
     $file = $_FILES['gambar'];
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $allowed = ['svg', 'png', 'jpg', 'jpeg', 'webp'];

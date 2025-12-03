@@ -1,12 +1,12 @@
 <?php
-// Path Koneksi (Naik 2 Level)
+
 include("../../Koneksi/koneksi.php");
-// Path Session (Naik 1 Level)
+
 include("../Component/session.php");
 include("../Component/head.php");
 include("../Component/pagination.php");
 
-// --- KONFIGURASI PAGINATION & SEARCH ---
+
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -18,7 +18,7 @@ $where_conditions = [];
 $params = [];
 $types = "";
 
-// Filter Pencarian
+
 if (!empty($search_term)) {
     $search_like = "%" . $search_term . "%";
     $where_conditions[] = "(t.midtrans_order_id LIKE ? OR c.nama LIKE ?)";
@@ -33,7 +33,7 @@ if (!empty($where_conditions)) {
     $where_sql = " WHERE " . implode(" AND ", $where_conditions);
 }
 
-// 1. Hitung Total Data
+
 $count_query = "SELECT COUNT(*) as total 
                 FROM transaksi t 
                 JOIN akun_customer c ON t.uid_customer = c.uid 
@@ -48,7 +48,7 @@ $total_rows = $count_result->fetch_assoc()['total'];
 $total_pages = ceil($total_rows / $limit);
 $stmt_count->close();
 
-// 2. Ambil Data Transaksi
+
 $data_query = "SELECT t.*, c.nama as nama_customer 
                FROM transaksi t 
                JOIN akun_customer c ON t.uid_customer = c.uid 
@@ -111,7 +111,7 @@ $result = $stmt->get_result();
                         if ($result && $result->num_rows > 0) {
                             $no = $offset + 1;
                             while ($row = $result->fetch_assoc()) {
-                                // Badge Status Logic
+                                
                                 $st = $row['status_pesanan'];
                                 $badge = 'badge bg-secondary';
                                 if ($st == 'Menunggu Pembayaran') $badge = 'badge bg-warning';

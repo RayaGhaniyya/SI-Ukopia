@@ -7,7 +7,7 @@ class Database {
     private $password = ""; 
     public $conn;
 
-    // Fungsi untuk mendapatkan koneksi
+    
     public function getConnection() {
         $this->conn = null;
 

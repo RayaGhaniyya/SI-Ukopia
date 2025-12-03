@@ -4,14 +4,13 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET");
 
 $uid = isset($_GET['uid']) ? intval($_GET['uid']) : 0;
-$type = isset($_GET['type']) ? $_GET['type'] : 'pending'; // 'pending' atau 'history'
+$type = isset($_GET['type']) ? $_GET['type'] : 'pending';
 
 if ($uid <= 0) {
     exit(json_encode(['success' => false, 'message' => 'UID wajib diisi']));
 }
 
 try {
-    // Query Dasar: Join ke Menu & Kategori Menu untuk ambil nama
     $sql = "SELECT 
                 l.id_loyalty, 
                 l.tanggal, 
@@ -24,7 +23,6 @@ try {
             JOIN kategori_menu k ON l.id_kategori = k.id_kategori_menu
             WHERE l.uid_akun = ?";
 
-    // Filter Berdasarkan Status
     if ($type == 'pending') {
         $sql .= " AND l.status_pengisian = 'Menunggu Review'";
     } else {
@@ -40,14 +38,13 @@ try {
 
     $data = [];
     while ($row = $result->fetch_assoc()) {
-        // Rapikan format data
         $data[] = [
             'id_loyalty'   => intval($row['id_loyalty']),
             'nama_menu'    => $row['nama_menu'],
             'kategori'     => $row['nama_kategori'],
-            'biji_kopi'    => $row['biji_kopi'] ?: '-', // Jika null ganti dash
+            'biji_kopi'    => $row['biji_kopi'] ?: '-', 
             'tanggal'      => $row['tanggal'],
-            // Data nilai (default 0 jika pending)
+
             'nilai' => [
                 'keasaman'   => intval($row['keasaman']),
                 'kepahitan'  => intval($row['kepahitan']),

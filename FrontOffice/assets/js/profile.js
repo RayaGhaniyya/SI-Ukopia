@@ -1,4 +1,4 @@
-/* =================================
+/* 
    LOGIKA HALAMAN PROFIL (BERSIH)
    ================================= */
 
@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initTogglePassword('newPassword', 'toggleNewPassword');
     initTogglePassword('confirmNewPassword', 'toggleConfirmNewPassword');
 
-    // --- 1. EDIT DATA DIRI ---
     const editBtn = document.getElementById("editProfileBtn");
     const namaInput = document.getElementById("namaLengkap");
     const usernameInput = document.getElementById("username");
@@ -58,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         finally { editBtn.disabled = false; if (editBtn.textContent.includes('spinner')) editBtn.textContent = "Simpan"; }
     }
 
-    // --- 2. GANTI EMAIL ---
     const step1Form = document.getElementById("emailStep1Form");
     const step2Form = document.getElementById("emailStep2Form");
     const btnBatalEmail = document.getElementById("btnBatalEmail");
@@ -111,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (btnBatalEmail) { btnBatalEmail.addEventListener('click', () => { step2Form.style.display = 'none'; step1Form.style.display = 'block'; }); }
 
-    // --- 3. GANTI PASSWORD ---
     const passStep1 = document.getElementById("passStep1Form");
     const passStep2 = document.getElementById("passStep2Form");
     const btnBatalPass = document.getElementById("btnBatalPass");
@@ -163,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (btnBatalPass) { btnBatalPass.addEventListener('click', () => { passStep2.style.display = 'none'; passStep1.style.display = 'block'; }); }
     
-    // --- 4. ALAMAT ---
     const alamatForm = document.getElementById("alamatChangeForm");
     if (alamatForm) {
        alamatForm.addEventListener("submit", async (e) => { 
@@ -226,7 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 6. LOGOUT ---
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn){
         logoutBtn.addEventListener('click', (e) => {
@@ -236,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// GLOBAL FUNCTIONS
 function hapusAlamat(id) {
     showConfirm('Yakin ingin menghapus alamat ini?', async () => {
         const formData = new FormData();

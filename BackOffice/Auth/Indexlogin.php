@@ -4,13 +4,13 @@ session_start();
 
 $session_lifetime = 24 * 60 * 60;
 
-// Cek apakah user sudah login
+
 if (isset($_SESSION['username']) && isset($_SESSION['login_time'])) {
     if (time() - $_SESSION['login_time'] < $session_lifetime) {
         header("Location: ../Dashboard/index.php");
         exit();
     } else {
-        // Session expired
+
         session_unset();
         session_destroy();
         session_start();
@@ -19,7 +19,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['login_time'])) {
     }
 }
 
-// Proses Login
+
 if (isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
@@ -37,7 +37,7 @@ if (isset($_POST['login'])) {
             $row = $result->fetch_assoc();
 
             if (password_verify($password, $row['password'])) {
-                // Login berhasil
+
                 $_SESSION['username'] = $username;
                 $_SESSION['login_time'] = time();
                 $_SESSION['notif'] = "Login berhasil! Selamat datang";
@@ -61,11 +61,11 @@ if (isset($_POST['login'])) {
     exit();
 }
 
-// Ambil notifikasi (kalau ada)
+
 $notif = $_SESSION['notif'] ?? '';
 $type = $_SESSION['type'] ?? '';
 
-// Hapus notifikasi setelah diambil
+
 unset($_SESSION['notif']);
 unset($_SESSION['type']);
 ?>
@@ -78,11 +78,12 @@ unset($_SESSION['type']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Ukopia</title>
     <link rel="stylesheet" href="../assets/css/login.css">
+    <link rel="stylesheet" href="../assets/css/responsive/misc-responsive.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
+    <div class=" container">
         <div class="card">
             <h2 class="title">Login</h2>
             <form method="POST" class="login-form">

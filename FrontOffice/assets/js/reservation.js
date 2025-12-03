@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Ambil semua elemen penting
     const dayButtons = document.querySelectorAll(".days .day-btn");
     const hiddenDay = document.getElementById("selectedDay");
     
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("reservationForm");
     const confirmBtn = document.getElementById("confirmBtn");
 
-    // === FUNGSI UNTUK DROPDOWN ===
     document.querySelectorAll(".custom-dropdown").forEach(drop => {
         const btn = drop.querySelector(".dropdown-btn");
         const items = drop.querySelectorAll(".dropdown-list li");
@@ -50,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".custom-dropdown.active").forEach(d => d.classList.remove("active"));
     });
 
-    // === FUNGSI UNTUK TOMBOL HARI ===
     dayButtons.forEach(btn => {
         btn.addEventListener("click", () => {
             if (btn.disabled) return; 
@@ -64,16 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // === FUNGSI UPDATE WAKTU ===
     function updateSelectedTime() {
         const hour = hourBtn.textContent.trim();
         const minute = minuteBtn.textContent.trim();
         hiddenTime.value = `${hour}:${minute}:00`;
     }
 
-    // ==========================================================
-    // === FUNGSI CEK SLOT (LOGIKA UTAMA) ===
-    // ==========================================================
     function checkSlotAvailability() {
         
         if (typeof bookedHours === 'undefined' || typeof serverTime === 'undefined') {
@@ -90,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const hoursBookedOnThisDate = bookedHours[selectedDate] || {};
 
-        // 1. Cek JAM
         hourListItems.forEach(hourItem => {
             const hour = parseInt(hourItem.dataset.value, 10);
             const isBooked = !!hoursBookedOnThisDate[hour];
@@ -105,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 2. Cek Jam Terpilih
         const selectedHour = hourBtn.textContent.trim();
         const selectedHourEl = Array.from(hourListItems).find(li => li.dataset.value === selectedHour);
         
@@ -123,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         
-        // 3. Cek MENIT
         const finalSelectedHour = parseInt(hourBtn.textContent.trim(), 10);
         const isHourBooked = !!hoursBookedOnThisDate[finalSelectedHour];
         const isCurrentHour = (isToday && finalSelectedHour === currentHour);
@@ -153,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
         
-        // 4. Atur Tombol Confirm
         const finalSelectedHourEl = Array.from(hourListItems).find(li => li.dataset.value === String(finalSelectedHour).padStart(2,'0'));
         const isFinalHourDisabled = (finalSelectedHourEl && finalSelectedHourEl.classList.contains('disabled'));
 
@@ -171,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmBtn.textContent = "Confirm";
         }
         
-        // 5. Cek Hari
         dayButtons.forEach(btn => {
             if (btn.dataset.value === selectedDate && btn.disabled) {
                  confirmBtn.disabled = true;
@@ -186,7 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateSelectedTime();
     }
 
-    // === FUNGSI SUBMIT FORM (AJAX/FETCH) ===
     if (form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault(); 
@@ -204,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const result = await response.json(); 
 
                 if (result.success) {
-                    // === GANTI DENGAN TOAST ===
                     showToast("Reservasi berhasil! Silakan tunggu konfirmasi admin.", 'success');
                     
                     form.reset();
@@ -227,11 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateSelectedTime();
                     
                     setTimeout(() => {
-                        location.reload(); // Reload untuk update slot
+                        location.reload(); 
                     }, 2000); 
 
                 } else {
-                    // === GANTI DENGAN TOAST ===
                     showToast(result.message, 'error');
                     
                     confirmBtn.disabled = false;
@@ -239,7 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
             } catch (error) {
-                // === GANTI DENGAN TOAST ===
                 showToast("Terjadi kesalahan sistem. Coba lagi nanti.", 'error');
                 
                 console.error("Error submitting form:", error);
@@ -249,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // === Inisialisasi ===
     if (dayButtons.length > 0) {
         checkSlotAvailability();
     }

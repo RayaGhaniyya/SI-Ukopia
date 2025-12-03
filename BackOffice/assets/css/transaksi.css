@@ -1,9 +1,4 @@
-/* ============================================
-   STYLE TRANSAKSI (CLEAN & WIDE)
-   File: BackOffice/assets/css/transaksi.css
-   ============================================ */
 
-/* Modal Styling */
 .modal-content {
     background-color: #fff;
     border: none;
@@ -11,7 +6,6 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
-/* Grid Layout (2 Kolom) */
 .detail-header-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -47,7 +41,6 @@
     flex-shrink: 0;
 }
 
-/* Tabel Produk */
 .trx-product-table {
     width: 100%;
     border-collapse: separate;
@@ -82,7 +75,6 @@
     vertical-align: middle;
 }
 
-/* Footer Total */
 .detail-footer {
     display: flex;
     justify-content: flex-end;
@@ -116,7 +108,6 @@
 
 .text-highlight { color: #198754; }
 
-/* Form Actions */
 .form-actions {
     margin-top: 25px;
     display: flex;

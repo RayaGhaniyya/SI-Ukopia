@@ -3,11 +3,11 @@ include("../../Koneksi/koneksi.php");
 
 $id = $_GET['id'] ?? 0;
 
-// 1. Ambil Data Transaksi
+
 $query = mysqli_query($conn, "
     SELECT t.*, 
-           a.nama_penerima, a.no_telepon, a.alamat_lengkap, a.kota, a.provinsi, a.kode_pos, 
-           c.nama as nama_user, c.email
+    a.nama_penerima, a.no_telepon, a.alamat_lengkap, a.kota, a.provinsi, a.kode_pos, 
+    c.nama as nama_user, c.email
     FROM transaksi t
     JOIN akun_customer c ON t.uid_customer = c.uid
     JOIN alamat_customer a ON t.id_alamat_kirim = a.id_alamat
@@ -20,7 +20,7 @@ if (!$trx) {
     exit;
 }
 
-// 2. Ambil Item Barang
+
 $items = mysqli_query($conn, "
     SELECT dt.*, p.nama_produk, s.ukuran, g.nama_grind, p.gambar_url
     FROM detail_transaksi dt

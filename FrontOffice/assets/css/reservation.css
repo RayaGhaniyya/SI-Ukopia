@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    RESERVATION.CSS - RESPONSIVE
 ============================================== */
 
@@ -343,7 +343,6 @@ section.reservation-section {
     box-shadow: none;
 }
 
-/* Responsive Reservation */
 @media (max-width: 1024px) {
     .left-content,
     .right-content {

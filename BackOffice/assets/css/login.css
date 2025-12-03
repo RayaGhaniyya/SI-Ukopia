@@ -1,4 +1,4 @@
-/* ====== Tampilan Utama ====== */
+
 * {
     margin: 0;
     padding: 0;
@@ -36,7 +36,7 @@ body {
     padding-bottom: 0.5rem;
 }
 
-/* ====== Input Style ====== */
+
 .input-box {
     position: relative;
     margin-bottom: 1.8rem;
@@ -74,7 +74,7 @@ body {
     color: #e0e0e0;
 }
 
-/* ====== Ikon Default (misal username) ====== */
+
 .icon {
     position: absolute;
     right: 12px;
@@ -83,7 +83,7 @@ body {
     color: #aaa;
 }
 
-/* ====== Ikon Mata untuk Password ====== */
+
 .toggle-password {
     position: absolute;
     right: 15px;
@@ -98,7 +98,7 @@ body {
     color: #fff;
 }
 
-/* ====== Tombol ====== */
+
 .btn {
     width: 100%;
     padding: 12px;
@@ -115,7 +115,7 @@ body {
     background: #575e68; 
 }
 
-/* ====== Link Register/Login ====== */
+
 .register-link {
     margin-top: 1rem;
     color: #ffffff;
@@ -130,7 +130,7 @@ body {
     text-decoration: underline;
 }
 
-/* ====== Notifikasi ====== */
+
 .notification {
     position: fixed;
     top: 30px;
@@ -160,3 +160,4 @@ body {
 .notification.error {
     background: linear-gradient(135deg, #d63031, #ff7675);
 }
+

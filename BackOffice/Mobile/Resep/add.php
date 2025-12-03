@@ -5,7 +5,7 @@ include("../../Component/head.php");
 
 $customers = mysqli_query($conn, "SELECT uid, nama FROM akun_customer ORDER BY nama ASC");
 $alats = mysqli_query($conn, "SELECT id_alat, nama_alat FROM alat ORDER BY nama_alat ASC");
-// [BARU] Ambil Data Metode
+
 $metodes = mysqli_query($conn, "SELECT id_metode, nama_metode FROM metode ORDER BY nama_metode ASC");
 ?>
 

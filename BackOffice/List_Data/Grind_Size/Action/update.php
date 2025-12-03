@@ -1,5 +1,5 @@
 <?php
-// [UBAH] Path koneksi sesuai lokasi
+
 include("../../../../Koneksi/koneksi.php");
 header('Content-Type: application/json');
 
@@ -7,26 +7,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit(json_encode(['success' => false, 'message' => 'Method tidak valid']));
 }
 
-// [UBAH] Nama variable sesuai field
+
 $id_grind = intval($_POST['id_grind'] ?? 0);
 $nama_grind = trim($_POST['nama_grind'] ?? '');
 
-// Validasi
+
 if ($id_grind <= 0) {
     exit(json_encode(['success' => false, 'message' => 'ID tidak valid!']));
 }
 
-// [UBAH] Validasi input
+
 if (empty($nama_grind)) {
     exit(json_encode(['success' => false, 'message' => 'Grind Size wajib diisi!']));
 }
 
-// [UBAH] Validasi panjang
+
 if (strlen($nama_grind) > 100) {
     exit(json_encode(['success' => false, 'message' => 'Grind Size maksimal 100 karakter!']));
 }
 
-// [UBAH] Cek exists
+
 $stmt_check = $conn->prepare("SELECT id_grind FROM grind_size WHERE id_grind = ?");
 $stmt_check->bind_param("i", $id_grind);
 $stmt_check->execute();
@@ -37,7 +37,7 @@ if ($stmt_check->get_result()->num_rows == 0) {
 }
 $stmt_check->close();
 
-// [UBAH - OPTIONAL] Cek duplikasi nama (kecuali data sendiri)
+
 $stmt_dup = $conn->prepare("SELECT id_grind FROM grind_size WHERE nama_grind = ? AND id_grind != ?");
 $stmt_dup->bind_param("si", $nama_grind, $id_grind);
 $stmt_dup->execute();
@@ -49,7 +49,7 @@ if ($stmt_dup->get_result()->num_rows > 0) {
 $stmt_dup->close();
 
 try {
-    // [UBAH] Query update - nama tabel dan kolom
+    
     $stmt = $conn->prepare("UPDATE grind_size SET nama_grind = ? WHERE id_grind = ?");
     $stmt->bind_param("si", $nama_grind, $id_grind);
 
@@ -60,7 +60,7 @@ try {
     $stmt->close();
     $conn->close();
 
-    // [UBAH] Success message
+    
     echo json_encode(['success' => true, 'message' => 'Grind Size berhasil diperbarui!']);
 } catch (Exception $e) {
     $conn->close();

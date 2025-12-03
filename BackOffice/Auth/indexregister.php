@@ -65,6 +65,7 @@ $type = $_SESSION['type'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar | Ukopia</title>
     <link rel="stylesheet" href="../assets/css/register.css">
+    <link rel="stylesheet" href="../assets/css/responsive/misc-responsive.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 

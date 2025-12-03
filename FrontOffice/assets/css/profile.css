@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    PROFILE.CSS - RESPONSIVE
 ============================================== */
 * { 
@@ -229,7 +229,6 @@ body {
     border-color: #198754; 
 }
 
-/* Responsive Profile */
 @media (max-width: 1024px) {
     .profile-content-container {
         max-width: 800px;

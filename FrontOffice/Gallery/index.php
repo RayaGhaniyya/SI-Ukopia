@@ -3,18 +3,13 @@ include("../../Koneksi/koneksi.php");
 include("../Component/NavBar.php");
 include("../Component/Loader.php");
 
-// Pagination
 $itemsPerPage = 5;
 $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($currentPage - 1) * $itemsPerPage;
-
-// Count total galleries
 $countQuery = "SELECT COUNT(*) as total FROM galery";
 $countResult = mysqli_query($conn, $countQuery);
 $totalItems = mysqli_fetch_assoc($countResult)['total'];
 $totalPages = ceil($totalItems / $itemsPerPage);
-
-// Fetch galleries with images
 $query = "
     SELECT 
         g.id_galery,
@@ -30,7 +25,6 @@ $result = mysqli_query($conn, $query);
 $galleries = [];
 
 while ($row = mysqli_fetch_assoc($result)) {
-    // Fetch images for this gallery
     $id = $row['id_galery'];
     $imgQuery = "SELECT gambar FROM detail_galery WHERE id_galery = $id LIMIT 4";
     $imgResult = mysqli_query($conn, $imgQuery);
@@ -61,13 +55,10 @@ while ($row = mysqli_fetch_assoc($result)) {
                     $isEven = $index % 2 == 0;
                     $tanggalFormat = date('d-m-y', strtotime($gallery['tanggal']));
                 ?>
-
-                    <!-- Pattern: Gambar dulu (untuk index genap: 0, 2, 4...) -->
                     <?php if ($isEven): ?>
                         <div class="galery-images">
                             <div class="img-grid">
                                 <?php
-                                // Tampilkan max 4 gambar
                                 $imageCount = min(4, count($gallery['images']));
                                 for ($i = 0; $i < $imageCount; $i++):
                                     $imgPath = "../../BackOffice/" . $gallery['images'][$i];
@@ -78,7 +69,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 <?php endfor; ?>
 
                                 <?php
-                                // Fill dengan placeholder jika kurang dari 4
                                 for ($i = $imageCount; $i < 4; $i++):
                                 ?>
                                     <img src="../assets/img/placeholder.jpg" alt="Placeholder">
@@ -87,14 +77,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                         </div>
                     <?php endif; ?>
 
-                    <!-- Text Content -->
                     <div class="galery-text">
                         <h3><?php echo htmlspecialchars($gallery['judul']); ?></h3>
                         <p><?php echo nl2br(htmlspecialchars($gallery['deskripsi'])); ?></p>
                         <span class="date"><?php echo $tanggalFormat; ?></span>
                     </div>
 
-                    <!-- Pattern: Gambar di belakang (untuk index ganjil: 1, 3, 5...) -->
                     <?php if (!$isEven): ?>
                         <div class="galery-images">
                             <div class="img-grid">
@@ -123,7 +111,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                 ?>
             </div>
 
-            <!-- Pagination -->
             <?php if ($totalPages > 1): ?>
                 <div class="pagination">
                     <?php if ($currentPage > 1): ?>
@@ -155,7 +142,6 @@ while ($row = mysqli_fetch_assoc($result)) {
             <?php endif; ?>
 
         <?php else: ?>
-            <!-- Empty State -->
             <div class="empty-gallery">
                 <i class="fas fa-images"></i>
                 <h3>Belum Ada Galeri</h3>

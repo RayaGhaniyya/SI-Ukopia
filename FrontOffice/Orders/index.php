@@ -2,20 +2,14 @@
 session_start();
 include("../../Koneksi/koneksi.php");
 
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header('Location: ../auth/login.php');
     exit;
 }
 
 $customer_uid = $_SESSION['customer_uid'];
+$timeout_minutes = 10;
 
-// ============================================================
-// LOGIKA 0: AUTO-CANCEL (LAZY UPDATE) - 10 MENIT
-// ============================================================
-$timeout_minutes = 10; // Batas waktu 10 menit
-
-// Cari transaksi yang 'Menunggu Pembayaran' dan sudah lewat 10 menit
 $cekExpired = mysqli_query($conn, "
     SELECT id_transaksi FROM transaksi 
     WHERE status_pesanan = 'Menunggu Pembayaran' 
@@ -25,20 +19,13 @@ $cekExpired = mysqli_query($conn, "
 
 while ($rowExp = mysqli_fetch_assoc($cekExpired)) {
     $id_trx_exp = $rowExp['id_transaksi'];
-
-    // A. Kembalikan Stok Barang
     $qDetail = mysqli_query($conn, "SELECT id_detail_produk, jumlah FROM detail_transaksi WHERE id_transaksi = '$id_trx_exp'");
     while ($item = mysqli_fetch_assoc($qDetail)) {
         $conn->query("UPDATE detail_produk SET stok = stok + {$item['jumlah']} WHERE id_detail_produk = {$item['id_detail_produk']}");
     }
-
-    // B. Ubah Status jadi 'Kadaluarsa'
     $conn->query("UPDATE transaksi SET status_pesanan = 'Kadaluarsa' WHERE id_transaksi = '$id_trx_exp'");
 }
-// ============================================================
 
-
-// 2. Ambil Semua Transaksi (Setelah di-update)
 $queryTrx = mysqli_query($conn, "
     SELECT t.*, 
            (SELECT p.gambar_url FROM detail_transaksi dt 
@@ -58,7 +45,6 @@ $queryTrx = mysqli_query($conn, "
     ORDER BY t.tanggal_pesan DESC
 ");
 
-// 3. Pisahkan ke 5 Kategori
 $orders_unpaid = [];
 $orders_process = [];
 $orders_shipping = [];
@@ -77,7 +63,6 @@ while ($trx = mysqli_fetch_assoc($queryTrx)) {
     } elseif ($s == 'Selesai') {
         $orders_completed[] = $trx;
     } else {
-        // Batal, Kadaluarsa, Pengajuan Batal
         $orders_failed[] = $trx;
     }
 }
@@ -85,10 +70,9 @@ while ($trx = mysqli_fetch_assoc($queryTrx)) {
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 
-// Fungsi Helper Render Item HTML
 function renderTransactionItem($trx)
 {
-    global $timeout_minutes; // Ambil variabel durasi
+    global $timeout_minutes;
 
     $statusClass = 'badge-secondary';
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') $statusClass = 'badge-warning text-dark';
@@ -100,10 +84,7 @@ function renderTransactionItem($trx)
     $gambar_mentah = $trx['gambar_produk'] ?? '';
     $img = str_replace("localhost", $_SERVER['HTTP_HOST'], $gambar_mentah);
     if (empty($img)) $img = "../assets/img/default-product.png";
-
     $date = date('d M Y, H:i', strtotime($trx['tanggal_pesan']));
-
-    // Hitung Deadline (Waktu Pesan + 10 Menit)
     $deadline = date('Y-m-d H:i:s', strtotime($trx['tanggal_pesan'] . " +$timeout_minutes minutes"));
 
     echo '<div class="transaction-item">';
@@ -111,7 +92,6 @@ function renderTransactionItem($trx)
     echo '<div>';
     echo '<span class="trx-date"><i class="far fa-calendar-alt"></i> ' . $date . '</span>';
 
-    // Tampilkan Countdown hanya jika status Menunggu Pembayaran
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') {
         echo '<span class="badge bg-danger ms-2 countdown-timer" data-deadline="' . $deadline . '">Menghitung...</span>';
     }
@@ -129,7 +109,6 @@ function renderTransactionItem($trx)
     echo '</div>';
 
     echo '<div class="trx-footer">';
-    // Tombol Aksi Dinamis
     if ($trx['status_pesanan'] == 'Menunggu Pembayaran') {
         echo '<button class="btn btn-outline-danger btn-sm me-2" onclick="cancelOrder(' . $trx['id_transaksi'] . ')">Batalkan</button>';
         echo '<button class="btn btn-dark btn-sm btn-pay-now" onclick="payNow(\'' . $trx['snap_token'] . '\')">Bayar Sekarang</button>';

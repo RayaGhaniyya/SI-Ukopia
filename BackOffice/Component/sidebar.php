@@ -147,9 +147,11 @@
     </ul>
 
     <div class="profile-section">
-        <a href="#">
-            <i class="fas fa-user-circle"></i>
-            <span>Profile</span>
+
+        <a href="/SI-Ukopia/BackOffice/Auth/indexlogout.php" class="logout-btn" title="Keluar">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
         </a>
     </div>
+
 </div>

@@ -21,35 +21,26 @@ $uid = $_SESSION['customer_uid'];
 $old_password = $_POST['old_password'] ?? '';
 $new_password = $_POST['new_password'] ?? '';
 $confirm_new_password = $_POST['confirm_new_password'] ?? '';
-
-// 1. Validasi Input Kosong
 if (empty($old_password) || empty($new_password)) {
     ob_clean();
     echo json_encode(['success' => false, 'message' => 'Semua kolom wajib diisi.']);
     exit;
 }
-
-// 2. Validasi Kecocokan Password
 if ($new_password !== $confirm_new_password) {
     ob_clean();
     echo json_encode(['success' => false, 'message' => 'Password baru dan konfirmasi tidak cocok.']);
     exit;
 }
-
-// 3. VALIDASI KEKUATAN PASSWORD (Sesuai Permintaan)
-// Minimal 8 karakter
 if (strlen($new_password) < 8) {
     ob_clean();
     echo json_encode(['success' => false, 'message' => 'Password minimal 8 karakter.']);
     exit;
 }
-// Harus ada Huruf Besar
 if (!preg_match('/[A-Z]/', $new_password)) {
     ob_clean();
     echo json_encode(['success' => false, 'message' => 'Password harus mengandung minimal 1 Huruf Besar (A-Z).']);
     exit;
 }
-// Harus ada Huruf Kecil
 if (!preg_match('/[a-z]/', $new_password)) {
     ob_clean();
     echo json_encode(['success' => false, 'message' => 'Password harus mengandung minimal 1 Huruf Kecil (a-z).']);
@@ -58,8 +49,6 @@ if (!preg_match('/[a-z]/', $new_password)) {
 
 try {
     include("../../../Koneksi/koneksi.php");
-
-    // 4. Cek Password Lama
     $stmt = $conn->prepare("SELECT password, email, nama FROM akun_customer WHERE uid = ?");
     $stmt->bind_param("i", $uid);
     $stmt->execute();
@@ -71,15 +60,12 @@ try {
         echo json_encode(['success' => false, 'message' => 'Password lama salah.']);
         exit;
     }
-
-    // 5. Generate Kode & Simpan HASH Password Baru di Session (Bukan password asli)
     $code = rand(100000, 999999);
     $hashed_new_password = password_hash($new_password, PASSWORD_DEFAULT);
 
-    $_SESSION['temp_pass_hash'] = $hashed_new_password; // Simpan calon password
+    $_SESSION['temp_pass_hash'] = $hashed_new_password;
     $_SESSION['temp_pass_code'] = $code;
 
-    // 6. Kirim Email OTP
     $mail = new PHPMailer(true);
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';

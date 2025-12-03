@@ -1,20 +1,20 @@
 <?php
-include("../../../Koneksi/koneksi.php"); // Sesuaikan path
+include("../../../Koneksi/koneksi.php"); 
 include("../../Component/session.php");
 include("../../Component/head.php");
-include("../../Component/pagination.php"); // 1. INCLUDE PAGINATION
+include("../../Component/pagination.php"); 
 
-// ==========================================================
-// PERUBAHAN 1: Definisikan base URL untuk gambar
-// ==========================================================
+
+
+
 $current_host = $_SERVER['HTTP_HOST'];
-// Pastikan ini sesuai dengan path ke folder Uploads Anda
+
 $BASE_IMAGE_URL = "http://{$current_host}/SI-Ukopia/BackOffice/Mobile/Uploads/Menu/";
-// ==========================================================
 
 
-// --- LOGIKA PAGINATION & SEARCH (VERSI MENU DENGAN JOIN) ---
-// ... (Kode pagination Anda sudah benar) ...
+
+
+
 $limit = 20;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($current_page < 1) $current_page = 1;
@@ -69,7 +69,7 @@ $stmt_data = $conn->prepare($data_query);
 $stmt_data->bind_param($data_types, ...$data_params);
 $stmt_data->execute();
 $result = $stmt_data->get_result();
-// --- LOGIKA SELESAI ---
+
 ?>
 
 <div class="container">
@@ -134,12 +134,12 @@ $result = $stmt_data->get_result();
                                 $kategori = htmlspecialchars($row['nama_kategori']);
                                 $deskripsi = htmlspecialchars($row['deskripsi']);
                                 
-                                // ==========================================================
-                                // PERUBAHAN 2: Bangun URL gambar di sini
-                                // ==========================================================
+                                
+                                
+                                
                                 $gambar_filename = htmlspecialchars($row['gambar_url']);
                                 $gambar_dinamis = $BASE_IMAGE_URL . $gambar_filename;
-                                // ==========================================================
+                                
 
                                 $deskripsi_short = strlen($deskripsi) > 60 ? substr($deskripsi, 0, 60) . '...' : $deskripsi;
                         ?>

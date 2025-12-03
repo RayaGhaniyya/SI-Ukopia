@@ -8,7 +8,6 @@ include("../Component/head.php");
 
     <div class="dashboard-container">
 
-        <!-- Stats Cards (3 CARD AJA, HAPUS PESANAN AKTIF) -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-header">
@@ -52,9 +51,7 @@ include("../Component/head.php");
             </div>
         </div>
 
-        <!-- Charts -->
         <div class="charts-grid">
-            <!-- Grafik Penjualan -->
             <div class="chart-card">
                 <div class="chart-header">
                     <h2><i class="fas fa-chart-line"></i> Grafik Penjualan</h2>
@@ -66,7 +63,6 @@ include("../Component/head.php");
                 <div class="bar-chart" id="salesChart"></div>
             </div>
 
-            <!-- Produk Terlaris -->
             <div class="chart-card">
                 <div class="chart-header">
                     <h2><i class="fas fa-crown"></i> Produk Terlaris</h2>
@@ -75,15 +71,12 @@ include("../Component/head.php");
             </div>
         </div>
 
-        <!-- Bottom Section -->
         <div class="bottom-grid">
-            <!-- Pesanan Terbaru -->
             <div class="table-card">
                 <h2><i class="fas fa-receipt"></i> Pesanan Terbaru</h2>
                 <div class="orders-table" id="recentOrders"></div>
             </div>
 
-            <!-- Peringatan Stok -->
             <div class="table-card">
                 <h2><i class="fas fa-exclamation-triangle"></i> Peringatan Stok</h2>
                 <div class="alert-list" id="stockAlerts"></div>

@@ -14,7 +14,6 @@ if (!$data) {
     exit;
 }
 
-// Base URL Gambar
 $current_host = $_SERVER['HTTP_HOST'];
 $BASE_IMAGE_URL = "http://{$current_host}/si-ukopia/BackOffice/List_Data/Uploads/Alat/";
 
@@ -180,7 +179,6 @@ function toggleImageOptionUpdate(option) {
     const newSection = document.getElementById('newImageSection');
     const fileInput = document.getElementById('fileInput');
     
-    // Hide all sections
     currentSection.style.display = 'none';
     existingSection.style.display = 'none';
     newSection.style.display = 'none';
@@ -192,7 +190,6 @@ function toggleImageOptionUpdate(option) {
         existingSection.style.display = 'block';
         fileInput.removeAttribute('required');
         
-        // Load existing images
         const kategoriId = document.getElementById('kategoriSelect').value;
         if (kategoriId) {
             loadExistingImagesUpdate(kategoriId);

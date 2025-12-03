@@ -16,7 +16,6 @@ if (!$id_transaksi) {
     exit;
 }
 
-// 1. Cek Validasi (Milik user ini & Statusnya harus 'Dikirim')
 $check = mysqli_query($conn, "SELECT status_pesanan FROM transaksi WHERE id_transaksi = '$id_transaksi' AND uid_customer = '$uid'");
 $trx = mysqli_fetch_assoc($check);
 
@@ -30,7 +29,6 @@ if ($trx['status_pesanan'] !== 'Dikirim') {
     exit;
 }
 
-// 2. Update Status
 $update = mysqli_query($conn, "UPDATE transaksi SET status_pesanan = 'Selesai' WHERE id_transaksi = '$id_transaksi'");
 
 if ($update) {

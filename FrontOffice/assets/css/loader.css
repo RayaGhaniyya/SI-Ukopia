@@ -1,4 +1,4 @@
-/* ==============================================
+/* 
    LOADER.CSS - RESPONSIVE (No changes needed, but included for completeness)
 ============================================== */
 
@@ -42,7 +42,6 @@ body.loaded #loader {
   pointer-events: none;
 }
 
-/* Responsive Loader */
 @media (max-width: 768px) {
   .coffee-beans {
     gap: 12px;

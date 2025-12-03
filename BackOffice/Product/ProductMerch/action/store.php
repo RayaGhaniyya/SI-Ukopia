@@ -1,8 +1,8 @@
 <?php
 session_start();
-include("../../../../Koneksi/koneksi.php"); // Naik 4 level
+include("../../../../Koneksi/koneksi.php"); 
 
-// --- FUNGSI UPLOAD GAMBAR ---
+
 function uploadGambar($file, $current_host)
 {
     $uploadDir_relative = dirname(__DIR__, 3) . '/assets/img/produk/';
@@ -38,12 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $current_host = $_SERVER['HTTP_HOST'];
 
-        // 1. AMBIL DATA & SET DEFAULT KOSONG (FIX ERROR 'Field doesn't have default value')
+        
         $nama_produk = $_POST['nama_produk'];
         $id_kategori = (int)$_POST['id_kategori'];
         $deskripsi = $_POST['deskripsi'] ?? '';
 
-        // Data Opsional (Set ke string kosong '' jika tidak ada)
+        
         $origin = $_POST['origin'] ?? '';
         $altitude = $_POST['altitude'] ?? '';
         $variety = $_POST['variety'] ?? '';
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notes = $_POST['notes'] ?? '';
         $link = $_POST['link'] ?? '';
 
-        // 2. UPLOAD GAMBAR UTAMA
+        
         $gambar_url = '';
         if (isset($_FILES['gambar_url']) && $_FILES['gambar_url']['error'] == 0) {
             $uploadResult = uploadGambar($_FILES['gambar_url'], $current_host);
@@ -64,15 +64,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             throw new Exception("Error: Gambar utama wajib diisi.");
         }
 
-        // 3. INSERT PRODUK UTAMA
-        // Pastikan urutan kolom dan bind_param SAMA
+        
+        
         $stmt_produk = $conn->prepare("INSERT INTO produk (id_kategori, nama_produk, gambar_url, link, origin, altitude, notes, process, variety, deskripsi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt_produk->bind_param("isssssssss", $id_kategori, $nama_produk, $gambar_url, $link, $origin, $altitude, $notes, $process, $variety, $deskripsi);
         $stmt_produk->execute();
         $id_produk_baru = $conn->insert_id;
         $stmt_produk->close();
 
-        // 4. UPLOAD GALERI FOTO (LOOPING)
+        
         if (isset($_FILES['galeri']) && !empty($_FILES['galeri']['name'][0])) {
             $files = $_FILES['galeri'];
             $count = count($files['name']);
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_galeri->close();
         }
 
-        // 5. INSERT VARIAN
+        
         $varian_sizes = $_POST['varian_size'];
         $varian_grinds = $_POST['varian_grind'];
         $varian_hargas = $_POST['varian_harga'];
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_varian = $conn->prepare("INSERT INTO detail_produk (id_produk, id_grind, id_size, stok, harga) VALUES (?, ?, ?, ?, ?)");
         for ($i = 0; $i < count($varian_sizes); $i++) {
             $id_size = (int)$varian_sizes[$i];
-            // Fix Bug Grind Size (Bisa NULL)
+            
             $id_grind = (!empty($varian_grinds[$i]) && $varian_grinds[$i] !== 'N/A') ? (string)$varian_grinds[$i] : NULL;
             $harga = (int)$varian_hargas[$i];
             $stok = (int)$varian_stoks[$i];

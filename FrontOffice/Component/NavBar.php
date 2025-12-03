@@ -1,12 +1,7 @@
 <?php
-// [PERBAIKAN] Cek dulu jika session SUDAH aktif atau BELUM
 if (session_status() === PHP_SESSION_NONE) {
-    // --- BLOK INI HANYA JALAN JIKA SESSION BELUM DIMULAI ---
-
-    // [PERUBAHAN] Atur masa berlaku session (30 hari)
     $session_lifetime = 2592000;
 
-    // Atur parameter cookie SEBELUM session_start()
     session_set_cookie_params([
         'lifetime' => $session_lifetime,
         'path' => '/', 
@@ -15,7 +10,6 @@ if (session_status() === PHP_SESSION_NONE) {
         'httponly' => true 
     ]);
 
-    // [PERUBAHAN] Mulai session
     session_start();
 }
 ?>
@@ -63,9 +57,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <ul class="navbar-nav ms-auto align-items-center navbar-icons">
                     <?php
-                    // LOGIKA BUTTON KHUSUS MEMBER (LOGIN)
                     if (isset($_SESSION['customer_uid'])) {
-                        // Jika SUDAH LOGIN: Tampilkan 3 Icon (Cart, Orders, Profile)
                         echo '
                         <li class="nav-item">
                             <a class="nav-link nav-icon" href="../Product-Cart/index.php" title="Cart">
@@ -83,7 +75,6 @@ if (session_status() === PHP_SESSION_NONE) {
                             </a>
                         </li>';
                     } else {
-                        // Jika BELUM LOGIN: Hanya Tampilkan Icon Login
                         echo '
                         <li class="nav-item">
                             <a class="nav-link nav-icon" href="../auth/login.php" title="Sign In">

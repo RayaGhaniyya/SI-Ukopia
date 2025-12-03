@@ -1,5 +1,4 @@
 <?php
-// include("../koneksi/koneksi.php");
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
 ?>
@@ -8,7 +7,6 @@ include("../Component/NavBar.php");
 <script src="../assets/js/loader.js"></script>
 <link rel="stylesheet" href="../assets/css/homepage.css">
 
-<!-- Hero -->
 <div class="hero position-relative">
     <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -36,7 +34,6 @@ include("../Component/NavBar.php");
     </div>
 </div>
 
-<!-- Gallery -->
 <div class="gallery">
     <div class="container py-6">
         <div class="row g-3 pt-5 mb-3">
@@ -103,7 +100,6 @@ include("../Component/NavBar.php");
     </div>
 </div>
 
-<!-- Product -->
 <div class="products py-5">
     <div class="container">
         <div class="row g-4 text-center">
@@ -152,7 +148,6 @@ include("../Component/NavBar.php");
     </div>
 </div>
 
-<!-- About Section -->
 <section class="about py-5">
     <div class="container">
         <div class="row align-items-center g-4">
@@ -186,7 +181,6 @@ include("../Component/NavBar.php");
     </div>
 </section>
 
-<!-- Reservation Section -->
 <section class="reservation">
     <div class="reservation-card">
         <img src="../assets/img/Reservation/Reservation-Homepage.jpg" alt="Reservation Background">

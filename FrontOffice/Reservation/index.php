@@ -1,40 +1,29 @@
 <?php
 include("../Component/Loader.php");
 include("../Component/NavBar.php");
-include("../../Koneksi/koneksi.php"); // koneksi database
-
-// SET ZONA WAKTU
+include("../../Koneksi/koneksi.php");
 date_default_timezone_set('Asia/Jakarta');
-
-// === KONSTANTA ===
-// Total jam reservasi yang tersedia per hari (10,11,12,13,14,15,16,17,18,19,20,21,22)
 $total_jam_operasional = 13;
-
-// === LOGIKA 1: BUAT BLOK KALENDER MINGGUAN (MINGGU - SABTU) ===
 $dates = [];
-$today = new DateTime(); // Tanggal hari ini
-$today_str = $today->format('Y-m-d'); // String 'YYYY-MM-DD' hari ini
+$today = new DateTime();
+$today_str = $today->format('Y-m-d');
 
 $day_of_week = (int)$today->format('w');
 $start_of_week = clone $today;
-$start_of_week->modify("-$day_of_week days"); // Mundur ke hari Minggu
+$start_of_week->modify("-$day_of_week days");
 
 for ($i = 0; $i < 7; $i++) {
     $date = clone $start_of_week;
     $date->modify("+$i days");
     $date_str = $date->format('Y-m-d');
-
-    $is_past = ($date_str < $today_str); // Cek apakah tanggal sudah lewat
-
+    $is_past = ($date_str < $today_str);
     $dates[] = [
-        'value' => $date_str,             // 2025-11-05
-        'dayNum' => $date->format('j M'), // 5 Nov
-        'isDisabled' => $is_past,         // true jika sudah lewat
-        'isFullyBooked' => false          // Flag untuk cek penuh
+        'value' => $date_str,
+        'dayNum' => $date->format('j M'),
+        'isDisabled' => $is_past,
+        'isFullyBooked' => false
     ];
 }
-
-// === LOGIKA 2: AMBIL SEMUA JAM YANG SUDAH DI-BOOK ===
 $start_date_query = $dates[0]['value'];
 $end_date_query = $dates[6]['value'];
 
@@ -52,26 +41,18 @@ while ($row = $result->fetch_assoc()) {
     $bookedHours[$tanggal][$jam_H] = true;
 }
 $stmt->close();
-
-// === LOGIKA 3: CEK HARI YANG PENUH (LOGIKA BARU) ===
 foreach ($dates as $index => $date) {
     $date_str = $date['value'];
     if (isset($bookedHours[$date_str])) {
-        // Hitung jumlah jam unik yang sudah di-book pada tanggal ini
         $jumlah_jam_booked = count($bookedHours[$date_str]);
-
-        // Bandingkan dengan total jam operasional
         if ($jumlah_jam_booked >= $total_jam_operasional) {
-            // Jika Penuh, tandai sebagai Penuh dan Disabled
             $dates[$index]['isFullyBooked'] = true;
-            $dates[$index]['isDisabled'] = true; // Otomatis nonaktifkan
+            $dates[$index]['isDisabled'] = true;
         }
     }
 }
 
-// === LOGIKA 4: TENTUKAN DEFAULT SELECTED DAY (UPDATED) ===
 $default_selected_day = '';
-// Cari hari PERTAMA yang TIDAK disabled (belum lewat DAN tidak penuh)
 foreach ($dates as $date) {
     if (!$date['isDisabled']) {
         $default_selected_day = $date['value'];
@@ -79,9 +60,7 @@ foreach ($dates as $date) {
     }
 }
 
-// Fallback: Jika semua hari (termasuk hari ini) penuh atau sudah lewat
 if (empty($default_selected_day)) {
-    // Cari hari ini di dalam array
     $today_in_array = false;
     foreach ($dates as $date) {
         if ($date['value'] == $today_str) {
@@ -90,8 +69,6 @@ if (empty($default_selected_day)) {
             break;
         }
     }
-    // Jika hari ini tidak ada (misal di hari Minggu, tgl 2),
-    // pilih saja hari pertama di array
     if (!$today_in_array && !empty($dates)) {
         $default_selected_day = $dates[0]['value'];
     }
@@ -110,9 +87,9 @@ if (empty($default_selected_day)) {
 
 <script>
     const serverTime = {
-        todayDateStr: "<?php echo $today_str; ?>", // "2025-11-05"
-        currentHour: <?php echo (int)date('H'); ?>, // Misal: 12
-        currentMinute: <?php echo (int)date('i'); ?> // Misal: 45
+        todayDateStr: "<?php echo $today_str; ?>",
+        currentHour: <?php echo (int)date('H'); ?>,
+        currentMinute: <?php echo (int)date('i'); ?>
     };
 </script>
 <section class="reservation-section">
@@ -146,10 +123,7 @@ if (empty($default_selected_day)) {
                             class="day-btn <?php echo ($date['value'] == $default_selected_day) ? 'active' : ''; ?>"
                             data-value="<?php echo $date['value']; ?>"
                             <?php
-                            // Tombol akan disabled jika sudah lewat ATAU sudah penuh
                             if ($date['isDisabled']) echo 'disabled';
-
-                            // Beri 'title' agar user tahu kenapa disabled
                             if ($date['isFullyBooked']) {
                                 echo ' title="Slot Penuh"';
                             } elseif ($date['isDisabled']) {

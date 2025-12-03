@@ -1,7 +1,6 @@
 <?php
 include("../../../Koneksi/koneksi.php");
 
-// Import PHPMailer
 require '../../../vendor/PHPMailer/src/Exception.php';
 require '../../../vendor/PHPMailer/src/PHPMailer.php';
 require '../../../vendor/PHPMailer/src/SMTP.php';
@@ -12,27 +11,20 @@ use PHPMailer\PHPMailer\Exception;
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 
-// Ambil Data JSON
 $json = file_get_contents("php://input");
 $data = json_decode($json, true);
-
-// Debugging: Cek apakah data terbaca? (Hapus baris ini nanti)
-// file_put_contents('debug_log.txt', print_r($data, true));
 
 $nama     = trim($data['nama'] ?? '');
 $username = trim($data['username'] ?? '');
 $email    = trim($data['email'] ?? '');
 $password = trim($data['password'] ?? '');
 
-// VALIDASI REGISTER
 if (empty($nama) || empty($username) || empty($email) || empty($password)) {
-    // Pesan ini beda dengan login.php
     echo json_encode(['success' => false, 'message' => 'Semua kolom wajib diisi (Nama, Username, Email, Password)']);
     exit;
 }
 
 try {
-    // 1. Cek Email
     $stmt = $conn->prepare("SELECT uid FROM akun_customer WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -42,7 +34,6 @@ try {
     }
     $stmt->close();
 
-    // 2. Cek Username
     $stmt = $conn->prepare("SELECT uid FROM akun_customer WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -52,7 +43,6 @@ try {
     }
     $stmt->close();
 
-    // 3. Insert
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $verification_code = bin2hex(random_bytes(16));
 
@@ -61,12 +51,10 @@ try {
 
     if ($stmt_insert->execute()) {
         
-        // 4. Kirim Email
         $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        // GANTI DENGAN EMAIL ASLI
         $mail->Username   = 'rayaghaniyya1@gmail.com'; 
         $mail->Password   = 'iehd xtvq hvzc mhox'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;

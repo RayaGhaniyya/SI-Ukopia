@@ -1,8 +1,6 @@
 <?php
 session_start();
 include("../../Koneksi/koneksi.php");
-
-// 1. Cek Login
 if (!isset($_SESSION['customer_uid'])) {
     header('Location: ../auth/login.php');
     exit;
@@ -10,8 +8,6 @@ if (!isset($_SESSION['customer_uid'])) {
 
 $customer_uid = $_SESSION['customer_uid'];
 $customer = null;
-
-// 2. Ambil Data Customer
 $stmt = $conn->prepare("SELECT nama, username, email FROM akun_customer WHERE uid = ?");
 $stmt->bind_param("i", $customer_uid);
 $stmt->execute();
