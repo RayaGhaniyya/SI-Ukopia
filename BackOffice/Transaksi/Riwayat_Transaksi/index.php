@@ -1,10 +1,10 @@
 <?php
 
-include("../../Koneksi/koneksi.php");
+include("../../../Koneksi/koneksi.php");
 
-include("../Component/session.php");
-include("../Component/head.php");
-include("../Component/pagination.php");
+include("../../Component/session.php");
+include("../../Component/head.php");
+include("../../Component/pagination.php");
 
 
 $limit = 20;
@@ -68,7 +68,7 @@ $result = $stmt->get_result();
 ?>
 
 <div class="container">
-    <?php include("../Component/sidebar.php"); ?>
+    <?php include("../../Component/sidebar.php"); ?>
 
     <div class="dashboard-container">
         <div class="dashboard-header">
@@ -183,4 +183,4 @@ $result = $stmt->get_result();
 
 <script src="/SI-Ukopia/BackOffice/assets/js/transaksi.js"></script>
 
-<?php include("../Component/bottom.php"); ?>
+<?php include("../../Component/bottom.php"); ?>

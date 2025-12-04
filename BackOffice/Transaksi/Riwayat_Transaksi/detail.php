@@ -1,5 +1,5 @@
 <?php
-include("../../Koneksi/koneksi.php");
+include("../../../Koneksi/koneksi.php");
 
 $id = $_GET['id'] ?? 0;
 

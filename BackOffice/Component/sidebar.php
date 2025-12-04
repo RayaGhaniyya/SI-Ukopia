@@ -15,12 +15,30 @@
             </a>
         </li>
 
-        <li>
-            <a href="/SI-Ukopia/BackOffice/Transaksi/index.php">
-                <i class="fas fa-receipt"></i>
-                <span>Transaksi</span>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" id="mobileBtn">
+                <i class="fas fa-chart-line"></i>
+                <span>Laporan</span>
             </a>
+
+            <ul class="dropdown-menu" id="mobileDropdown">
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Transaksi/Riwayat_Transaksi/index.php">
+                        <i class="fas fa-history"></i>
+                        <span>Riwayat Transaksi</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/SI-Ukopia/BackOffice/Transaksi/Cetak_Penjualan/index.php">
+                        <i class="fas fa-print"></i>
+                        <span>Cetak Laporan</span>
+                    </a>
+                </li>
+            </ul>
         </li>
+
+
 
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" id="productBtn"> <i class="fas fa-box-open"></i> <span>Manajemen Produk</span>

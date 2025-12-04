@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include("../../../Koneksi/koneksi.php");
+include("../../../../Koneksi/koneksi.php");
 
 header('Content-Type: application/json');
 
